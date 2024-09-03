@@ -1,0 +1,37 @@
+<form method="post">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit">Submit</button>
+</form>
+
+
+<table class="styled-table">
+    <thead>
+        <tr>
+            <th>Patient Name</th>
+            <th>total bill</th>
+            <th>commission to doc</th>
+            <th>commission %</th>
+        </tr>
+    </thead>
+    {% for patient in patients_with_collected_date %}
+    <tbody>
+        <tr>
+            <td><a href="{% url 'details' patient.id %}"> {{patient}}</a></td>
+            <td> {{patient.get_total}}</td>
+            <td> {{patient.referred_by.commission}}</td>
+            <td> {{patient.commision_to_doc}}</td>
+        </tr>
+        <!-- and so on... -->
+    </tbody>
+
+    {% endfor %}
+    <tr>
+        <td>Total</td>
+        <td>{{todays_total}}</td>
+    </tr>
+
+    {% for key, value in todays_docs.items %}
+        <p>{{ key }}: {{ value }}</p>
+    {% endfor %}
+</table>

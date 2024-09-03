@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>fill values</title>
+
+</head>
+<body>
+    <div class="details">
+        <p> Name : {{patient}}</p>
+        <p> Mobile: {{patient.mobile}}</p>
+        <p>Email: {{patient.email}}</p>
+        <p>Gender: {{patient.gender}}</p>
+        <p>collected_at: {{patient.collected_at}}</p>
+        <p>referred_by: {{patient.referred_by}}</p>
+        <p>collected_date: {{patient.collected_date}}</p>
+        <p>expected_complete_date: {{patient.expected_complete_date}}</p>
+        <p>Registred Time: {{patient.created_at}}</p>
+        <p>Age :{{patient.age}}</p>
+
+    </div>
+
+    <div>
+        <a href="{% url 'export_pdf' %}">Export to pdf</a>
+    </div>
+
+
+    
+    {% if eye_status %}
+        left eye : {{patient.left_eye}}
+        right eye: {{patient.right_eye}}
+    {% endif %}
+
+    {% if grouping_status %}
+        {{patient.group}}
+        {{patient.rh}}
+    {% endif %}
+
+    {% if CBP_status %}
+        {{patient.WBC}}
+        {{patient.RBC}}
+        {{patient.platelets}}
+    {% endif %}
+
+    {% if urine_status %}
+        {{patient.bilrubine}}
+    {% endif %} 
+     
+</body>
+</html>

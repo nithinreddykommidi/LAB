@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>grouping</title>
+</head>
+<body>
+    <div class="details">
+        <p> Name : {{patient}}</p>
+        <p> Mobile: {{patient.mobile}}</p>
+        <p>Email: {{patient.email}}</p>
+        <p>Gender: {{patient.gender}}</p>
+        <p>collected_at: {{patient.collected_at}}</p>
+        <p>referred_by: {{patient.referred_by}}</p>
+        <p>collected_date: {{patient.collected_date}}</p>
+        <p>expected_complete_date: {{patient.expected_complete_date}}</p>
+        <p>Registred Time: {{patient.created_at}}</p>
+        <p>Age :{{patient.age}}</p>
+    </div>
+
+    <div> 
+        {{patient.group}}
+        {{patient.rh}} 
+    </div>
+
+</body>
+</html>
