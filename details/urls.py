@@ -18,7 +18,7 @@ from django.urls import path,re_path
 from .views import home,patients_list,doctors_list,details,fill_values,delete_user,doctor,CBP,group,urine,eye,user_login,user_logout,print_CBP,print_eye,print_group,print_urine,urine_pdf,pending_samples,my_view
 
 urlpatterns = [
-    path('', home),
+    path('', home,name = 'home'),
     path('logout',user_logout,name='user_logout'),
     path('login',user_login, name='user_login'),
     path('patients_list',patients_list, name='patients_list'),
