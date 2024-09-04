@@ -248,7 +248,6 @@ def my_view(request):
         if form.is_valid():
             selected_date = form.cleaned_data['required_date']
             patients_with_collected_date = Patient.objects.filter(collected_date=datetime.date(selected_date.year, selected_date.month, selected_date.day))
-            print(patients_with_collected_date)
         todays_total = 0
         todays_docs = {}
         for pats in patients_with_collected_date:
@@ -259,6 +258,10 @@ def my_view(request):
                 todays_docs[doc] = todays_docs[doc] + comm
             else:
                todays_docs[doc] = comm
-        print(todays_docs)
-        print(todays_total)
+    else:
+        form = MyForm()
+        patients_with_collected_date = None
+        todays_total =  None
+        todays_docs = None
     return render(request, 'daily_totals.html', {'form': form, 'patients_with_collected_date': patients_with_collected_date , 'todays_total': todays_total, 'todays_docs':todays_docs})
+    

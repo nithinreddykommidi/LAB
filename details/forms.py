@@ -1,7 +1,5 @@
 from django.forms import *
 from .models import Patient, Test, Doctor,Date
-from django import forms
-from bootstrap_datepicker.widgets import DatePicker
 
 class PatientForm(ModelForm):
     class Meta:
