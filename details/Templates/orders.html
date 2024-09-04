@@ -30,11 +30,11 @@
                 </tr>
             </thead>
             <tbody>
-                {% for customer in customers%}
+                {% for order in list_of_orders%}
                 <tbody>
                     <tr>
-                        <td><a href="{% url 'customer_details' customer.id %}"> {{customer}}</a></td>
-                        <td> {{customer}}</td>
+                        <td><a href="{% url 'order_details' order.order_id %}"> {{order.customer.patient_name}}</a></td>
+                        <td><a href="{% url 'fill_values' order.order_id %}"> <i class="bi bi-pencil-square"></i></a></td>
                     </tr>
                     <!-- and so on... -->
                 </tbody>

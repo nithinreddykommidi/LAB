@@ -1,5 +1,7 @@
 from django.db import models
 from datetime import datetime
+import uuid
+
 
 class Test(models.Model):
     is_collected = {('yes', 'yes'),
@@ -15,7 +17,23 @@ class Test(models.Model):
     def __str__(self):
         return self.test_name
 
+class Customer(models.Model):
 
+    choice = {('male', 'male'),
+              ('female', 'female')}
+        
+    patient_name = models.CharField(max_length=50)
+    mobile = models.IntegerField(null=True)
+    email = models.EmailField(null=True)
+    gender = models.CharField(max_length=50, choices=choice)
+    age = models.CharField(max_length=4, null=True)
+    @staticmethod
+    def get_all_customers():
+        return Customer.objects.all()
+
+    def __str__(self):
+        return self.patient_name
+    
 class Date(models.Model):
         required_date = models.DateField(null= True)
 
@@ -28,7 +46,7 @@ class Doctor(models.Model):
         return Doctor.objects.all()
     def total_cost(self):
         # doc = Doctor.objects.get(id=pk)
-        s = self.patient_set.all()
+        s = self.order_set.all()
         amount = 0
         for i in s:
             patient_bill = i.get_total()
@@ -36,7 +54,7 @@ class Doctor(models.Model):
         return amount
     def no_of_patients(self):
         # doc = Doctor.objects.get(id=pk)
-        s = self.patient_set.all()
+        s = self.order_set.all()
         return len(s)
     
     def commission_to_doc(self):
@@ -51,7 +69,7 @@ class Doctor(models.Model):
         return self.doctor_name
 
 
-class Patient(models.Model):
+class Order(models.Model):
     def get_total(self):
         # patient_tests = self.tests.all()
         total = sum([test.price for test in self.tests.all()])
@@ -69,16 +87,7 @@ class Patient(models.Model):
             return int(float(doc_commission) / 100 * float(bill))
         except ZeroDivisionError:
             return 0
-
-
         
-
-    # def pending(self):
-    #     pending = self.tests.all()
-
-
-    choice = {('male', 'male'),
-              ('female', 'female')}
     locations = {('ATP', 'ATP'),
                  ('KNR', 'KNR')
                  }
@@ -90,19 +99,16 @@ class Patient(models.Model):
              ('O', 'O'),
              }
 
-    patient_name = models.CharField(max_length=50)
-    mobile = models.IntegerField(null=True)
-    email = models.EmailField(null=True)
-    gender = models.CharField(max_length=50, choices=choice)
     collected_at = models.CharField(max_length=50, choices=locations)
     referred_by = models.ForeignKey(Doctor, on_delete=models.DO_NOTHING,null=True)
     collected_date = models.DateField(null= True)
     expected_complete_date = models.DateField(null=True)
     tests = models.ManyToManyField(Test, blank=False)
+    customer = models.ForeignKey(Customer,on_delete=models.PROTECT, blank=False)
     collection_status = models.ManyToManyField(Test, blank=False,related_name='stat')
     created_at = models.DateTimeField(datetime.now(),null=True)
-    age = models.CharField(max_length=4, null=True)
-    name = models.CharField(max_length=50)
+    order_id = models.UUIDField(default=uuid.uuid4, primary_key=True)
+
     # blood grouping
     group = models.CharField(max_length=20, choices=groups, blank=True)
     rh = models.CharField(max_length=20, choices=rh_factor, blank=True)
@@ -119,11 +125,13 @@ class Patient(models.Model):
     # urine
     bilrubine = models.CharField(max_length=20, blank=True)
     @staticmethod
-    def get_all_patients():
-        return Patient.objects.all()
+    def get_all_orders():
+        return Order.objects.all()
 
     def __str__(self):
-        return self.patient_name
+        return self.customer.patient_name
+        # return str(self.order_id)
+
 
 
 

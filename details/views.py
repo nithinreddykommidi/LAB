@@ -1,25 +1,41 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse,HttpResponseRedirect
-from .models import Patient, Test, Doctor
-from .forms import PatientForm, GroupingForm, UrineForm, CBPForm,EyeForm,MyForm
+from .models import Customer, Test, Doctor, Order
+from .forms import OrderForm, GroupingForm, UrineForm, CBPForm,EyeForm,MyForm,CusromerForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 import datetime
+import re
 
 def get_pat_id(request):
     s = request.META.get('HTTP_REFERER')
-    s = (s.split('/'))
-    s = s = [x for x in s if x.isdigit()][0]
-    patient = Patient.objects.get(id=s)
-    return patient
+    match = re.search(r'([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})', s)
+    if match:
+        uuid =  match.group(1)
+    else:
+        uuid =  None
+    Orderid = Order.objects.get(order_id=uuid)
+    return Orderid
+
+@login_required(login_url='user_login')
+def register_customer(request):
+    tests = Test.get_all_tests()
+    form = CusromerForm()
+    if request.method == 'POST':
+        form = CusromerForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    return render(request, 'New Customer.html', {'tests': tests, 'form': form})
 @login_required(login_url='user_login')
 def home(request):
     tests = Test.get_all_tests()
-    form = PatientForm()
+    form = OrderForm()
     if request.method == 'POST':
-        form = PatientForm(request.POST)
+        form = OrderForm(request.POST)
 
         if form.is_valid():
             form.save()
@@ -27,8 +43,13 @@ def home(request):
     return render(request, 'Home.html', {'tests': tests, 'form': form})
 @login_required(login_url='user_login')
 def patients_list(request):
-    patients = Patient.get_all_patients()
-    return render(request, 'patients.html', {'patients': patients})
+    customers = Customer.get_all_customers()
+    return render(request, 'patients.html', {'customers': customers})
+
+@login_required(login_url='user_login')
+def orders_list(request):
+    list_of_orders = Order.get_all_orders
+    return render(request, 'orders.html', {'list_of_orders': list_of_orders})
 
 @login_required(login_url='user_login')
 def doctors_list(request):
@@ -36,14 +57,22 @@ def doctors_list(request):
     return render(request, 'Doctors.html', {'doctors': doctors})
 
 @login_required(login_url='user_login')
-def details(request,pk):
-    patient = Patient.objects.get(id=pk)
-    tests = patient.tests.all()
-    return render(request,'Details.html',{'patient': patient, 'tests': tests})
+def customer_details(request,pk):
+    patient = Customer.objects.get(id=pk)
+    orders = patient.order_set.all()
+    print(orders)
+    return render(request,'Customer Details.html',{'patient': patient, 'orders':orders})
+
+@login_required(login_url='user_login')
+def order_details(request,pk):
+    order = Order.objects.get(order_id=pk)
+    tests = order.tests.all()
+    return render(request,'Order Details.html',{'order': order, 'tests': tests})
+
 
 @login_required(login_url='user_login')
 def fill_values(request,pk):
-    patient = Patient.objects.get(id=pk)
+    patient = Order.objects.get(order_id=pk)
     patient_tests = patient.tests.all()
     context = {'patient':patient, 'patient_tests':patient_tests}
     return render(request,'fill_values.html',context)
@@ -52,60 +81,60 @@ def fill_values(request,pk):
 
 @login_required(login_url='user_login')
 def delete_user(request,pk):
-    patient = Patient.objects.get(id=pk)
+    patient = Order.objects.get(id=pk)
     patient.delete()
     return  redirect('patients_list')
 
 @login_required(login_url='user_login')
 def doctor(request,pk):
     doc = Doctor.objects.get(id=pk)
-    patients = doc.patient_set.all()
+    orders = doc.order_set.all()
 
-    return render(request,'doctor_details.html',{'patients':patients})
+    return render(request,'doctor_details.html',{'orders':orders})
 
 @login_required(login_url='user_login')
-def CBP(request):
-    patient = get_pat_id(request)
-    form = CBPForm(instance=patient)
+def CBP(request,uuid):
+    Orderid = Order.objects.get(order_id=uuid)
+    form = CBPForm(instance=Orderid)
     if request.method == 'POST':
-        form = CBPForm(request.POST,instance=patient)
+        form = CBPForm(request.POST,instance=Orderid)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    return render(request, 'TESTS/CBP.html',{'form':form,'patient':patient})
+    return render(request, 'TESTS/CBP.html',{'form':form,'Orderid':Orderid})
 
 @login_required(login_url='user_login')
-def group(request):
-    patient = get_pat_id(request)
-    form = GroupingForm(instance=patient)
+def group(request,uuid):
+    Orderid = Order.objects.get(order_id=uuid)
+    form = GroupingForm(instance=Orderid)
     if request.method == 'POST':
-        form = GroupingForm(request.POST,instance=patient)
+        form = GroupingForm(request.POST,instance=Orderid)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    return render(request, 'TESTS/group.html',{'form':form,'patient':patient})
+    return render(request, 'TESTS/group.html',{'form':form,'Orderid':Orderid})
 
 @login_required(login_url='user_login')
-def urine(request):
-    patient = get_pat_id(request)
-    form = UrineForm(instance=patient)
+def urine(request,uuid):
+    Orderid = Order.objects.get(order_id=uuid)
+    form = UrineForm(instance=Orderid)
     if request.method == 'POST':
-        form = UrineForm(request.POST,instance=patient)
+        form = UrineForm(request.POST,instance=Orderid)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    return render(request, 'TESTS/Urine.html',{'form':form,'patient':patient})
+    return render(request, 'TESTS/Urine.html',{'form':form,'Orderid':Orderid})
 
 @login_required(login_url='user_login')
-def eye(request):
-    patient = get_pat_id(request)
-    form = EyeForm(instance=patient)
+def eye(request,uuid):
+    Orderid = Order.objects.get(order_id=uuid)
+    form = EyeForm(instance=Orderid)
     if request.method == 'POST':
-        form = EyeForm(request.POST,instance=patient)
+        form = EyeForm(request.POST,instance=Orderid)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    return render(request, 'TESTS/Eye.html',{'form':form,'patient':patient})
+    return render(request, 'TESTS/Eye.html',{'form':form,'Orderid':Orderid})
 
 def user_login(request):
     if request.method == 'POST':
@@ -122,32 +151,32 @@ def user_logout(request):
     return redirect('user_login')
 
 @login_required(login_url='user_login')
-def print_CBP(request):
-    patient = get_pat_id(request)
-    return render(request, 'TESTS/print_CBP.html',{'patient':patient})
+def print_CBP(request,uuid):
+    Orderid = Order.objects.get(order_id=uuid)
+    return render(request, 'TESTS/print_CBP.html',{'Orderid':Orderid})
 
 
 @login_required(login_url='user_login')
-def print_group(request):
-    patient = get_pat_id(request)
-    return render(request, 'TESTS/print_group.html',{'patient':patient})
+def print_group(request,uuid):
+    Orderid = Order.objects.get(order_id=uuid)
+    return render(request, 'TESTS/print_group.html',{'Orderid':Orderid})
 
 
 @login_required(login_url='user_login')
-def print_urine(request):
-    patient = get_pat_id(request)
-    return render(request, 'TESTS/print_urine.html',{'patient':patient})
+def print_urine(request,uuid):
+    Orderid = Order.objects.get(order_id=uuid)
+    return render(request, 'TESTS/print_urine.html',{'Orderid':Orderid})
 
 
 @login_required(login_url='user_login')
-def print_eye(request):
-    patient = get_pat_id(request)
-    return render(request, 'TESTS/print_Eye.html',{'patient':patient})
+def print_eye(request,uuid):
+    Orderid = Order.objects.get(order_id=uuid)
+    return render(request, 'TESTS/print_Eye.html',{'Orderid':Orderid})
 
-def urine_pdf(request):
-    patient = get_pat_id(request)
+def urine_pdf(request,uuid):
+    Orderid = Order.objects.get(order_id=uuid)
     template_path = '/home/nithinreddykommidi424/LAB_CSS/details/Templates/TESTS/urinepdf.html'
-    context = {'patient': patient}
+    context = {'Orderid': Orderid}
     # Create a Django response object, and specify content_type as pdf
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'filename="report.pdf"'
@@ -163,10 +192,10 @@ def urine_pdf(request):
        return HttpResponse('We had some errors <pre>' + html + '</pre>')
     return response
 
-def CBP_pdf(request):
-    patient = get_pat_id(request)
+def CBP_pdf(request,uuid):
+    Orderid = Order.objects.get(order_id=uuid)
     template_path = 'E:/LAB_CSS/details/Templates/TESTS/CBPpdf.html'
-    context = {'patient': patient}
+    context = {'Orderid': Orderid}
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'filename="report.pdf"'
     template = get_template(template_path)
@@ -176,10 +205,10 @@ def CBP_pdf(request):
     if pisa_status.err:
        return HttpResponse('We had some errors <pre>' + html + '</pre>')
     return response
-def Eye_pdf(request):
-    patient = get_pat_id(request)
+def Eye_pdf(request,uuid):
+    Orderid = Order.objects.get(order_id=uuid)
     template_path = 'E:/LAB_CSS/details/Templates/TESTS/Eyepdf.html'
-    context = {'patient': patient}
+    context = {'Orderid': Orderid}
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'filename="report.pdf"'
     template = get_template(template_path)
@@ -189,10 +218,10 @@ def Eye_pdf(request):
     if pisa_status.err:
        return HttpResponse('We had some errors <pre>' + html + '</pre>')
     return response
-def group_pdf(request):
-    patient = get_pat_id(request)
+def group_pdf(request,uuid):
+    Orderid = Order.objects.get(order_id=uuid)
     template_path = 'E:/LAB_CSS/details/Templates/TESTS/grouppdf.html'
-    context = {'patient': patient}
+    context = {'Orderid': Orderid}
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'filename="report.pdf"'
     template = get_template(template_path)
@@ -229,13 +258,13 @@ def group_pdf(request):
 #     print(pending_tests)
 
 def pending_samples(request):
-        patients = Patient.get_all_patients()
+        orders = Order.get_all_orders()
         pending_tests = {}
-        for patient in patients:
+        for order in orders:
             # Get tests that are not in the collection_status of the patient
-            pending_patient_tests = patient.tests.exclude(id__in=patient.collection_status.all())
+            pending_patient_tests = order.tests.exclude(id__in=order.collection_status.all())
             if pending_patient_tests.exists():
-                pending_tests[patient] = list(pending_patient_tests)
+                pending_tests[order] = list(pending_patient_tests)
 
         # print(pending_tests)
         return render(request,'pending.html',{'pending_tests':pending_tests})
@@ -247,21 +276,21 @@ def my_view(request):
         form = MyForm(request.POST)
         if form.is_valid():
             selected_date = form.cleaned_data['required_date']
-            patients_with_collected_date = Patient.objects.filter(collected_date=datetime.date(selected_date.year, selected_date.month, selected_date.day))
+            orders_with_collected_date = Order.objects.filter(collected_date=datetime.date(selected_date.year, selected_date.month, selected_date.day))
         todays_total = 0
         todays_docs = {}
-        for pats in patients_with_collected_date:
-            todays_total += pats.get_total()
-            doc = pats.referred_by
-            comm = pats.commision_to_doc
+        for order in orders_with_collected_date:
+            todays_total += order.get_total()
+            doc = order.referred_by
+            comm = order.commision_to_doc
             if doc in todays_docs:
                 todays_docs[doc] = todays_docs[doc] + comm
             else:
                todays_docs[doc] = comm
     else:
         form = MyForm()
-        patients_with_collected_date = None
+        orders_with_collected_date = None
         todays_total =  None
         todays_docs = None
-    return render(request, 'daily_totals.html', {'form': form, 'patients_with_collected_date': patients_with_collected_date , 'todays_total': todays_total, 'todays_docs':todays_docs})
+    return render(request, 'daily_totals.html', {'form': form, 'orders_with_collected_date': orders_with_collected_date , 'todays_total': todays_total, 'todays_docs':todays_docs})
     

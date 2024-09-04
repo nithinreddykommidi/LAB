@@ -16,13 +16,13 @@
             <th>commission %</th>
         </tr>
     </thead>
-    {% for patient in patients_with_collected_date %}
+    {% for order in orders_with_collected_date %}
     <tbody>
         <tr>
-            <td><a href="{% url 'details' patient.id %}"> {{patient}}</a></td>
-            <td> {{patient.get_total}}</td>
-            <td> {{patient.referred_by.commission}}</td>
-            <td> {{patient.commision_to_doc}}</td>
+            <td> {{order.customer.patient_name}}</td>
+            <td> {{order.get_total}}</td>
+            <td> {{order.referred_by.commission}}</td>
+            <td> {{order.commision_to_doc}}</td>
         </tr>
         <!-- and so on... -->
     </tbody>

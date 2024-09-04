@@ -60,7 +60,7 @@
         {% for patient in patients %}
         <tbody>
             <tr>
-                <td><a href="{% url 'details' patient.id %}"> {{patient}}</a></td>
+                <td><a href="{% url 'customer_details' customer.id %}"> {{customer}}</a></td>
                 <td><a href="{% url 'fill_values' patient.id %}"> <i class="fa-solid fa-pen"></i></a></td>            </tr>
             <!-- and so on... -->
         </tbody>

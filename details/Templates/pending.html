@@ -63,7 +63,7 @@
         {% for patient, tests in pending_tests.items %}
         <tbody>
             <tr>
-                <td><a href="{% url 'details' patient.id %}"> {{patient}}</a></td>
+                <td>{{patient.customer}}</td>
                 <td>
                 <ul>
                     {% for test in tests %}

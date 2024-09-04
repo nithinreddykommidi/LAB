@@ -25,11 +25,6 @@
         <p> Mobile: {{patient.mobile}}</p>
         <p>Email: {{patient.email}}</p>
         <p>Gender: {{patient.gender}}</p>
-        <p>collected_at: {{patient.collected_at}}</p>
-        <p>referred_by: {{patient.referred_by}}</p>
-        <p>collected_date: {{patient.collected_date}}</p>
-        <p>expected_complete_date: {{patient.expected_complete_date}}</p>
-        <p>Registred Time: {{patient.created_at}}</p>
         <p>Age :{{patient.age}}</p>
     </div>
 
@@ -41,11 +36,11 @@
                     <th>Price</th>
                 </tr>
             </thead>
-            {% for test in tests %}
+            {% for order in orders %}
             <tbody>
                 <tr>
-                    <td>{{test}}</td>
-                    <td>{{test.price}}</td>
+                    <td>{{order.collected_date}}</td>
+                    <td>{{order.get_total}}</td>
                 </tr>
                 <!-- and so on... -->
             </tbody>
