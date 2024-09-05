@@ -87,10 +87,9 @@ def delete_user(request,pk):
 
 @login_required(login_url='user_login')
 def doctor(request,pk):
-    doc = Doctor.objects.get(id=pk)
-    orders = doc.order_set.all()
-
-    return render(request,'doctor_details.html',{'orders':orders})
+    doctor = Doctor.objects.get(id=pk)
+    orders = doctor.order_set.all()
+    return render(request,'doctor_details.html',{'doctor':doctor, 'orders':orders})
 
 @login_required(login_url='user_login')
 def CBP(request,uuid):

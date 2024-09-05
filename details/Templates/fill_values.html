@@ -1,31 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <title>fill values</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-
-    <script src="https://kit.fontawesome.com/de9620ca84.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-    <style>
-        .cls{
-            margin-left: 20%;
-            margin-right: 20%;
-            text-align: center;
-        }
-        .list-group{
-            margin-left: 20%;
-            margin-right: 20%; 
-            text-align: center;           
-        }
-        .details{
-            text-align: center;
-        }
-    </style>
-</head>
-
-<body>
+{% extends "base.html" %}
+{% block title%} Fill Report {% endblock%}
+{% block content%}
+<section>
     <div class="details">
         <div> Name : {{patient}}</div>
         <div> Mobile: {{patient.mobile}}</div>
@@ -38,33 +14,32 @@
         <div>Registred Time: {{patient.created_at}}</div>
         <div>Age :{{patient.age}}</div>
     </div>
-
-    <div class="cls">
-
-    <table class="table">
-        <thead class="table-dark">
-            <tr>
-                <th>Test</th>
-                <th>Fill Values</th>
-                <th>Print Values</th>
-            </tr>
-        </thead>
-        {% for test in patient_tests %}
-        <tbody>
-            <tr>
-                <td>  {{test}}  </td>
-                <td><a href="{{test}}"> <i class="bi bi-pencil-square"></i></a></td>            
-                <td><a href="print/{{test}}"> <i class="bi bi-printer"></i></a></td>            
-            </tr>
-
-            <!-- and so on... -->
-        </tbody>
-    
-        {% endfor %}
-      </table>
-    </div>
-</body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
-
-
-</html>
+        <!--for demo wrap-->
+        <h1>Patien's Tests</h1>
+        <div class="tbl-header">
+          <table cellpadding="0" cellspacing="0" border="0">
+            <thead>
+                <tr>
+                    <th>Test</th>
+                    <th>Fill Values</th>
+                    <th>Print Values</th>
+                </tr>
+            </thead>
+          </table>
+        </div>
+        <div class="tbl-content">
+          <table cellpadding="0" cellspacing="0" border="0">
+           
+            {% for test in patient_tests %}
+            <tbody>
+                <tr>
+                    <td>  {{test}}  </td>
+                    <td><a href="{{test}}"> Edit</a></td>            
+                    <td><a href="print/{{test}}"> print</a></td>            
+                </tr>
+            </tbody>
+            {% endfor %}
+          </table>
+        </div>
+</section>
+{% endblock %}

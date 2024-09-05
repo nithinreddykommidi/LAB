@@ -1,73 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+{% block title%} Doctot Details {% endblock%}
+{% block content%}
+<section>
 
-<head>
-    <meta charset="UTF-8">
-    <title>Patients</title>
-    <script src="https://kit.fontawesome.com/de9620ca84.js" crossorigin="anonymous"></script>
-    <style>
-        .styled-table {
-            border-collapse: collapse;
-            margin: 25px 0;
-            font-size: 0.9em;
-            font-family: sans - serif;
-            min-width: 400px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-            allign-items: center;
-        }
+    <div class="details">
+        <p> Name : {{doctor}}</p>
+        <p> commission: {{doctor.commission}} %</p>
+    </div>    
 
-        .styled-table thead tr {
-            background-color: #009879;
-            color: #ffffff;
-            text-align: left;
-        }
-
-        .styled-table th,
-        .styled-table td {
-            padding: 12px 15px;
-        
-        }
-
-        .styled-table tbody tr {
-            border-bottom: 1px solid #dddddd;
-        }
-
-        .styled-table tbody tr:nth-of-type(even){
-            background-color: #f3f3f3;
-        }
-
-        .styled-table tbody tr:last-of-type {
-            border-bottom: 2px solid #009879;
-        }
-
-        .styled-table tbody tr.active-row {
-            font-weight: bold;
-            color: #009879;
-        }
-    </style>
-
-</head>
-
-<body>
-    
-    <table class="styled-table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Fill Values</th>
+            <!--for demo wrap-->
+            <h1>Patients Referred By {{doctor}}</h1>
+            <div class="tbl-header">
+              <table cellpadding="0" cellspacing="0" border="0">
+                <thead>
+                    <tr>
+                        <th>Patients</th>
+                        <th>Bill</th>
+                    </tr>
+                </thead>
+              </table>
+            </div>
+            <div class="tbl-content">
+              <table cellpadding="0" cellspacing="0" border="0">
+               
+                {% for order in orders %}
+                <tbody>
+                    <tr>
+                        <td><a href="{% url 'order_details' order.order_id %}"> {{order.customer.patient_name}}</a></td>
+                        <td>{{order.get_total}}</td>
+                    </tr>
+                    <!-- and so on... -->
+                </tbody>
+                
+                    {% endfor %}
+                
+              </table>
+              <tr>
+                <td>{{doctor.total_cost}}</td>
             </tr>
-        </thead>
-        {% for patient in patients %}
-        <tbody>
-            <tr>
-                <td><a href="{% url 'customer_details' customer.id %}"> {{customer}}</a></td>
-                <td><a href="{% url 'fill_values' patient.id %}"> <i class="fa-solid fa-pen"></i></a></td>            </tr>
-            <!-- and so on... -->
-        </tbody>
-    
-        {% endfor %}
-    </table>
-
-</body>
-
-</html>
+            </div>
+          </section>
+{% endblock %}

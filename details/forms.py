@@ -10,15 +10,18 @@ class CusromerForm(ModelForm):
 class OrderForm(ModelForm):
     class Meta:
         model = Order
-        fields = ['customer','collected_at','referred_by','collected_date','expected_complete_date','tests','collection_status']
-        widgets = {'customer': Select(),
-                   'collected_at': Select(),
-                   'referred_by': Select(),
-                   'collected_date': DateInput(format='%m/%d/%Y', attrs={'class': 'nithin', 'placeholder': 'Select a date', 'type': 'date'}),
-                   'expected_complete_date': DateInput(format='%m/%d/%Y', attrs={'class': 'nithin', 'placeholder': 'Select a date', 'type': 'date'}),
-                   'tests': CheckboxSelectMultiple(),
-                   'collection_status': CheckboxSelectMultiple(),
-                   }
+        fields = ['customer', 'collected_at', 'referred_by', 'collected_date', 'expected_complete_date', 'tests', 'collection_status']
+        widgets = {
+            'customer': Select(attrs={'class': 'form-control custom-select'}),
+            'collected_at': Select(attrs={'class': 'form-control custom-select'}),
+            'referred_by': Select(attrs={'class': 'form-control custom-select'}),
+            'collected_date': DateInput(format='%m/%d/%Y', 
+                                        attrs={'class': 'form-control datepicker input-box', 'placeholder': 'MM/DD/YYYY', 'type':'date'}),
+            'expected_complete_date': DateInput(format='%m/%d/%Y', 
+                                                attrs={'class': 'form-control datepicker input-box', 'placeholder': 'Expected completion date'}),
+            'tests': CheckboxSelectMultiple(attrs={'class': 'form-check-inline custom-checkbox-grid'}),
+            'collection_status': CheckboxSelectMultiple(attrs={'class': 'form-check-inline switch'}),
+        }
 
 class GroupingForm(ModelForm):
         class Meta:

@@ -1,25 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Details</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+{% extends "base.html" %}
+{% block title%} Customer Details {% endblock%}
+{% block content%}
+<section>
 
-    <style>
-        .cls{
-            margin-left: 20%;
-            margin-right: 20%;
-            text-align: center;
-        }
-        .details{
-            display: inline;
-            text-align: center;
-        }
-    </style>
-
-</head>
-<body>
-    <a href={% url 'home' %}> Home </a>
     <div class="details">
         <p> Name : {{patient}}</p>
         <p> Mobile: {{patient.mobile}}</p>
@@ -28,34 +11,33 @@
         <p>Age :{{patient.age}}</p>
     </div>
 
-    <div class="cls">
-        <table class="table">
-            <thead class="table-dark">
+        <!--for demo wrap-->
+        <h1>Customer Tests Details</h1>
+        <div class="tbl-header">
+          <table cellpadding="0" cellspacing="0" border="0">
+            <thead>
                 <tr>
                     <th>Test</th>
                     <th>Price</th>
                 </tr>
             </thead>
+          </table>
+        </div>
+        <div class="tbl-content">
+          <table cellpadding="0" cellspacing="0" border="0">
+           
             {% for order in orders %}
             <tbody>
                 <tr>
-                    <td>{{order.collected_date}}</td>
+                    <td><a href="{% url 'order_details' order.order_id %}"> {{order.collected_date}}</a></td>
                     <td>{{order.get_total}}</td>
                 </tr>
                 <!-- and so on... -->
             </tbody>
             
                 {% endfor %}
-                <tr>
-                    <td>Total</td>
-                    <td>{{patient.get_total}}</td>
-                </tr>
-            </tbody>
           </table>
-    </div>
+        </div>
+      </section>
+{% endblock %}
 
-
-
-
-</body>
-</html>
