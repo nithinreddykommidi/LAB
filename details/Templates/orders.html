@@ -12,7 +12,7 @@
       <table cellpadding="0" cellspacing="0" border="0">
         <thead>
           <tr>
-            <th>Orders ID</th>
+            <th>Orders Date</th>
             <th>Customer Name</th>
             <th>total amount</th>
             <th>referred_by</th>
@@ -24,11 +24,10 @@
     </div>
     <div class="tbl-content">
       <table cellpadding="0" cellspacing="0" border="0">
-       
-        {% for order in list_of_orders%}
+        {% for order in orders%}
         <tbody>
             <tr>
-                <td> {{order.order_id}}</td>
+                <td> {{order.collected_date}}</td>
                 <td><a href="{% url 'order_details' order.order_id %}"> {{order.customer.patient_name}}</a></td>
                 <td> {{order.get_total}}</td>
                 <td> {{order.referred_by}}</td>
@@ -38,7 +37,39 @@
             </tr>
             <!-- and so on... -->
         </tbody>
+    </div>
     
         {% endfor %}
+      </table>
+  </section>
 
-    {% endblock %}
+        <div class="cs">
+          <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center" type="none">
+              
+          {% if orders.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page=1">&laquo First</a></li>
+        
+            <li class="page-item"><a class="page-link" href="?page={{ orders.previous_page_number }}">Previous</a></li>
+            
+          {% endif %}
+        
+          {% for i in nums %}
+            <li class="page-item"><a class="page-link" href="?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
+        
+          {% endfor %}
+        
+        
+          {% if orders.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ orders.next_page_number }}">Next</a></li>
+        
+            <li class="page-item"><a class="page-link" href="?page={{ orders.paginator.num_pages }}">Last &raquo</a></li>
+        
+          {% endif %}
+        
+          </ul>
+          </nav>
+        </div>
+
+{% endblock %}
+    

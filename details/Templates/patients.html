@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 {% block title%} All Customers {% endblock%}
 {% block content%}
+margin-top: 20px;
 
 <section>
+
     <!--for demo wrap-->
     <h1>list Of Customers</h1>
     <div class="tbl-header">
@@ -18,18 +20,21 @@
     </div>
     <div class="tbl-content">
       <table cellpadding="0" cellspacing="0" border="0">
-       
-    {% for customer in customers%}
-        <tbody>
-            <tr>
-                <td><a href="{% url 'customer_details' customer.id %}"> {{customer}}</a></td>
-                <td> last order</td>
+    {% if customers %}
+      {% for customer in customers%}
+          <tbody>
+              <tr>
+                  <td><a href="{% url 'customer_details' customer.id %}"> {{customer}}</a></td>
+                  <td> {{customer.get_last_order_date}}</td>
 
-            </tr>
-            <!-- and so on... -->
-        </tbody>
-    
-        {% endfor %} 
+              </tr>
+              <!-- and so on... -->
+          </tbody>
+      
+      {% endfor %} 
+    {% else %}
+      <td><p>No customers found.</p></td>
+    {% endif %}
       </table>
     </div>
   </section>

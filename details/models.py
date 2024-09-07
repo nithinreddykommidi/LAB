@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import datetime
+from django.db.models import Max
 import uuid
 
 
@@ -17,25 +18,42 @@ class Test(models.Model):
     def __str__(self):
         return self.test_name
 
-class Customer(models.Model):
+class Gender(models.Model):
+    gender = models.CharField(max_length= 10)
 
-    choice = {('male', 'male'),
-              ('female', 'female')}
-        
+    def __str__(self):
+        return self.gender
+
+class Customer(models.Model):
     patient_name = models.CharField(max_length=50)
     mobile = models.IntegerField(null=True)
     email = models.EmailField(null=True)
-    gender = models.CharField(max_length=50, choices=choice)
+    gender = models.ForeignKey(Gender, on_delete=models.DO_NOTHING,null=True)
     age = models.CharField(max_length=4, null=True)
     @staticmethod
     def get_all_customers():
         return Customer.objects.all()
-
+    def get_last_order_date(self):
+        # Fetches the latest collected_date for this customer
+        last_order = self.order_set.aggregate(last_order_date=Max('collected_date'))
+        return last_order['last_order_date']
     def __str__(self):
         return self.patient_name
+
+
     
 class Date(models.Model):
-        required_date = models.DateField(null= True)
+    required_date = models.DateField(null= True)
+    patient_name = models.CharField(max_length=50,null= True, blank= True)
+    mobile = models.IntegerField(null=True, blank= True)
+
+
+
+class Locations(models.Model):
+        location = models.CharField(max_length=50)
+
+        def __str__(self):
+            return self.location
 
 
 class Doctor(models.Model):
@@ -87,10 +105,7 @@ class Order(models.Model):
             return int(float(doc_commission) / 100 * float(bill))
         except ZeroDivisionError:
             return 0
-        
-    locations = {('ATP', 'ATP'),
-                 ('KNR', 'KNR')
-                 }
+
     rh_factor = {('+', '+'),
                  ('-', '-')}
     groups = {('A', 'A'),
@@ -99,7 +114,7 @@ class Order(models.Model):
              ('O', 'O'),
              }
 
-    collected_at = models.CharField(max_length=50, choices=locations)
+    collected_at = models.ForeignKey(Locations, on_delete=models.DO_NOTHING,null=True)
     referred_by = models.ForeignKey(Doctor, on_delete=models.DO_NOTHING,null=True)
     collected_date = models.DateField(null= True)
     expected_complete_date = models.DateField(null=True)

@@ -30,14 +30,17 @@
                         <td>{{order.get_total}}</td>
                     </tr>
                     <!-- and so on... -->
-                </tbody>
+                
                 
                     {% endfor %}
-                
+                    <tr style="background-color: rgb(3, 0, 0);">
+                      <td>Total</td>
+                      <td>{{doctor.total_cost}}</td>
+                  </tr>
+                </tbody>
               </table>
-              <tr>
-                <td>{{doctor.total_cost}}</td>
-            </tr>
             </div>
+
+            
           </section>
 {% endblock %}

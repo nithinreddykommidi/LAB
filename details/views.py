@@ -1,13 +1,17 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse,HttpResponseRedirect
 from .models import Customer, Test, Doctor, Order
-from .forms import OrderForm, GroupingForm, UrineForm, CBPForm,EyeForm,MyForm,CusromerForm
+from .forms import OrderForm, GroupingForm, UrineForm, CBPForm,EyeForm,MyForm,CustomerForm,CustomerSearchForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 import datetime
 import re
+from django.core.paginator import Paginator
+from .filters import CustomerFilter
+from django.core.exceptions import ObjectDoesNotExist
+
 
 def get_pat_id(request):
     s = request.META.get('HTTP_REFERER')
@@ -22,9 +26,9 @@ def get_pat_id(request):
 @login_required(login_url='user_login')
 def register_customer(request):
     tests = Test.get_all_tests()
-    form = CusromerForm()
+    form = CustomerForm()
     if request.method == 'POST':
-        form = CusromerForm(request.POST)
+        form = CustomerForm(request.POST)
 
         if form.is_valid():
             form.save()
@@ -41,6 +45,7 @@ def home(request):
             form.save()
             return redirect('/')
     return render(request, 'Home.html', {'tests': tests, 'form': form})
+
 @login_required(login_url='user_login')
 def patients_list(request):
     customers = Customer.get_all_customers()
@@ -48,9 +53,16 @@ def patients_list(request):
 
 @login_required(login_url='user_login')
 def orders_list(request):
-    list_of_orders = Order.get_all_orders
-    return render(request, 'orders.html', {'list_of_orders': list_of_orders})
-
+    list_of_orders = Order.objects.all()
+    p = Paginator(Order.objects.all(), 2)
+    page = request.GET.get('page')
+    orders = p.get_page(page)
+    nums = "a" * orders.paginator.num_pages
+    return render(request, 'orders.html', 
+		{'list_of_orders': list_of_orders,
+		'orders': orders,
+		'nums':nums}
+		)
 @login_required(login_url='user_login')
 def doctors_list(request):
     doctors = Doctor.get_all_doctors()
@@ -269,7 +281,7 @@ def pending_samples(request):
         return render(request,'pending.html',{'pending_tests':pending_tests})
 
 
-def my_view(request):
+def daily_totals(request):
 
     if request.method == 'POST':
         form = MyForm(request.POST)

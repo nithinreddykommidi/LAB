@@ -1,12 +1,19 @@
-import re
+from django.core.exceptions import ObjectDoesNotExist
 
-def extract_uuid(url):
-  match = re.search(r'([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})', url)
-  if match:
-    return match.group(1)
+def get_customer(patient_name, mobile=None):
+        # Positive Scenario: When both patient_name and mobile are provided
+  if mobile:
+    customer = Customer.objects.get(patient_name=patient_name, mobile=mobile)
+    print(f"Customer found: {customer.patient_name}, Mobile: {customer.mobile}")
+    return customer
   else:
-    return None
+            # Negative Scenario: When only patient_name is provided (mobile is None or not given)
+    customer = Customer.objects.get(patient_name=patient_name)
+    print(f"Customer found: {customer.patient_name}, Mobile: {customer.mobile}")
+    return customer
+  
+  
+customer_1 = get_customer(patient_name='John Doe', mobile=1234567890)
 
-s = "http://127.0.0.1:8000/0bd78cef-34d3-44aa-97f9-d539c4f1691d/Eye"
-uuid = extract_uuid(s)
-print(uuid)
+# Negative case: Only patient_name matches, mobile not provided
+customer_2 = get_customer(patient_name='Jane Doe')

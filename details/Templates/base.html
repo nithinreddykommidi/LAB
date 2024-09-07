@@ -9,11 +9,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 </head>
+<img src="{% static '/images/cat.jpg' %}" alt="My image">
 
 <div>
-
   <ul class="nav-links">
-    <li><a href={% url 'home' %}> Home</li>
+    <li><a href={% url 'home' %}> <img src="{% static '/images/logo.png' %}" alt="My image" width="200" height="45"></li>
     <li><a href={% url 'patients_list' %}> patients list </a> </li> 
     <li><a href={% url 'doctors_list' %}> Doctors </a> </li>
     <li><a href={% url 'orders_list' %}> Orders </a> </li>

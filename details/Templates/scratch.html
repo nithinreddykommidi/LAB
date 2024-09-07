@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title%} scratch {% endblock%}
+{% block content%}
+
+<section>
+<form method="post">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit">Submit</button>
+</form>
+    <!--for demo wrap-->
+    <h1>Orders For Selected Date</h1>
+    <div class="tbl-header">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <thead>
+          <tr>
+            <th>Patient Name</th>
+            <th>total bill</th>
+            <th>commission to doc</th>
+            <th>commission %</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    <div class="tbl-content">
+      <table cellpadding="0" cellspacing="0" border="0">
+       
+        {% for order in orders_with_collected_date %}
+        <tbody>
+            <tr>
+                <td> {{order.customer.patient_name}}</td>
+                <td> {{order.get_total}}</td>
+                <td> {{order.commision_to_doc}}</td>
+                <td> {{order.referred_by.commission}} %</td>
+
+            </tr>
+            <!-- and so on... -->
+        </tbody>
+    
+        {% endfor %}
+      </table>
+
+
+    </div>
+    <tbody>
+    <tr>
+        <td>Total</td>
+        <td>{{todays_total}}</td>
+    </tr>
+    </tbody>
+
+  </section>
+
+
+  <section>
+    <!--for demo wrap-->
+    <h1>Doctor's commision For Selected Date</h1>
+    <div class="tbl-header">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <thead>
+          <tr>
+            <th>Doctor Name</th>
+            <th> Todays commision to doctor </th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    <div class="tbl-content">
+      <table cellpadding="0" cellspacing="0" border="0">
+       
+        {% for key, value in todays_docs.items %}
+        <tbody>
+            <tr>
+                <td> {{key}}</td>
+                <td> {{value}}</td>
+            </tr>
+            <!-- and so on... -->
+        </tbody>
+    
+        {% endfor %} 
+      </table>
+    </div>
+  </section>
+
+  {% endblock %}
+
