@@ -4,7 +4,11 @@
 margin-top: 20px;
 
 <section>
-
+<form method="post">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit">Submit</button>
+</form>
     <!--for demo wrap-->
     <h1>list Of Customers</h1>
     <div class="tbl-header">
@@ -13,6 +17,7 @@ margin-top: 20px;
           <tr>
             <th>Customer Name</th>
             <th>last visited</th>
+            <th>Create New Order</th>
 
           </tr>
         </thead>
@@ -26,6 +31,8 @@ margin-top: 20px;
               <tr>
                   <td><a href="{% url 'customer_details' customer.id %}"> {{customer}}</a></td>
                   <td> {{customer.get_last_order_date}}</td>
+                  <td><a href="{% url 'create_order_for_customer' customer.id %}"> Create New Order</a></td>
+
 
               </tr>
               <!-- and so on... -->

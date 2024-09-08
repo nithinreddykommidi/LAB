@@ -15,8 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,re_path
-from .views import home,patients_list,doctors_list,customer_details,fill_values,delete_user,doctor,CBP,group,urine,eye,user_login,user_logout,print_CBP,print_eye,print_group,print_urine,urine_pdf,pending_samples,daily_totals,register_customer,orders_list,order_details
-
+from .views import *
 urlpatterns = [
     path('', home,name = 'home'),
     path('register_customer',register_customer,name='register_customer'),
@@ -45,4 +44,8 @@ urlpatterns = [
     path('pdf/Eye',urine_pdf,name='pdf_Urine'),
     path('pdf/group',urine_pdf,name='pdf_Urine'),
     path('<uuid:uuid>/print/Eye',print_eye,name='Eye'),
+    path('create_order/<int:customer_id>/', create_order_for_customer, name='create_order_for_customer'),
+    # path('scratch',scratch, name='scratch'),
+
+
 ]

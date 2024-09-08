@@ -27,8 +27,8 @@
         {% for order in orders%}
         <tbody>
             <tr>
-                <td> {{order.collected_date}}</td>
-                <td><a href="{% url 'order_details' order.order_id %}"> {{order.customer.patient_name}}</a></td>
+                <td><a href="{% url 'order_details' order.order_id %}"> {{order.collected_date}}</a></td>
+                <td>{{order.customer.patient_name}}</td>
                 <td> {{order.get_total}}</td>
                 <td> {{order.referred_by}}</td>
                 <td> order status</td>

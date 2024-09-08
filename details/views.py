@@ -1,13 +1,14 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse,HttpResponseRedirect
 from .models import Customer, Test, Doctor, Order
-from .forms import OrderForm, GroupingForm, UrineForm, CBPForm,EyeForm,MyForm,CustomerForm,CustomerSearchForm
+from .forms import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 import datetime
 import re
+from django.db.models import Q
 from django.core.paginator import Paginator
 from .filters import CustomerFilter
 from django.core.exceptions import ObjectDoesNotExist
@@ -37,9 +38,9 @@ def register_customer(request):
 @login_required(login_url='user_login')
 def home(request):
     tests = Test.get_all_tests()
-    form = OrderForm()
+    form = NewOrderForm()
     if request.method == 'POST':
-        form = OrderForm(request.POST)
+        form = NewOrderForm(request.POST)
 
         if form.is_valid():
             form.save()
@@ -47,7 +48,7 @@ def home(request):
     return render(request, 'Home.html', {'tests': tests, 'form': form})
 
 @login_required(login_url='user_login')
-def patients_list(request):
+def scratch(request):
     customers = Customer.get_all_customers()
     return render(request, 'patients.html', {'customers': customers})
 
@@ -71,6 +72,7 @@ def doctors_list(request):
 @login_required(login_url='user_login')
 def customer_details(request,pk):
     patient = Customer.objects.get(id=pk)
+    print(patient)
     orders = patient.order_set.all()
     print(orders)
     return render(request,'Customer Details.html',{'patient': patient, 'orders':orders})
@@ -304,4 +306,60 @@ def daily_totals(request):
         todays_total =  None
         todays_docs = None
     return render(request, 'daily_totals.html', {'form': form, 'orders_with_collected_date': orders_with_collected_date , 'todays_total': todays_total, 'todays_docs':todays_docs})
-    
+
+def create_order_for_customer(request, customer_id):
+    customer = get_object_or_404(Customer, id=customer_id)  # Get the customer by ID
+
+    if request.method == 'POST':
+        form = OrderForm(request.POST, customer=customer)  # Pass customer to the form
+        if form.is_valid():
+            order = form.save(commit=False)
+            order.customer = customer  # Set the customer explicitly before saving
+            order.save()
+            form.save_m2m()  # Save the ManyToMany relationships
+            return redirect('home')  # Redirect to a success page
+    else:
+        form = OrderForm(customer=customer)  # Initialize the form with customer
+
+    return render(request, 'order_form.html', {'form': form, 'customer': customer})   
+
+    # Helper function to get customer by patient_name and optionally mobile
+def get_customer(patient_name=None, mobile=None):
+    try:
+        # Start with an empty query
+        query = Q()
+
+        # If patient_name is provided, use icontains to allow partial matching
+        if patient_name:
+            query &= Q(patient_name__icontains=patient_name)
+
+        # If mobile is provided, use icontains to allow partial matching
+        if mobile:
+            query &= Q(mobile__icontains=mobile)
+
+        # Query the database with the constructed Q object
+        customers = Customer.objects.filter(query)
+
+        # If no customers are found, return an empty list
+        if not customers.exists():
+            return []
+
+        return customers  # Return the queryset containing multiple customers
+
+    except ObjectDoesNotExist:
+        # Handling case where no customer is found
+        return []
+# View function
+def patients_list(request):
+    form = CustomerSearchForm(request.POST or None)  # Handle both POST and GET
+    if request.method == 'POST' and form.is_valid():
+        patient_name = form.cleaned_data.get('patient_name')
+        mobile = form.cleaned_data.get('mobile')
+        customers = get_customer(patient_name, mobile)
+    else:
+        customers = Customer.objects.all()  # By default, list all customers
+    print(customers)
+
+    return render(request, 'patients.html', {'customers': customers, 'form': form})
+    # customers = Customer.get_all_customers()
+    # return render(request, 'patients.html', {'customers': customers})

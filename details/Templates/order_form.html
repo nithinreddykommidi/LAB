@@ -1,0 +1,200 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Order Form</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background: linear-gradient(to right, #25c481, #25b7c4);
+        }
+        .user_card {
+            width: 600px; /* Increased width */
+            margin-top: 50px;
+            margin-bottom: auto;
+            background: #74cfbf;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            padding: 20px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            border-radius: 5px;
+        }
+        .form_container {
+            margin-top: 20px;
+        }
+        #form-title {
+            color: #fff;
+        }
+        .form-control {
+            border-radius: 0.25rem !important;
+        }
+        .login_btn {
+            width: 100%;
+            background: #33ccff !important;
+            color: white !important;
+        }
+        .login_btn:focus {
+            box-shadow: none !important;
+            outline: 0px !important;
+        }
+        .checkbox-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .input-group-text {
+            background: #f7ba5b !important;
+            color: white !important;
+            border: 0 !important;
+            border-radius: 0.25rem 0 0 0.25rem !important;
+        }
+        .nav-links{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        padding: 20px 15px;
+        border-radius: 12px;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+        /* Move the navigation to the top */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        }
+        .nav-links li{
+        list-style: none;
+        margin: 0 12px;
+        }
+        .nav-links li a{
+        position: relative;
+        color: #333;
+        font-size: 20px;
+        font-weight: 500;
+        padding: 6px 0;
+        text-decoration: none;
+        }
+        .nav-links li a:before{
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        width: 0%;
+        background: #34efdf;
+        border-radius: 12px;
+        transition: all 0.4s ease;
+        }
+        .nav-links li a:hover:before{
+        width: 100%;
+        }
+        .nav-links li.center a:before{
+        left: 50%;
+        transform: translateX(-50%);
+        }
+        .nav-links li.upward a:before{
+        width: 100%;
+        bottom: -5px;
+        opacity: 0;
+        }
+        .nav-links li.upward a:hover:before{
+        bottom: 0px;
+        opacity: 1;
+        }
+        .nav-links li.forward a:before{
+        width: 100%;
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.4s ease;
+        }
+        .nav-links li.forward a:hover:before{
+        transform: scaleX(1);
+        transform-origin: left;
+        }
+    </style>
+</head>
+<body>
+    <div>
+
+        <ul class="nav-links">
+          <li><a href={% url 'home' %}> <img src="{% static '/images/logo.png' %}" alt="My image" width="200" height="45"></li>
+          <li><a href={% url 'patients_list' %}> patients list </a> </li> 
+          <li><a href={% url 'doctors_list' %}> Doctors </a> </li>
+          <li><a href={% url 'orders_list' %}> Orders </a> </li>
+          <li><a href={% url 'pending_samples' %}> Pending </a> </li>
+          <li><a href={% url 'register_customer' %}> New Customer </a> </li>
+          <li><a href={% url 'daily_totals' %}> Daily Revenue </a> </li>
+        </ul>
+    </div>
+    <br> </br>
+    <div class="container h-100">
+        <div class="d-flex justify-content-center h-100">
+            <div class="user_card">
+                <div class="d-flex justify-content-center">
+                    <h3 id="form-title">Create New Order For <span style="color: blue;">{{ customer.patient_name }}</span></h3>
+                </div>
+                <div class="d-flex justify-content-center form_container">
+                    <form method="POST" action="">
+                        {% csrf_token %}
+
+                        <!-- Collected At Dropdown -->
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                            </div>
+                            {{form.collected_at}}
+                        </div>
+
+                        <!-- Referred By Dropdown -->
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-user-tag"></i></span>
+                            </div>
+                            {{form.referred_by}}
+                        </div>
+
+                        <!-- Collected Date -->
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                            </div>
+                             {{form.collected_date}}
+                        </div>
+
+                        <!-- Expected Complete Date -->
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
+                            </div>
+                            {{form.expected_complete_date}}
+                        </div>
+
+                        <!-- Tests Multi Checkbox -->
+                        <div class="mb-3">
+                            <label>Tests:</label>
+                            {{form.tests}}
+                        </div>
+
+                        <!-- Collection Status Multi Checkbox -->
+                        <div class="mb-3">
+                            <label>Collection Status:</label>
+                            {{form.collection_status}}
+                        </div>
+
+                        <div class="d-flex justify-content-center mt-3 login_container">
+                            <input class="btn login_btn" type="submit" value="Submit">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
