@@ -72,9 +72,7 @@ def doctors_list(request):
 @login_required(login_url='user_login')
 def customer_details(request,pk):
     patient = Customer.objects.get(id=pk)
-    print(patient)
     orders = patient.order_set.all()
-    print(orders)
     return render(request,'Customer Details.html',{'patient': patient, 'orders':orders})
 
 @login_required(login_url='user_login')
@@ -266,9 +264,6 @@ def group_pdf(request,uuid):
 #                 pt.append(test)
 #         pending_tests[i] = pt
 #
-#
-#
-#     print(pending_tests)
 
 def pending_samples(request):
         orders = Order.get_all_orders()
@@ -278,8 +273,6 @@ def pending_samples(request):
             pending_patient_tests = order.tests.exclude(id__in=order.collection_status.all())
             if pending_patient_tests.exists():
                 pending_tests[order] = list(pending_patient_tests)
-
-        # print(pending_tests)
         return render(request,'pending.html',{'pending_tests':pending_tests})
 
 
@@ -358,7 +351,6 @@ def patients_list(request):
         customers = get_customer(patient_name, mobile)
     else:
         customers = Customer.objects.all()  # By default, list all customers
-    print(customers)
 
     return render(request, 'patients.html', {'customers': customers, 'form': form})
     # customers = Customer.get_all_customers()

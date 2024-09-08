@@ -77,8 +77,6 @@ class Doctor(models.Model):
     
     def commission_to_doc(self):
         try:
-            print((self.commission))
-            print(self.total_cost())
             return float(self.commission) / 100 * float(self.total_cost())
         except ZeroDivisionError:
             return 0
@@ -95,7 +93,6 @@ class Order(models.Model):
     
     def all_tests(self):
         tests = self.tests.all()
-        print(tests.n)
         
     @property
     def commision_to_doc(self):
