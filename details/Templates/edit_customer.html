@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Order Form</title>
+    <title>edit customer</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
@@ -16,7 +16,7 @@
         }
         .user_card {
             width: 600px; /* Increased width */
-            margin-top: 50px;
+            margin-top: auto;
             margin-bottom: auto;
             background: #74cfbf;
             position: relative;
@@ -56,70 +56,85 @@
             border-radius: 0.25rem 0 0 0.25rem !important;
         }
         .nav-links{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #fff;
-        padding: 20px 15px;
-        border-radius: 12px;
-        box-shadow: 0 5px 10px rgba(0,0,0,0.2);
-        /* Move the navigation to the top */
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        }
-        .nav-links li{
-        list-style: none;
-        margin: 0 12px;
-        }
-        .nav-links li a{
-        position: relative;
-        color: #333;
-        font-size: 20px;
-        font-weight: 500;
-        padding: 6px 0;
-        text-decoration: none;
-        }
-        .nav-links li a:before{
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        height: 3px;
-        width: 0%;
-        background: #34efdf;
-        border-radius: 12px;
-        transition: all 0.4s ease;
-        }
-        .nav-links li a:hover:before{
-        width: 100%;
-        }
-        .nav-links li.center a:before{
-        left: 50%;
-        transform: translateX(-50%);
-        }
-        .nav-links li.upward a:before{
-        width: 100%;
-        bottom: -5px;
-        opacity: 0;
-        }
-        .nav-links li.upward a:hover:before{
-        bottom: 0px;
-        opacity: 1;
-        }
-        .nav-links li.forward a:before{
-        width: 100%;
-        transform: scaleX(0);
-        transform-origin: right;
-        transition: transform 0.4s ease;
-        }
-        .nav-links li.forward a:hover:before{
-        transform: scaleX(1);
-        transform-origin: left;
-        }
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            padding: 20px 15px;
+            border-radius: 12px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+            /* Move the navigation to the top */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            }
+            .nav-links{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            padding: 20px 15px;
+            border-radius: 12px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+            /* Move the navigation to the top */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            }
+            .nav-links li{
+            list-style: none;
+            margin: 0 12px;
+            }
+            .nav-links li a{
+            position: relative;
+            color: #333;
+            font-size: 20px;
+            font-weight: 500;
+            padding: 6px 0;
+            text-decoration: none;
+            }
+            .nav-links li a:before{
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            width: 0%;
+            background: #34efdf;
+            border-radius: 12px;
+            transition: all 0.4s ease;
+            }
+            .nav-links li a:hover:before{
+            width: 100%;
+            }
+            .nav-links li.center a:before{
+            left: 50%;
+            transform: translateX(-50%);
+            }
+            .nav-links li.upward a:before{
+            width: 100%;
+            bottom: -5px;
+            opacity: 0;
+            }
+            .nav-links li.upward a:hover:before{
+            bottom: 0px;
+            opacity: 1;
+            }
+            .nav-links li.forward a:before{
+            width: 100%;
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s ease;
+            }
+            .nav-links li.forward a:hover:before{
+            transform: scaleX(1);
+            transform-origin: left;
+            }
     </style>
 </head>
+
 <body>
     <div>
 
@@ -132,13 +147,13 @@
           <li><a href={% url 'register_customer' %}> New Customer </a> </li>
           <li><a href={% url 'daily_totals' %}> Daily Revenue </a> </li>
         </ul>
-    </div>
-    <br> </br>
+      
+      </div>
     <div class="container h-100">
         <div class="d-flex justify-content-center h-100">
             <div class="user_card">
                 <div class="d-flex justify-content-center">
-                    <h3 id="form-title">Order Form</h3>
+                    <h3 id="form-title">Edit Customer</h3>
                 </div>
                 <div class="d-flex justify-content-center form_container">
                     <form method="POST" action="">
@@ -148,56 +163,59 @@
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="fas fa-user"></i></span>
                             </div>
-                            {{form.customer}}
+                            {{form.title}}
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            {{form.patient_name}}
                         </div>
 
                         <!-- Collected At Dropdown -->
                         <div class="input-group mb-3">
                             <div class="input-group-append">
-                                <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                                <span class="input-group-text"><i class="fas fa-solid fa-phone"></i></span>
                             </div>
-                            {{form.collected_at}}
+                            {{form.mobile}}
                         </div>
 
                         <!-- Referred By Dropdown -->
                         <div class="input-group mb-3">
                             <div class="input-group-append">
-                                <span class="input-group-text"><i class="fas fa-user-tag"></i></span>
+                                <span class="input-group-text"><i class="fas fa-at"></i></span>
                             </div>
-                            {{form.referred_by}}
+                            {{form.email}}
                         </div>
 
                         <!-- Collected Date -->
                         <div class="input-group mb-3">
                             <div class="input-group-append">
-                                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                                <span class="input-group-text"><i class="fas fa-venus-mars"></i></span>
                             </div>
-                             {{form.collected_date}}
+                             {{form.gender}}
                         </div>
 
                         <!-- Expected Complete Date -->
                         <div class="input-group mb-3">
                             <div class="input-group-append">
-                                <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
                             </div>
-                            {{form.expected_complete_date}}
+                            {{form.age}}
                         </div>
-
-                        <!-- Tests Multi Checkbox -->
-                        <div class="mb-3">
-                            <label>Tests:</label>
-                            {{form.tests}}
-                        </div>
-
-                        <!-- Collection Status Multi Checkbox -->
-                        <div class="mb-3">
-                            <label>Collection Status:</label>
-                            {{form.collection_status}}
+                        <div class="input-group mb-3">
+                        <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            {{form.patient_address}}
                         </div>
 
                         <div class="d-flex justify-content-center mt-3 login_container">
                             <input class="btn login_btn" type="submit" value="Submit">
                         </div>
+                        {{ form.non_field_errors }}
+{{ form.errors }}
+
                     </form>
                 </div>
             </div>

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from django.http import HttpResponse,HttpResponseRedirect
-from .models import Customer, Test, Doctor, Order
+from .models import Customer, Test, Doctor, Order, Title
 from .forms import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -12,6 +13,9 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 from .filters import CustomerFilter
 from django.core.exceptions import ObjectDoesNotExist
+from django.template.loader import render_to_string
+from weasyprint import HTML
+import os
 
 
 def get_pat_id(request):
@@ -47,10 +51,6 @@ def home(request):
             return redirect('/')
     return render(request, 'Home.html', {'tests': tests, 'form': form})
 
-@login_required(login_url='user_login')
-def scratch(request):
-    customers = Customer.get_all_customers()
-    return render(request, 'patients.html', {'customers': customers})
 
 @login_required(login_url='user_login')
 def orders_list(request):
@@ -76,11 +76,23 @@ def customer_details(request,pk):
     return render(request,'Customer Details.html',{'patient': patient, 'orders':orders})
 
 @login_required(login_url='user_login')
-def order_details(request,pk):
-    order = Order.objects.get(order_id=pk)
+def order_details(request,order_id):
+    order = Order.objects.get(order_id=order_id)
     tests = order.tests.all()
     return render(request,'Order Details.html',{'order': order, 'tests': tests})
 
+
+@login_required(login_url='user_login')
+def edit_order(request,order_id):
+    instance = Order.objects.get(order_id=order_id)
+    form = NewOrderForm(request.POST or None, instance=instance)
+    if form.is_valid():
+        form.save()
+        return redirect(reverse('order_details', kwargs={'order_id': order_id}))
+    order = Order.objects.get(order_id=order_id)
+    # tests = order.tests.all()
+    print(print(request.POST))
+    return render(request,'edit_order.html',{'order': order, 'form':form})
 
 @login_required(login_url='user_login')
 def fill_values(request,pk):
@@ -92,10 +104,10 @@ def fill_values(request,pk):
 
 
 @login_required(login_url='user_login')
-def delete_user(request,pk):
-    patient = Order.objects.get(id=pk)
-    patient.delete()
-    return  redirect('patients_list')
+def delete_order(request,pk):
+    order = Order.objects.get(order_id=pk)
+    order.delete()
+    return  redirect('orders_list')
 
 @login_required(login_url='user_login')
 def doctor(request,pk):
@@ -244,27 +256,6 @@ def group_pdf(request,uuid):
     return response
 
 
-# def pending_samples(request):
-#     patients = Patient.get_all_patients()
-#     p = []
-#     for patient in patients:
-#         patient_tests = patient.tests.all()
-#         pen = patient.collection_status.all()
-#         for i in patient_tests:
-#             if i not in pen:
-#                 p.append(patient)
-#     p = set(p)
-#     pending_tests = {}
-#     for i in p:
-#         pt = []
-#         patient_tests = i.tests.all()
-#         pen = i.collection_status.all()
-#         for test in patient_tests:
-#             if test not in pen:
-#                 pt.append(test)
-#         pending_tests[i] = pt
-#
-
 def pending_samples(request):
         orders = Order.get_all_orders()
         pending_tests = {}
@@ -302,9 +293,10 @@ def daily_totals(request):
 
 def create_order_for_customer(request, customer_id):
     customer = get_object_or_404(Customer, id=customer_id)  # Get the customer by ID
+    print(customer)
 
     if request.method == 'POST':
-        form = OrderForm(request.POST, customer=customer)  # Pass customer to the form
+        form = OrderForm(request.POST)# Pass customer to the form
         if form.is_valid():
             order = form.save(commit=False)
             order.customer = customer  # Set the customer explicitly before saving
@@ -312,11 +304,12 @@ def create_order_for_customer(request, customer_id):
             form.save_m2m()  # Save the ManyToMany relationships
             return redirect('home')  # Redirect to a success page
     else:
-        form = OrderForm(customer=customer)  # Initialize the form with customer
+        form = OrderForm(initial={'customer': customer})  # Initialize the form with customer
 
     return render(request, 'order_form.html', {'form': form, 'customer': customer})   
 
-    # Helper function to get customer by patient_name and optionally mobile
+
+# Helper function to get customer by patient_name and optionally mobile
 def get_customer(patient_name=None, mobile=None):
     try:
         # Start with an empty query
@@ -355,3 +348,50 @@ def patients_list(request):
     return render(request, 'patients.html', {'customers': customers, 'form': form})
     # customers = Customer.get_all_customers()
     # return render(request, 'patients.html', {'customers': customers})
+
+@login_required(login_url='user_login')
+def edit_customer(request,pk):
+    instance = Customer.objects.get(id=pk)
+    form = EditCustomerorm(request.POST or None, instance=instance)
+    if form.is_valid():
+        form.save()
+        return redirect(reverse('customer_details', kwargs={'pk': pk}))
+    patient = Customer.objects.get(id=pk)
+    orders = patient.order_set.all()
+    return render(request,'edit_customer.html',{'patient': patient,'form':form})
+
+def generate_pdf(request, order_id):
+    # Get the order details by UUID
+    try:
+        order = Order.objects.get(order_id=order_id)  # Assuming 'order_id' is the field in the Order model
+    except Order.DoesNotExist:
+        return HttpResponse("Order not found", status=404)
+
+    # Context to pass to the template
+    context = {
+        'logo_url': 'path/to/your/logo.png',  # Provide your logo URL here
+        'barcode': '35443',
+        'patient_code': order.customer.id,
+        'patient_name': order.customer.patient_name,
+        'age': order.customer.age,
+        'gender': order.customer.gender.gender,
+        'registration_date': order.collected_date,
+        'sample_collection_date': order.collected_date,
+        'tests': order.tests.all(),
+        'subtotal': sum([test.price for test in order.tests.all()]),
+        'discount': 200,  # Add logic for calculating discount
+        'total': 800,  # Subtotal - Discount
+        'paid': 400,  # You can add logic to calculate payments
+        'due': 400,  # Add your due calculation here
+    }
+
+    # Render HTML content from the template
+    html_content = render_to_string('invoice_template.html', context)
+
+    # Create PDF
+    pdf_file = HTML(string=html_content).write_pdf()
+
+    # Create a response to serve PDF as a downloadable file
+    response = HttpResponse(pdf_file, content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; filename="order_invoice.pdf"'
+    return response

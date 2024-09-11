@@ -1,10 +1,20 @@
 from django.forms import *
-from .models import Customer, Test, Doctor,Date, Order, Locations, Gender
+from .models import Customer, Test, Doctor,Date, Order, Locations, Gender, Title
 from django import forms
 
 class CustomerForm(ModelForm):
+        title = forms.ModelChoiceField(
+            queryset=Title.objects.all(),
+            empty_label="Select title",  # Adds the placeholder option
+            widget=forms.Select(attrs={
+                'class': 'form-control'
+            })
+    )
         patient_name = forms.CharField(
             widget=forms.TextInput(attrs={'placeholder': "Enter patient's name"})
+    )
+        patient_address = forms.CharField(
+            widget=forms.TextInput(attrs={'placeholder': "Enter patient's address"})
     )
         mobile = forms.CharField(
             widget=forms.TextInput(attrs={'placeholder': "Enter patient's phnone No."})
@@ -24,80 +34,10 @@ class CustomerForm(ModelForm):
     )
         class Meta:
             model = Customer
-            fields = ['patient_name', 'mobile', 'email', 'gender', 'age']
+            fields = ['title','patient_name', 'mobile', 'email', 'gender', 'age', 'patient_address']
             widgets = {'gender': Select(),
                        }
 
-class OrderForm(ModelForm):
-    collected_at = forms.ModelChoiceField(
-            queryset=Locations.objects.all(),
-            empty_label="Select Location",  # Adds the placeholder option
-            widget=forms.Select(attrs={
-                'class': 'form-control'
-            })
-        )
-    
-    customer = forms.ModelChoiceField(
-            queryset=Customer.objects.all(),
-            empty_label="Select Customer",  # Adds the placeholder option
-            widget=forms.Select(attrs={
-                'class': 'form-control'
-            })
-        )
-    referred_by = forms.ModelChoiceField(
-            queryset=Doctor.objects.all(),
-            empty_label="Select the doctor refered",  # Adds the placeholder option
-            widget=forms.Select(attrs={
-                'class': 'form-control'
-            })
-        )
-    collected_date = forms.DateField(
-        widget=forms.DateInput(
-            attrs={
-                'class': 'form-control',   # Add CSS class for styling
-                'placeholder': 'collected date',  # Set the placeholder
-                'type': 'date',           # This is important for the calendar to show
-            }
-        ),
-        label="Collected Date",  # Optional: Add a label for the form field
-    )
-    expected_complete_date = forms.DateField(
-        widget=forms.DateInput(
-            attrs={
-                'class': 'form-control',   # Add CSS class for styling
-                'placeholder': 'collected_date',  # Set the placeholder
-                'type': 'date',           # This is important for the calendar to show
-            }
-        ),
-        label="Collected Date",  # Optional: Add a label for the form field
-    )
-    tests = forms.ModelMultipleChoiceField(
-        queryset=Test.objects.all(),  # Change this to your actual queryset
-        widget=forms.CheckboxSelectMultiple(),
-        help_text="Please select the tests you want to include.",  # Help text serves as a guide
-        label="Available Tests"
-    )
-    collection_status = forms.ModelMultipleChoiceField(
-        queryset=Test.objects.all(),  # Change this to your actual queryset
-        widget=forms.CheckboxSelectMultiple(),
-        help_text="Please select the tests you want to include.",  # Help text serves as a guide
-        label="Available Tests"
-    )
-    class Meta:
-        model = Order
-        fields = ['customer', 'collected_at', 'referred_by', 'collected_date', 'expected_complete_date', 'tests', 'collection_status']
-
-    # Override __init__ to inject customer
-    def __init__(self, *args, **kwargs):
-        customer = kwargs.pop('customer', None)  # Get customer from kwargs
-        super(OrderForm, self).__init__(*args, **kwargs)
-        
-        # Hide the customer field if you're setting it automatically
-        self.fields['customer'] = forms.ModelChoiceField(queryset=Customer.objects.all(), widget=forms.HiddenInput())
-        
-        # Set customer if provided
-        if customer:
-            self.fields['customer'].initial = customer
 
 class GroupingForm(ModelForm):
         class Meta:
@@ -200,6 +140,76 @@ class NewOrderForm(ModelForm):
     class Meta:
         model = Order
         fields = ['customer', 'collected_at', 'referred_by', 'collected_date', 'expected_complete_date', 'tests', 'collection_status']
+
+class OrderForm(ModelForm):
+    collected_at = forms.ModelChoiceField(
+            queryset=Locations.objects.all(),
+            empty_label="Select Location",  # Adds the placeholder option
+            widget=forms.Select(attrs={
+                'class': 'form-control'
+            })
+        )
+    
+    customer = forms.ModelChoiceField(
+            queryset=Customer.objects.all(),
+            empty_label="Select Customer",  # Adds the placeholder option
+            widget=forms.Select(attrs={
+                'class': 'form-control'
+            })
+        )
+    referred_by = forms.ModelChoiceField(
+            queryset=Doctor.objects.all(),
+            empty_label="Select the doctor refered",  # Adds the placeholder option
+            widget=forms.Select(attrs={
+                'class': 'form-control'
+            })
+        )
+    collected_date = forms.DateField(
+        widget=forms.DateInput(
+            attrs={
+                'class': 'form-control',   # Add CSS class for styling
+                'placeholder': 'collected date',  # Set the placeholder
+                'type': 'date',           # This is important for the calendar to show
+            }
+        ),
+        label="Collected Date",  # Optional: Add a label for the form field
+    )
+    expected_complete_date = forms.DateField(
+        widget=forms.DateInput(
+            attrs={
+                'class': 'form-control',   # Add CSS class for styling
+                'placeholder': 'collected_date',  # Set the placeholder
+                'type': 'date',           # This is important for the calendar to show
+            }
+        ),
+        label="Collected Date",  # Optional: Add a label for the form field
+    )
+    tests = forms.ModelMultipleChoiceField(
+        queryset=Test.objects.all(),  # Change this to your actual queryset
+        widget=forms.CheckboxSelectMultiple(),
+        help_text="Please select the tests you want to include.",  # Help text serves as a guide
+        label="Available Tests"
+    )
+    collection_status = forms.ModelMultipleChoiceField(
+        queryset=Test.objects.all(),  # Change this to your actual queryset
+        widget=forms.CheckboxSelectMultiple(),
+        help_text="Please select the tests you want to include.",  # Help text serves as a guide
+        label="Available Tests"
+    )
+    class Meta:
+        model = Order
+        fields = ['customer','collected_at', 'referred_by', 'collected_date', 'expected_complete_date', 'tests', 'collection_status']
+
+class EditOrderForm(NewOrderForm, ModelForm):
+    class Meta:
+        model = Order
+        fields = ['collected_at', 'referred_by', 'expected_complete_date', 'tests', 'collection_status']
+
+class EditCustomerorm(CustomerForm, ModelForm):
+    class Meta:
+        model = Customer
+        fields = ['title','patient_name', 'mobile', 'email', 'gender', 'age', 'patient_address']
+
 
 
 

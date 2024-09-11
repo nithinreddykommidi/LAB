@@ -32,7 +32,9 @@
                 <td> {{order.get_total}}</td>
                 <td> {{order.referred_by}}</td>
                 <td> order status</td>
-                <td><a href="{% url 'fill_values' order.order_id %}"> Edit</a></td>
+                <td><a href="{% url 'fill_values' order.order_id %}"> Edit</a>
+                    <a href="{% url 'delete_order' order.order_id %}"> ❌</a>
+                </td>
 
             </tr>
             <!-- and so on... -->

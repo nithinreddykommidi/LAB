@@ -15,6 +15,7 @@
                 <thead>
                     <tr>
                         <th>Patients</th>
+                        <th>Date</th>
                         <th>Bill</th>
                     </tr>
                 </thead>
@@ -27,6 +28,7 @@
                 <tbody>
                     <tr>
                         <td><a href="{% url 'order_details' order.order_id %}"> {{order.customer.patient_name}}</a></td>
+                        <td>{{order.collected_date}}</td>
                         <td>{{order.get_total}}</td>
                     </tr>
                     <!-- and so on... -->
@@ -35,6 +37,7 @@
                     {% endfor %}
                     <tr style="background-color: rgb(3, 0, 0);">
                       <td>Total</td>
+                      <td></td>
                       <td>{{doctor.total_cost}}</td>
                   </tr>
                 </tbody>

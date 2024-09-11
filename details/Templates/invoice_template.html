@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            padding: 0;
+            margin: 0;
+            font-size: 14px;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .header img {
+            width: 100px;
+        }
+        .patient-details, .bill-details {
+            margin-bottom: 20px;
+        }
+        .patient-details span, .bill-details span {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .test-details table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .test-details table th, .test-details table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        .amount-summary {
+            margin-top: 20px;
+        }
+        .amount-summary .total, .amount-summary .paid, .amount-summary .due {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="{{ logo_url }}" alt="Lab Logo">
+            <div>
+                <span>Curelink Laboratory</span>
+                <span>info@onlinelabtest.in</span>
+                <span>www.curelink.onlinelabtest.in</span>
+            </div>
+        </div>
+        <div class="patient-details">
+            <span><strong>Barcode:</strong> {{ barcode }}</span>
+            <span><strong>Patient Code:</strong> {{ patient_code }}</span>
+            <span><strong>Patient Name:</strong> {{ patient_name }}</span>
+            <span><strong>Age:</strong> {{ age }}</span>
+            <span><strong>Gender:</strong> {{ gender }}</span>
+            <span><strong>Registration Date:</strong> {{ registration_date }}</span>
+            <span><strong>Sample Collection Date:</strong> {{ sample_collection_date }}</span>
+        </div>
+        <div class="test-details">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Test Name</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for test in tests %}
+                    <tr>
+                        <td>{{ test.name }}</td>
+                        <td>{{ test.price }} INR</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="amount-summary">
+            <span class="subtotal"><strong>Subtotal:</strong> {{ subtotal }} INR</span>
+            <span class="discount"><strong>Discount:</strong> {{ discount }} INR</span>
+            <span class="total"><strong>Total:</strong> {{ total }} INR</span>
+            <span class="paid"><strong>Paid:</strong> {{ paid }} INR</span>
+            <span class="due"><strong>Due:</strong> {{ due }} INR</span>
+        </div>
+    </div>
+</body>
+</html>

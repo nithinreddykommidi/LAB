@@ -26,10 +26,11 @@ urlpatterns = [
     path('daily_totals',daily_totals, name='daily_totals'),
     path('doctors_list',doctors_list, name='doctors_list'),
     path('pending_samples',pending_samples, name='pending_samples'),
-    path('<pk>/customer_details', customer_details, name='customer_details'),
-    path('<pk>/order_details', order_details, name='order_details'),
+    path('<int:pk>/customer_details', customer_details, name='customer_details'),
+    path('<order_id>/order_details', order_details, name='order_details'),
+    path('<order_id>/edit_order', edit_order, name='edit_order'),
     path('<pk>/fill_values', fill_values, name='fill_values'),
-    path('<pk>/delete_user', delete_user, name='delete_user'),
+    path('<pk>/delete_order', delete_order, name='delete_order'),
     path('<pk>/doctor', doctor, name='doctor'),
     path('<uuid:uuid>/Eye', eye, name='Eye'),
     path('<uuid:uuid>/CBP',CBP,name='CBP'),
@@ -45,7 +46,8 @@ urlpatterns = [
     path('pdf/group',urine_pdf,name='pdf_Urine'),
     path('<uuid:uuid>/print/Eye',print_eye,name='Eye'),
     path('create_order/<int:customer_id>/', create_order_for_customer, name='create_order_for_customer'),
-    # path('scratch',scratch, name='scratch'),
+    path('<uuid:order_id>/order_details/invoice/', generate_pdf, name='generate_pdf'),
+    path('<pk>/edit_customer_details/', edit_customer, name='edit_customer'),
 
 
 ]

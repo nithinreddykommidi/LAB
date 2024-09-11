@@ -24,12 +24,23 @@ class Gender(models.Model):
     def __str__(self):
         return self.gender
 
+class Title(models.Model):
+    title = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.title
+
+
+
 class Customer(models.Model):
+    title = models.ForeignKey(Title, on_delete=models.DO_NOTHING,null=True)
     patient_name = models.CharField(max_length=50)
     mobile = models.IntegerField(null=True)
     email = models.EmailField(null=True)
     gender = models.ForeignKey(Gender, on_delete=models.DO_NOTHING,null=True)
     age = models.CharField(max_length=4, null=True)
+    patient_address = models.CharField(max_length=50)
+
     @staticmethod
     def get_all_customers():
         return Customer.objects.all()
@@ -55,10 +66,12 @@ class Locations(models.Model):
         def __str__(self):
             return self.location
 
-
 class Doctor(models.Model):
     doctor_name = models.CharField(max_length=50)
     commission = models.IntegerField()
+    doctor_mobile = models.IntegerField(null=True)
+    doctor_email = models.EmailField(null=True)
+
     @staticmethod
     def get_all_doctors():
         return Doctor.objects.all()
@@ -116,7 +129,7 @@ class Order(models.Model):
     collected_date = models.DateField(null= True)
     expected_complete_date = models.DateField(null=True)
     tests = models.ManyToManyField(Test, blank=False)
-    customer = models.ForeignKey(Customer,on_delete=models.PROTECT, blank=False)
+    customer = models.ForeignKey(Customer,on_delete=models.DO_NOTHING, blank=False)
     collection_status = models.ManyToManyField(Test, blank=False,related_name='stat')
     created_at = models.DateTimeField(datetime.now(),null=True)
     order_id = models.UUIDField(default=uuid.uuid4, primary_key=True)
