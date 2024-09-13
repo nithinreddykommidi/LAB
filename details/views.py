@@ -6,7 +6,6 @@ from .forms import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.template.loader import get_template
-from xhtml2pdf import pisa
 import datetime
 import re
 from django.db.models import Q
@@ -34,11 +33,11 @@ def register_customer(request):
     form = CustomerForm()
     if request.method == 'POST':
         form = CustomerForm(request.POST)
-
         if form.is_valid():
             form.save()
             return redirect('/')
     return render(request, 'New Customer.html', {'tests': tests, 'form': form})
+
 @login_required(login_url='user_login')
 def home(request):
     tests = Test.get_all_tests()
@@ -51,7 +50,6 @@ def home(request):
             return redirect('/')
     return render(request, 'Home.html', {'tests': tests, 'form': form})
 
-
 @login_required(login_url='user_login')
 def orders_list(request):
     list_of_orders = Order.objects.all()
@@ -60,10 +58,8 @@ def orders_list(request):
     orders = p.get_page(page)
     nums = "a" * orders.paginator.num_pages
     return render(request, 'orders.html', 
-		{'list_of_orders': list_of_orders,
-		'orders': orders,
-		'nums':nums}
-		)
+		{'list_of_orders': list_of_orders,'orders': orders,'nums':nums})
+
 @login_required(login_url='user_login')
 def doctors_list(request):
     doctors = Doctor.get_all_doctors()
@@ -90,7 +86,6 @@ def edit_order(request,order_id):
         form.save()
         return redirect(reverse('order_details', kwargs={'order_id': order_id}))
     order = Order.objects.get(order_id=order_id)
-    # tests = order.tests.all()
     print(print(request.POST))
     return render(request,'edit_order.html',{'order': order, 'form':form})
 
@@ -100,8 +95,6 @@ def fill_values(request,pk):
     patient_tests = patient.tests.all()
     context = {'patient':patient, 'patient_tests':patient_tests}
     return render(request,'fill_values.html',context)
-
-
 
 @login_required(login_url='user_login')
 def delete_order(request,pk):
@@ -174,86 +167,57 @@ def user_logout(request):
     return redirect('user_login')
 
 @login_required(login_url='user_login')
-def print_CBP(request,uuid):
-    Orderid = Order.objects.get(order_id=uuid)
-    return render(request, 'TESTS/print_CBP.html',{'Orderid':Orderid})
+def print_CBP(request,order_id):
+    try:
+        order = Order.objects.get(order_id=order_id)  # Assuming 'order_id' is the field in the Order model
+    except Order.DoesNotExist:
+        return HttpResponse("Order not found", status=404)
+    context = {'order': order}
+    html_content = render_to_string('TESTS/CBPpdf.html', context)
+    pdf_file = HTML(string=html_content).write_pdf()
+    response = HttpResponse(pdf_file, content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; filename="order_invoice.pdf"'
+    return response
 
 
 @login_required(login_url='user_login')
-def print_group(request,uuid):
-    Orderid = Order.objects.get(order_id=uuid)
-    return render(request, 'TESTS/print_group.html',{'Orderid':Orderid})
+def print_group(request,order_id):
+    try:
+        order = Order.objects.get(order_id=order_id)  # Assuming 'order_id' is the field in the Order model
+    except Order.DoesNotExist:
+        return HttpResponse("Order not found", status=404)
+    context = {'order': order}
+    html_content = render_to_string('TESTS/grouppdf.html', context)
+    pdf_file = HTML(string=html_content).write_pdf()
+    response = HttpResponse(pdf_file, content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; filename="order_invoice.pdf"'
+    return response
 
 
 @login_required(login_url='user_login')
-def print_urine(request,uuid):
-    Orderid = Order.objects.get(order_id=uuid)
-    return render(request, 'TESTS/print_urine.html',{'Orderid':Orderid})
-
-
-@login_required(login_url='user_login')
-def print_eye(request,uuid):
-    Orderid = Order.objects.get(order_id=uuid)
-    return render(request, 'TESTS/print_Eye.html',{'Orderid':Orderid})
-
-def urine_pdf(request,uuid):
-    Orderid = Order.objects.get(order_id=uuid)
-    template_path = '/home/nithinreddykommidi424/LAB_CSS/details/Templates/TESTS/urinepdf.html'
-    context = {'Orderid': Orderid}
-    # Create a Django response object, and specify content_type as pdf
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'filename="report.pdf"'
-    # find the template and render it.
-    template = get_template(template_path)
-    html = template.render(context)
-
-    # create a pdf
-    pisa_status = pisa.CreatePDF(
-       html, dest=response)
-    # if error then show some funny view
-    if pisa_status.err:
-       return HttpResponse('We had some errors <pre>' + html + '</pre>')
+def print_eye(request,order_id):
+    try:
+        order = Order.objects.get(order_id=order_id)  # Assuming 'order_id' is the field in the Order model
+    except Order.DoesNotExist:
+        return HttpResponse("Order not found", status=404)
+    context = {'order': order}
+    html_content = render_to_string('TESTS/Eyepdf.html', context)
+    pdf_file = HTML(string=html_content).write_pdf()
+    response = HttpResponse(pdf_file, content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; filename="order_invoice.pdf"'
     return response
 
-def CBP_pdf(request,uuid):
-    Orderid = Order.objects.get(order_id=uuid)
-    template_path = 'E:/LAB_CSS/details/Templates/TESTS/CBPpdf.html'
-    context = {'Orderid': Orderid}
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'filename="report.pdf"'
-    template = get_template(template_path)
-    html = template.render(context)
-    pisa_status = pisa.CreatePDF(
-       html, dest=response)
-    if pisa_status.err:
-       return HttpResponse('We had some errors <pre>' + html + '</pre>')
-    return response
-def Eye_pdf(request,uuid):
-    Orderid = Order.objects.get(order_id=uuid)
-    template_path = 'E:/LAB_CSS/details/Templates/TESTS/Eyepdf.html'
-    context = {'Orderid': Orderid}
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'filename="report.pdf"'
-    template = get_template(template_path)
-    html = template.render(context)
-    pisa_status = pisa.CreatePDF(
-       html, dest=response)
-    if pisa_status.err:
-       return HttpResponse('We had some errors <pre>' + html + '</pre>')
-    return response
-def group_pdf(request,uuid):
-    Orderid = Order.objects.get(order_id=uuid)
-    template_path = 'E:/LAB_CSS/details/Templates/TESTS/grouppdf.html'
-    context = {'Orderid': Orderid}
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'filename="report.pdf"'
-    template = get_template(template_path)
-    html = template.render(context)
-    pisa_status = pisa.CreatePDF(
-       html, dest=response)
-    if pisa_status.err:
-       return HttpResponse('We had some errors <pre>' + html + '</pre>')
-    return response
+def print_urine(request,order_id):
+    try:
+        order = Order.objects.get(order_id=order_id)  # Assuming 'order_id' is the field in the Order model
+    except Order.DoesNotExist:
+        return HttpResponse("Order not found", status=404)
+    context = {'order': order}
+    html_content = render_to_string('TESTS/urinepdf.html', context)
+    pdf_file = HTML(string=html_content).write_pdf()
+    response = HttpResponse(pdf_file, content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; filename="order_invoice.pdf"'
+    return response   
 
 
 def pending_samples(request):
