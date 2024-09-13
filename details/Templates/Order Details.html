@@ -14,7 +14,7 @@
         <p>Registred Time: {{order.created_at}}</p>
         <p>Age :{{order.customer.age}}</p>
         <p><a href="{% url 'edit_order' order.order_id %}"> edit</a></p>
-        <p><a href="{% url 'generate_pdf' order.order_id %}">Download Invoice</a></p>
+        <p><a href="{% url 'generate_invoice' order.order_id %}">Download Invoice</a></p>
         <p><a href="{% url 'delete_order' order.order_id %}"> ❌</a></p>
 
 

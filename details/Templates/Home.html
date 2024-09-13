@@ -142,6 +142,8 @@
                 </div>
                 <div class="d-flex justify-content-center form_container">
                     <form method="POST" action="">
+                        {{ form.non_field_errors }}
+                           {{ form.errors }}
                         {% csrf_token %}
                         <!-- Customer Dropdown -->
                         <div class="input-group mb-3">
@@ -187,12 +189,6 @@
                         <div class="mb-3">
                             <label>Tests:</label>
                             {{form.tests}}
-                        </div>
-
-                        <!-- Collection Status Multi Checkbox -->
-                        <div class="mb-3">
-                            <label>Collection Status:</label>
-                            {{form.collection_status}}
                         </div>
 
                         <div class="d-flex justify-content-center mt-3 login_container">

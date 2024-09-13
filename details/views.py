@@ -53,7 +53,7 @@ def home(request):
 @login_required(login_url='user_login')
 def orders_list(request):
     list_of_orders = Order.objects.all()
-    p = Paginator(Order.objects.all(), 2)
+    p = Paginator(Order.objects.all(), 11)
     page = request.GET.get('page')
     orders = p.get_page(page)
     nums = "a" * orders.paginator.num_pages
@@ -324,38 +324,15 @@ def edit_customer(request,pk):
     orders = patient.order_set.all()
     return render(request,'edit_customer.html',{'patient': patient,'form':form})
 
-def generate_pdf(request, order_id):
-    # Get the order details by UUID
+def generate_invoice(request, order_id):
     try:
         order = Order.objects.get(order_id=order_id)  # Assuming 'order_id' is the field in the Order model
     except Order.DoesNotExist:
         return HttpResponse("Order not found", status=404)
-
-    # Context to pass to the template
-    context = {
-        'logo_url': 'path/to/your/logo.png',  # Provide your logo URL here
-        'barcode': '35443',
-        'patient_code': order.customer.id,
-        'patient_name': order.customer.patient_name,
-        'age': order.customer.age,
-        'gender': order.customer.gender.gender,
-        'registration_date': order.collected_date,
-        'sample_collection_date': order.collected_date,
-        'tests': order.tests.all(),
-        'subtotal': sum([test.price for test in order.tests.all()]),
-        'discount': 200,  # Add logic for calculating discount
-        'total': 800,  # Subtotal - Discount
-        'paid': 400,  # You can add logic to calculate payments
-        'due': 400,  # Add your due calculation here
-    }
-
-    # Render HTML content from the template
+    selected_tests = order.tests.all()
+    context = {'order': order, 'selected_tests': selected_tests}  
     html_content = render_to_string('invoice_template.html', context)
-
-    # Create PDF
     pdf_file = HTML(string=html_content).write_pdf()
-
-    # Create a response to serve PDF as a downloadable file
     response = HttpResponse(pdf_file, content_type='application/pdf')
     response['Content-Disposition'] = 'inline; filename="order_invoice.pdf"'
     return response

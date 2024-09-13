@@ -32,22 +32,24 @@ urlpatterns = [
     path('<pk>/fill_values', fill_values, name='fill_values'),
     path('<pk>/delete_order', delete_order, name='delete_order'),
     path('<pk>/doctor', doctor, name='doctor'),
+    path('create_order/<int:customer_id>/', create_order_for_customer, name='create_order_for_customer'),
+    path('<uuid:order_id>/order_details/invoice/', generate_invoice, name='generate_invoice'),
+    path('<pk>/edit_customer_details/', edit_customer, name='edit_customer'),
     path('<uuid:uuid>/Eye', eye, name='Eye'),
     path('<uuid:uuid>/CBP',CBP,name='CBP'),
     path('<uuid:uuid>/group',group,name='group'),
     path('<uuid:uuid>/Urine',urine,name='Urine'),
     path('<uuid:uuid>/Eye',eye,name='Eye'),
+
+
+
+
+    
     path('<order_id>/print/CBP',print_CBP,name='CBP'),
     path('<order_id>/print/group',print_group,name='group'),
     path('<order_id>/print/Urine',print_urine,name='Urine'),
-    # path('pdf/Urine',urine_pdf,name='pdf_Urine'),
-    # path('pdf/CBP',urine_pdf,name='pdf_Urine'),
-    # path('pdf/Eye',urine_pdf,name='pdf_Urine'),
-    # path('pdf/group',urine_pdf,name='pdf_Urine'),
     path('<order_id>/print/Eye',print_eye,name='Eye'),
-    path('create_order/<int:customer_id>/', create_order_for_customer, name='create_order_for_customer'),
-    path('<uuid:order_id>/order_details/invoice/', generate_pdf, name='generate_pdf'),
-    path('<pk>/edit_customer_details/', edit_customer, name='edit_customer'),
+
 
 
 ]

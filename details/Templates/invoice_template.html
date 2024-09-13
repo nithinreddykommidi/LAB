@@ -1,97 +1,142 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            padding: 0;
-            margin: 0;
-            font-size: 14px;
-        }
-        .container {
-            width: 80%;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px solid #ddd;
+            font-family: Arial, sans-serif;
         }
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+            text-align: center;
         }
-        .header img {
-            width: 100px;
+        .clinic-name {
+            font-size: 24px;
+            font-weight: bold;
         }
-        .patient-details, .bill-details {
-            margin-bottom: 20px;
+        hr {
+            border: 1px solid black;
+            margin: 20px 0;
         }
-        .patient-details span, .bill-details span {
-            display: block;
-            margin-bottom: 5px;
-        }
-        .test-details table {
+        .patient-details {
+            margin-top: 20px;
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
         }
-        .test-details table th, .test-details table td {
-            border: 1px solid #ddd;
-            padding: 10px;
+        .patient-details th, .patient-details td {
+            padding: 8px;
+        }
+        .patient-details th {
+            text-align: left;
+            font-weight: normal;
+            width: 20%;
+        }
+        .patient-details td {
             text-align: left;
         }
-        .amount-summary {
+        .bill-details {
             margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
         }
-        .amount-summary .total, .amount-summary .paid, .amount-summary .due {
+        .bill-details th, .bill-details td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        .bill-details th {
+            background-color: #f2f2f2;
+        }
+        .total-row {
             font-weight: bold;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 12px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <img src="{{ logo_url }}" alt="Lab Logo">
-            <div>
-                <span>Curelink Laboratory</span>
-                <span>info@onlinelabtest.in</span>
-                <span>www.curelink.onlinelabtest.in</span>
-            </div>
-        </div>
-        <div class="patient-details">
-            <span><strong>Barcode:</strong> {{ barcode }}</span>
-            <span><strong>Patient Code:</strong> {{ patient_code }}</span>
-            <span><strong>Patient Name:</strong> {{ patient_name }}</span>
-            <span><strong>Age:</strong> {{ age }}</span>
-            <span><strong>Gender:</strong> {{ gender }}</span>
-            <span><strong>Registration Date:</strong> {{ registration_date }}</span>
-            <span><strong>Sample Collection Date:</strong> {{ sample_collection_date }}</span>
-        </div>
-        <div class="test-details">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Test Name</th>
-                        <th>Price</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for test in tests %}
-                    <tr>
-                        <td>{{ test.name }}</td>
-                        <td>{{ test.price }} INR</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="amount-summary">
-            <span class="subtotal"><strong>Subtotal:</strong> {{ subtotal }} INR</span>
-            <span class="discount"><strong>Discount:</strong> {{ discount }} INR</span>
-            <span class="total"><strong>Total:</strong> {{ total }} INR</span>
-            <span class="paid"><strong>Paid:</strong> {{ paid }} INR</span>
-            <span class="due"><strong>Due:</strong> {{ due }} INR</span>
-        </div>
+    <div class="header">
+        <h2 class="clinic-name">Tirumala Poly Clinic and Diagnostics</h2>
+    </div>
+
+    <hr> <!-- Line above patient details -->
+
+    <table class="patient-details">
+        <tr>
+            <th>Patient Name</th>
+            <td>{{order.customer.patient_name}}</td>
+            <th>MR No.</th>
+            <td>TDC/0924/171</td>
+        </tr>
+        <tr>
+            <th>Age / Gender</th>
+            <td>{{order.customer.age}} Years, {{order.customer.gender}}</td>
+            <th>Bill No.</th>
+            <td>31933</td>
+        </tr>
+        <tr>
+            <th>Phone Number</th>
+            <td>{{order.customer.mobile}}</td>
+            <th>IP No.</th>
+            <td> N?A</td>
+        </tr>
+        <tr>
+            <th>Address</th>
+            <td>{{order.customer.address}}</td>
+            <th>Date & Time</th>
+            <td>{{order.collected_date}}</td>
+        </tr>
+        <tr>
+            <th>Consultant Doctor</th>
+            <td>N/A</td>
+            <th>Referred By</th>
+            <td>{{order.referred_by}}</td>
+        </tr>
+    </table>
+
+    <hr> <!-- Line below patient details -->
+
+    <table class="bill-details">
+        <thead>
+            <tr>
+                <th>S.No</th>
+                <th>Investigations</th>
+                <th>Fee (INR)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for test in selected_tests %}
+            <tr>
+                <td>1</td>
+                <td>{{test}}</td>
+                <td>{{test.price}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr class="total-row">
+                <td colspan="2">Total Amount (INR)</td>
+                <td>{{order.get_total}}</td>
+            </tr>
+            <tr class="total-row">
+                <td colspan="2">Paid Amount (INR)</td>
+                <td>{{order.get_total}}</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <div class="footer">
+        <p>
+            Received with thanks a sum of Rs. : {{order.get_total}}/- (Rupees Four Thousand Four Hundred only)<br>
+            <strong>Authorized By:</strong> ________<br>
+            <strong>Remarks:</strong> ________<br><br>
+            Note: Please bring this receipt to collect Reports.
+        </p>
+        <p>Authorized Signature: _____________________</p>
     </div>
 </body>
 </html>

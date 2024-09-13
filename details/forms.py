@@ -39,26 +39,11 @@ class CustomerForm(ModelForm):
                        }
 
 
-class GroupingForm(ModelForm):
-        class Meta:
-            model = Order
-            fields = ['group', 'rh']
 
-
-class CBPForm(ModelForm):
-    class Meta:
-        model = Order
-        fields = ['WBC', 'RBC', 'platelets']
-
-class EyeForm(ModelForm):
-    class Meta:
-        model = Order
-        fields = ['left_eye', 'right_eye']
-
-class UrineForm(ModelForm):
-    class Meta:
-        model = Order
-        fields = ['bilrubine']
+# class UrineForm(ModelForm):
+#     class Meta:
+#         model = Order
+#         fields = ['bilrubine']
     
 class MyForm(ModelForm):
         class Meta:
@@ -67,21 +52,9 @@ class MyForm(ModelForm):
             widgets = {'required_date': DateInput(format='%m/%d/%Y', attrs={'class': 'nithin', 'placeholder': 'Select a date', 'type': 'date'}),}
 
 class CustomerSearchForm(ModelForm):
-    # patient_name = forms.CharField(
-    #         widget=forms.TextInput(attrs={'placeholder': "Enter patient's name"})
-    # )
-    # mobile = forms.CharField(
-    #         widget=forms.TextInput(attrs={'placeholder': "Enter patient's phnone No."})
-    # )
-    # class Meta:
-    #         model = Date
-    #         fields = ['patient_name','mobile']
-    #         required = {'patient_name': False}
     class Meta:
         model = Date
         fields = ['patient_name','mobile']
-        # widgets = {'required_date': DateInput(format='%m/%d/%Y', attrs={'class': 'nithin', 'placeholder': 'Select a date', 'type': 'date'}),}
-
 class NewOrderForm(ModelForm):
     collected_at = forms.ModelChoiceField(
             queryset=Locations.objects.all(),
@@ -131,15 +104,15 @@ class NewOrderForm(ModelForm):
         help_text="Please select the tests you want to include.",  # Help text serves as a guide
         label="Available Tests"
     )
-    collection_status = forms.ModelMultipleChoiceField(
-        queryset=Test.objects.all(),  # Change this to your actual queryset
-        widget=forms.CheckboxSelectMultiple(),
-        help_text="Please select the tests you want to include.",  # Help text serves as a guide
-        label="Available Tests"
-    )
+    # collection_status = forms.ModelMultipleChoiceField(
+    #     queryset=Test.objects.all(),  # Change this to your actual queryset
+    #     widget=forms.CheckboxSelectMultiple(),
+    #     help_text="Please select the tests you want to include.",  # Help text serves as a guide
+    #     label="Available Tests"
+    # )
     class Meta:
         model = Order
-        fields = ['customer', 'collected_at', 'referred_by', 'collected_date', 'expected_complete_date', 'tests', 'collection_status']
+        fields = ['customer', 'collected_at', 'referred_by', 'collected_date', 'expected_complete_date', 'tests']
 
 class OrderForm(ModelForm):
     collected_at = forms.ModelChoiceField(
@@ -190,20 +163,20 @@ class OrderForm(ModelForm):
         help_text="Please select the tests you want to include.",  # Help text serves as a guide
         label="Available Tests"
     )
-    collection_status = forms.ModelMultipleChoiceField(
-        queryset=Test.objects.all(),  # Change this to your actual queryset
-        widget=forms.CheckboxSelectMultiple(),
-        help_text="Please select the tests you want to include.",  # Help text serves as a guide
-        label="Available Tests"
-    )
+    # collection_status = forms.ModelMultipleChoiceField(
+    #     queryset=Test.objects.all(),  # Change this to your actual queryset
+    #     widget=forms.CheckboxSelectMultiple(),
+    #     help_text="Please select the tests you want to include.",  # Help text serves as a guide
+    #     label="Available Tests"
+    # )
     class Meta:
         model = Order
-        fields = ['customer','collected_at', 'referred_by', 'collected_date', 'expected_complete_date', 'tests', 'collection_status']
+        fields = ['customer','collected_at', 'referred_by', 'collected_date', 'expected_complete_date', 'tests']
 
 class EditOrderForm(NewOrderForm, ModelForm):
     class Meta:
         model = Order
-        fields = ['collected_at', 'referred_by', 'expected_complete_date', 'tests', 'collection_status']
+        fields = ['collected_at', 'referred_by', 'expected_complete_date', 'tests']
 
 class EditCustomerorm(CustomerForm, ModelForm):
     class Meta:
