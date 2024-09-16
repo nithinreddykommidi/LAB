@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.http import HttpResponse,HttpResponseRedirect
-from .models import Customer, Test, Doctor, Order, Title
+from .models import Customer, Test, Doctor, Order, Title, UNITSANDRANGES
 from .forms import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -88,15 +88,8 @@ def edit_order(request,order_id):
         form.save()
         return redirect(reverse('order_details', kwargs={'order_id': order_id}))
     order = Order.objects.get(order_id=order_id)
-    print(print(request.POST))
     return render(request,'edit_order.html',{'order': order, 'form':form})
 
-@login_required(login_url='user_login')
-def fill_values(request,pk):
-    patient = Order.objects.get(order_id=pk)
-    patient_tests = patient.tests.all()
-    context = {'patient':patient, 'patient_tests':patient_tests}
-    return render(request,'fill_values.html',context)
 
 @login_required(login_url='user_login')
 def delete_order(request,pk):
@@ -162,7 +155,6 @@ def daily_totals(request):
 
 def create_order_for_customer(request, customer_id):
     customer = get_object_or_404(Customer, id=customer_id)  # Get the customer by ID
-    print(customer)
 
     if request.method == 'POST':
         form = OrderForm(request.POST)# Pass customer to the form
@@ -243,10 +235,11 @@ def generate_invoice(request, order_id):
     return response
 
 @login_required(login_url='user_login')
-def fill(request, uuid):
+def fill_values(request, uuid):
     # Get the order by order_id
     order = get_object_or_404(Order, order_id=uuid)
     form = FillValuesForm(instance = order)
+    units = get_object_or_404(UNITSANDRANGES, id=1)
     if not order.customer:
         return HttpResponse("Order does not have an associated customer", status=400)
 
@@ -259,7 +252,7 @@ def fill(request, uuid):
             order.customer = order.customer
             form.save()
             return redirect('order_details', order_id=uuid)
-    return render(request, 'scratch.html', {'form': form, 'order': order, 'selected_tests': selected_tests})
+    return render(request, 'scratch.html', {'form': form, 'order': order, 'selected_tests': selected_tests,'units':units})
 
 def generate_pdf_for_tests(self, order_id):
     try:
@@ -286,7 +279,6 @@ def generate_pdf_for_tests(self, order_id):
     # Initialize PDF merger
     pdf_merger = PdfMerger()
     for test in selected_tests:
-        print(test)
         template = test_pdf_templates.get(test)  # Get the template path for the test
         if template:
             context = {

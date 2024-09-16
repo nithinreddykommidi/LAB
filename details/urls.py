@@ -29,12 +29,11 @@ urlpatterns = [
     path('<int:pk>/customer_details', customer_details, name='customer_details'),
     path('<order_id>/order_details', order_details, name='order_details'),
     path('<order_id>/edit_order', edit_order, name='edit_order'),
-    path('<pk>/fill_values', fill_values, name='fill_values'),
     path('<pk>/delete_order', delete_order, name='delete_order'),
     path('<pk>/doctor', doctor, name='doctor'),
     path('create_order/<int:customer_id>/', create_order_for_customer, name='create_order_for_customer'),
     path('<uuid:order_id>/order_details/invoice/', generate_invoice, name='generate_invoice'),
     path('<uuid:order_id>/generate_pdf_for_tests/', generate_pdf_for_tests, name='generate_pdf_for_tests'),
     path('<pk>/edit_customer_details/', edit_customer, name='edit_customer'),
-    path('<uuid:uuid>/fill', fill, name='fill'),
+    path('<uuid:uuid>/fill_values', fill_values, name='fill_values'),
 ]

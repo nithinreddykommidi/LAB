@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,500,300,700);
+
 *{
   margin: 0;
   padding: 0;
@@ -121,7 +123,6 @@ h1{
   
   /* demo styles */
   
-  @import url(https://fonts.googleapis.com/css?family=Roboto:400,500,300,700);
   body{
     background: -webkit-linear-gradient(left, #25c481, #25b7c4);
     background: linear-gradient(to right, #25c481, #25b7c4);

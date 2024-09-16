@@ -9,7 +9,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 </head>
-<img src="{% static '/images/cat.jpg' %}" alt="My image">
 
 <div>
   <ul class="nav-links">
@@ -20,11 +19,14 @@
     <li><a href={% url 'pending_samples' %}> Pending </a> </li>
     <li><a href={% url 'register_customer' %}> New Customer </a> </li>
     <li><a href={% url 'daily_totals' %}> Daily Revenue </a> </li>
+    <li><a> {{user}}</a></li>
+    <li><a href={% url 'user_logout' %}> Logout </a> </li>
+    
   </ul>
-
 </div>
   
 <body>
+  <div style="height: 50px;"></div>  <!-- This div adds white space -->
 
     {% block content%}
 

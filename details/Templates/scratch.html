@@ -1,81 +1,190 @@
+{% extends "base.html" %}
+{% block title%} Pending Orders {% endblock%}
+{% block content%}
+<style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+  
+    th, td {
+      border: 1px solid black;
+      padding: 8px;
+      text-align: left;
+    }
+  
+    /* Adjust the width of the Range column */
+    .range-column {
+      max-width: 200px; /* Set the desired width */
+      word-wrap: break-word; /* Wrap long text */
+      word-break: break-all; /* Break text in case of long words */
+    }
+</style>
+  
+
 <form method="POST">
     {% csrf_token %}
     {{ form.non_field_errors }}
     {{ form.errors }}
+    <table border="1">
+        <thead>
+          <tr>
+            <th>Test Name</th>
+            <th>Subtest</th>
+            <th>Result</th>
+            <th>Methodology</th>
+            <th>Units</th>
+            <th>Range</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
     {% for test in selected_tests %}
-        <h3>{{ test }}</h3>
+        <tbody>
+            <!-- Show fields for the selected tests -->
+            {% if test == "GLYCOSYLATED HEMOGLOBIN (HBA1c)" %}
+            <tr>
+                <td rowspan="1">{{test}}</td>
+                <td>{{ form.hba1c.label_tag }}</td>
+                <td>{{ form.hba1c }}</td>
+                <td>
+                <select>
+                    <option value="--Select--">--Select--</option>
+                    <!-- Add more options here -->
+                </select>
+                </td>
+                <td>{{units.hba1c_unit}}</td>
+                <td>
+                    {{units.hba1c_reference_range}}
+                </td>
+                <td>
+                <a href="#">Edit Ranges</a>
+                </td>
+            </tr> 
+            <div>
+            {% endif %}
 
-        <!-- Show fields for the selected tests -->
-        {% if test == "GLYCOSYLATED HEMOGLOBIN (HBA1c)" %}
-            <div>
-                {{ form.hba1c.label_tag }} {{ form.hba1c }} <br>
-            </div>
-        {% endif %}
-        {% if test == "BLOOD UREA NITROGEN - BUN " %}
-            <div>
-                {{ form.blood_urea_nitrogen.label_tag }} {{ form.blood_urea_nitrogen }} <br>
-            </div>
-        {% endif %}
-        {% if test == "COMPLETE URINE EXAMINATION" %}
-            <div>
-                {{ form.esr.label_tag }} {{ form.esr }} <br>
-                {{ form.esr_unit.label_tag }} {{ form.esr_unit }} <br>
-            </div>
-        {% endif %}
-        {% if test == "COTININE" %}
-            <div>
-                {{ form.esr.label_tag }} {{ form.esr }} <br>
-                {{ form.esr_unit.label_tag }} {{ form.esr_unit }} <br>
-            </div>
-        {% endif %}
-        {% if test == "ERYTHROCYTE SEDIMENTATION RATE( ESR)" %}
-            <div>
-                {{ form.esr.label_tag }} {{ form.esr }} <br>
-                {{ form.esr_unit.label_tag }} {{ form.esr_unit }} <br>
-            </div>
-        {% endif %}
-        {% if test == "HAEMOGRAM" %}
-            <div>
-                {{ form.esr.label_tag }} {{ form.esr }} <br>
-                {{ form.esr_unit.label_tag }} {{ form.esr_unit }} <br>
-            </div>
-        {% endif %}
-        {% if test == "HBsAg - Hepatitis B surface Antigen" %}
-            <div>
-                {{ form.esr.label_tag }} {{ form.esr }} <br>
-                {{ form.esr_unit.label_tag }} {{ form.esr_unit }} <br>
-            </div>
-        {% endif %}
-        {% if test == "HIV I & II Elisa" %}
-            <div>
-                {{ form.esr.label_tag }} {{ form.esr }} <br>
-                {{ form.esr_unit.label_tag }} {{ form.esr_unit }} <br>
-            </div>
-        {% endif %}
-        {% if test == "LIPID PROFILE" %}
-            <div>
-                {{ form.esr.label_tag }} {{ form.esr }} <br>
-                {{ form.esr_unit.label_tag }} {{ form.esr_unit }} <br>
-            </div>
-        {% endif %}
-        {% if test == "LIVER FUNCTION TEST" %}
-            <div>
-                {{ form.esr.label_tag }} {{ form.esr }} <br>
-                {{ form.esr_unit.label_tag }} {{ form.esr_unit }} <br>
-            </div>
-        {% endif %}
-        {% if test == "RANDOM BLOOD SUGAR" %}
-            <div>
-                {{ form.esr.label_tag }} {{ form.esr }} <br>
-                {{ form.esr_unit.label_tag }} {{ form.esr_unit }} <br>
-            </div>
-        {% endif %}
-        {% if test == "RFT/KFT" %}
-            <div>
-                {{ form.esr.label_tag }} {{ form.esr }} <br>
-                {{ form.esr_unit.label_tag }} {{ form.esr_unit }} <br>
-            </div>
-        {% endif %}
-    {% endfor %}
+            {% if test == "BLOOD UREA NITROGEN - BUN " %}
+            <tr>
+                <td rowspan="1">{{test}}</td>
+                <td>{{ form.blood_urea_nitrogen.label_tag }}</td>
+                <td>{{ form.blood_urea_nitrogen }}</td>
+                <td>
+                <select>
+                    <option value="--Select--">--Select--</option>
+                    <!-- Add more options here -->
+                </select>
+                </td>
+                <td>{{units.blood_urea_nitrogen_unit}}</td>
+                <td>
+                    {{units.blood_urea_nitrogen_range}}
+                </td>
+                <td>
+                <a href="#">Edit Ranges</a> |
+                </td>
+            </tr> 
+            {% endif %}
+            {% if test == "COMPLETE URINE EXAMINATION" %}
+
+            {% endif %}
+            {% if test == "COTININE" %}
+            <tr>
+                <td rowspan="1">{{test}}</td>
+                <td>{{ form.cotinine.label_tag }}</td>
+                <td>{{ form.cotinine }}</td>
+                <td>
+                <select>
+                    <option value="--Select--">--Select--</option>
+                    <!-- Add more options here -->
+                </select>
+                </td>
+                <td>{{units.cotinine_unit}}</td>
+                <td>
+                    {{units.cotinine_reference_range}}
+                </td>
+                <td>
+                <a href="#">Edit Ranges</a> |
+                </td>
+            </tr>
+            {% endif %}
+            {% if test == "ERYTHROCYTE SEDIMENTATION RATE( ESR)" %}
+            <tr>
+                <td rowspan="1">{{test}}</td>
+                <td>{{ form.esr_1_hour.label_tag }}</td>
+                <td>{{ form.esr_1_hour }}</td>
+                <td>
+                <select>
+                    <option value="--Select--">--Select--</option>
+                    <!-- Add more options here -->
+                </select>
+                </td>
+                <td>{{units.esr_1_hour_unit}}</td>
+                <td>
+                    {{units.esr_1_hour_reference_range}}
+                </td>
+                <td>
+                <a href="#">Edit Ranges</a> |
+                </td>
+            </tr>
+            {% endif %}
+            {% if test == "HAEMOGRAM" %}
+
+            {% endif %}
+            {% if test == "HBsAg - Hepatitis B surface Antigen" %}
+            <tr>
+                <td rowspan="1">{{test}}</td>
+                <td>{{ form.hbsag.label_tag }}</td>
+                <td>{{ form.hbsag }}</td>
+                <td>
+                <select>
+                    <option value="--Select--">--Select--</option>
+                    <!-- Add more options here -->
+                </select>
+                </td>
+                <td>{{units.hbsag_unit}}</td>
+                <td>
+                    {{units.hbsag_reference_range}}
+                </td>
+                <td>
+                <a href="#">Edit Ranges</a> |
+                </td>
+            </tr>
+            {% endif %}
+            {% if test == "HIV I & II Elisa" %}
+            <tr>
+                <td rowspan="1">{{test}}</td>
+                <td>{{ form.hiv_1_and_2.label_tag }}</td>
+                <td>{{ form.hiv_1_and_2 }}</td>
+                <td>
+                <select>
+                    <option value="--Select--">--Select--</option>
+                    <!-- Add more options here -->
+                </select>
+                </td>
+                <td>{{units.hiv_1_and_2_unit}}</td>
+                <td>
+                    {{units.hiv_1_and_2_reference_range}}
+                </td>
+                <td>
+                <a href="#">Edit Ranges</a> |
+                </td>
+            </tr>
+            {% endif %}
+            {% if test == "LIPID PROFILE" %}
+
+            {% endif %}
+            {% if test == "LIVER FUNCTION TEST" %}
+
+            {% endif %}
+            {% if test == "RANDOM BLOOD SUGAR" %}
+
+            {% endif %}
+            {% if test == "RFT/KFT" %}
+
+            {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
     <button type="submit">Save</button>
 </form>
+
+{% endblock %}

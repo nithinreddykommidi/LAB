@@ -177,13 +177,11 @@ class EditCustomerorm(CustomerForm, ModelForm):
         model = Customer
         fields = ['title','patient_name', 'mobile', 'email', 'gender', 'age', 'patient_address']
 
-from django import forms
-from .models import Order
-
 class FillValuesForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ['hba1c', 'hba1c_unit', 'blood_urea_nitrogen', 'blood_urea_nitrogen_unit']  # Add all relevant fields here
+        fields = '__all__'
+        exclude = ['collected_at', 'referred_by','collected_date','expected_complete_date','tests','customer','order_id']
 
     # def __init__(self, *args, **kwargs):
     #     # Pass the selected tests from the view to the form to dynamically show relevant fields
