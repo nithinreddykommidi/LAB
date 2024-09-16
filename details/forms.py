@@ -1,5 +1,5 @@
 from django.forms import *
-from .models import Customer, Test, Doctor,Date, Order, Locations, Gender, Title
+from .models import *
 from django import forms
 
 class CustomerForm(ModelForm):
@@ -37,14 +37,7 @@ class CustomerForm(ModelForm):
             fields = ['title','patient_name', 'mobile', 'email', 'gender', 'age', 'patient_address']
             widgets = {'gender': Select(),
                        }
-
-
-
-# class UrineForm(ModelForm):
-#     class Meta:
-#         model = Order
-#         fields = ['bilrubine']
-    
+   
 class MyForm(ModelForm):
         class Meta:
             model = Date
@@ -55,6 +48,7 @@ class CustomerSearchForm(ModelForm):
     class Meta:
         model = Date
         fields = ['patient_name','mobile']
+
 class NewOrderForm(ModelForm):
     collected_at = forms.ModelChoiceField(
             queryset=Locations.objects.all(),
@@ -183,6 +177,29 @@ class EditCustomerorm(CustomerForm, ModelForm):
         model = Customer
         fields = ['title','patient_name', 'mobile', 'email', 'gender', 'age', 'patient_address']
 
+from django import forms
+from .models import Order
 
+class FillValuesForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ['hba1c', 'hba1c_unit', 'blood_urea_nitrogen', 'blood_urea_nitrogen_unit']  # Add all relevant fields here
 
+    # def __init__(self, *args, **kwargs):
+    #     # Pass the selected tests from the view to the form to dynamically show relevant fields
+    #     selected_tests = kwargs.pop('selected_tests', [])
+    #     super(FillValuesForm, self).__init__(*args, **kwargs)
 
+    #     # Initially hide all fields
+    #     all_fields = ['hba1c', 'hba1c_unit', 'blood_urea_nitrogen', 'blood_urea_nitrogen_unit']
+    #     for field in all_fields:
+    #         self.fields[field].widget = forms.HiddenInput()
+
+    #     # Display the fields related to the selected tests
+    #     if 'HbA1C' in selected_tests:
+    #         self.fields['hba1c'].widget = forms.TextInput()
+    #         self.fields['hba1c_unit'].widget = forms.TextInput()
+
+    #     if 'BLOOD UREA NITROGEN - BUN ' in selected_tests:
+    #         self.fields['blood_urea_nitrogen'].widget = forms.TextInput()
+    #         self.fields['blood_urea_nitrogen_unit'].widget = forms.TextInput()

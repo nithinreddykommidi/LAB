@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HbA1C Results</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .header { text-align: center; }
+        .content { margin: 20px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>HbA1C Test Results</h1>
+    </div>
+    <div class="content">
+        <p>Order ID: {{ order.order_id }}</p>
+        <p>Patient: {{ order.customer.patient_name }}</p>
+        <p>HbA1C Level: {{ order.hba1c }} {{ order.hba1c_unit }}</p>
+        <!-- Add more details if necessary -->
+    </div>
+</body>
+</html>

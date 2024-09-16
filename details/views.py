@@ -15,6 +15,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.template.loader import render_to_string
 from weasyprint import HTML
 import os
+from PyPDF2 import PdfMerger
+from io import BytesIO
 
 
 def get_pat_id(request):
@@ -108,50 +110,6 @@ def doctor(request,pk):
     orders = doctor.order_set.all()
     return render(request,'doctor_details.html',{'doctor':doctor, 'orders':orders})
 
-@login_required(login_url='user_login')
-def CBP(request,uuid):
-    Orderid = Order.objects.get(order_id=uuid)
-    form = CBPForm(instance=Orderid)
-    if request.method == 'POST':
-        form = CBPForm(request.POST,instance=Orderid)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    return render(request, 'TESTS/CBP.html',{'form':form,'Orderid':Orderid})
-
-@login_required(login_url='user_login')
-def group(request,uuid):
-    Orderid = Order.objects.get(order_id=uuid)
-    form = GroupingForm(instance=Orderid)
-    if request.method == 'POST':
-        form = GroupingForm(request.POST,instance=Orderid)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    return render(request, 'TESTS/group.html',{'form':form,'Orderid':Orderid})
-
-@login_required(login_url='user_login')
-def urine(request,uuid):
-    Orderid = Order.objects.get(order_id=uuid)
-    form = UrineForm(instance=Orderid)
-    if request.method == 'POST':
-        form = UrineForm(request.POST,instance=Orderid)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    return render(request, 'TESTS/Urine.html',{'form':form,'Orderid':Orderid})
-
-@login_required(login_url='user_login')
-def eye(request,uuid):
-    Orderid = Order.objects.get(order_id=uuid)
-    form = EyeForm(instance=Orderid)
-    if request.method == 'POST':
-        form = EyeForm(request.POST,instance=Orderid)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    return render(request, 'TESTS/Eye.html',{'form':form,'Orderid':Orderid})
-
 def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -165,59 +123,6 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return redirect('user_login')
-
-@login_required(login_url='user_login')
-def print_CBP(request,order_id):
-    try:
-        order = Order.objects.get(order_id=order_id)  # Assuming 'order_id' is the field in the Order model
-    except Order.DoesNotExist:
-        return HttpResponse("Order not found", status=404)
-    context = {'order': order}
-    html_content = render_to_string('TESTS/CBPpdf.html', context)
-    pdf_file = HTML(string=html_content).write_pdf()
-    response = HttpResponse(pdf_file, content_type='application/pdf')
-    response['Content-Disposition'] = 'inline; filename="order_invoice.pdf"'
-    return response
-
-
-@login_required(login_url='user_login')
-def print_group(request,order_id):
-    try:
-        order = Order.objects.get(order_id=order_id)  # Assuming 'order_id' is the field in the Order model
-    except Order.DoesNotExist:
-        return HttpResponse("Order not found", status=404)
-    context = {'order': order}
-    html_content = render_to_string('TESTS/grouppdf.html', context)
-    pdf_file = HTML(string=html_content).write_pdf()
-    response = HttpResponse(pdf_file, content_type='application/pdf')
-    response['Content-Disposition'] = 'inline; filename="order_invoice.pdf"'
-    return response
-
-
-@login_required(login_url='user_login')
-def print_eye(request,order_id):
-    try:
-        order = Order.objects.get(order_id=order_id)  # Assuming 'order_id' is the field in the Order model
-    except Order.DoesNotExist:
-        return HttpResponse("Order not found", status=404)
-    context = {'order': order}
-    html_content = render_to_string('TESTS/Eyepdf.html', context)
-    pdf_file = HTML(string=html_content).write_pdf()
-    response = HttpResponse(pdf_file, content_type='application/pdf')
-    response['Content-Disposition'] = 'inline; filename="order_invoice.pdf"'
-    return response
-
-def print_urine(request,order_id):
-    try:
-        order = Order.objects.get(order_id=order_id)  # Assuming 'order_id' is the field in the Order model
-    except Order.DoesNotExist:
-        return HttpResponse("Order not found", status=404)
-    context = {'order': order}
-    html_content = render_to_string('TESTS/urinepdf.html', context)
-    pdf_file = HTML(string=html_content).write_pdf()
-    response = HttpResponse(pdf_file, content_type='application/pdf')
-    response['Content-Disposition'] = 'inline; filename="order_invoice.pdf"'
-    return response   
 
 
 def pending_samples(request):
@@ -335,4 +240,72 @@ def generate_invoice(request, order_id):
     pdf_file = HTML(string=html_content).write_pdf()
     response = HttpResponse(pdf_file, content_type='application/pdf')
     response['Content-Disposition'] = 'inline; filename="order_invoice.pdf"'
+    return response
+
+@login_required(login_url='user_login')
+def fill(request, uuid):
+    # Get the order by order_id
+    order = get_object_or_404(Order, order_id=uuid)
+    form = FillValuesForm(instance = order)
+    if not order.customer:
+        return HttpResponse("Order does not have an associated customer", status=400)
+
+    # Get the names of the tests selected for this order
+    selected_tests = [test.test_name for test in order.tests.all()]
+
+    if request.method == 'POST':
+        form = FillValuesForm(request.POST, instance=order)
+        if form.is_valid():
+            order.customer = order.customer
+            form.save()
+            return redirect('order_details', order_id=uuid)
+    return render(request, 'scratch.html', {'form': form, 'order': order, 'selected_tests': selected_tests})
+
+def generate_pdf_for_tests(self, order_id):
+    try:
+        order = Order.objects.get(order_id=order_id)  # Assuming 'order_id' is the field in the Order model
+    except Order.DoesNotExist:
+        return HttpResponse("Order not found", status=404)    
+    
+    selected_tests = [test.test_name for test in order.tests.all()]
+    test_pdf_templates = {
+        "GLYCOSYLATED HEMOGLOBIN (HBA1c)": "TESTS/HbA1Cpdf.html",
+        "BLOOD UREA NITROGEN - BUN ": "TESTS/BUN.html",
+        "COMPLETE URINE EXAMINATION": "TESTS/COMPLETE URINE EXAMINATION.html",
+        "COTININE": "TESTS/COTININE.html",
+        "ERYTHROCYTE SEDIMENTATION RATE( ESR)": "TESTS/ESR.html",
+        "HAEMOGRAM": "TESTS/HAEMOGRAM.html",
+        "HBsAg - Hepatitis B surface Antigen": "TESTS/HBsAg.html",
+        "HIV I & II Elisa": "TESTS/HIV.html",
+        "LIPID PROFILE": "TESTS/LIPID PROFILE.html",
+        "LIVER FUNCTION TEST": "TESTS/LFT.html",
+        "RANDOM BLOOD SUGAR": "TESTS/RANDOM BLOOD SUGAR.html",
+        "RFT/KFT": "TESTS/KFT.html",
+    }
+
+    # Initialize PDF merger
+    pdf_merger = PdfMerger()
+    for test in selected_tests:
+        print(test)
+        template = test_pdf_templates.get(test)  # Get the template path for the test
+        if template:
+            context = {
+                'order': order,
+                'test': test,
+            }
+            # Generate the PDF using the selected template
+            html_content = render_to_string(template, context)
+            pdf_file = HTML(string=html_content).write_pdf()
+
+            # Add the PDF file to the merger
+            pdf_merger.append(BytesIO(pdf_file))
+
+    # Create a combined PDF output
+    merged_pdf = BytesIO()
+    pdf_merger.write(merged_pdf)
+    pdf_merger.close()
+
+    # Respond with the merged PDF
+    response = HttpResponse(merged_pdf.getvalue(), content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; filename="merged_test_results.pdf"'
     return response

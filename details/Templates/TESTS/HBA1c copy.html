@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            margin: 0;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+        }
+        .header img {
+            width: 200px;
+        }
+        .details-table {
+            width: 100%;
+            margin: 20px 0;
+        }
+        .details-table th, .details-table td {
+            padding: 5px;
+            text-align: left;
+        }
+        .investigations-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .investigations-table th, .investigations-table td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+        }
+        .investigations-table th {
+            background-color: #f2f2f2;
+        }
+        .footer {
+            text-align: left;
+            margin-top: 30px;
+            font-size: 12px;
+        }
+        .signature {
+            margin-top: 40px;
+            text-align: left;
+        }
+        .signature img {
+            width: 100px;
+        }
+        .signature p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <img src="https://via.placeholder.com/150x50" alt="Diagnostic Center Logo">
+    <h1>TIRUMALA Diagnostic Center</h1>
+    <p>1st Floor, Beside AXIS Bank ATM,<br> Opp. Sri Balaji Anil Mithai Bhandar, Attapur, Hyderabad - 500 048.<br> Ph: 040-3581 6927, 80997 46797</p>
+</div>
+
+<table class="details-table">
+    <tr>
+        <th>Patient Name</th>
+        <td>{{ patient_name }}</td>
+        <th>Bill No</th>
+        <td>{{ bill_no }}</td>
+    </tr>
+    <tr>
+        <th>Age/Sex</th>
+        <td>{{ age }} Years/{{ gender }}</td>
+        <th>MR No.</th>
+        <td>{{ mr_no }}</td>
+    </tr>
+    <tr>
+        <th>Reported on</th>
+        <td>{{ reported_on }}</td>
+        <th>Referred By</th>
+        <td>{{ referred_by }}</td>
+    </tr>
+    <tr>
+        <th>Order on</th>
+        <td>{{ order_on }}</td>
+    </tr>
+</table>
+
+<h3>RFT/KFT</h3>
+
+<table class="investigations-table">
+    <thead>
+        <tr>
+            <th>Investigations</th>
+            <th>Result</th>
+            <th>Unit</th>
+            <th>Ref. Ranges</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>URIC ACID</td>
+            <td>{{ uric_acid_result }}</td>
+            <td>mg/dl</td>
+            <td>Females: 2.5 – 6.2, Males: 3.5 – 7.2</td>
+        </tr>
+        <tr>
+            <td>SERUM CREATININE</td>
+            <td>{{ serum_creatinine_result }}</td>
+            <td>mg/dl</td>
+            <td>0.5 – 1.5</td>
+        </tr>
+    </tbody>
+</table>
+
+<p><i>Please correlate with clinical conditions.</i></p>
+<p><i>* End of Report *</i></p>
+
+<div class="signature">
+    <p><strong>This report is authorized by:</strong></p>
+    <img src="https://via.placeholder.com/100x50" alt="Signature">
+    <p><strong>Dr. K. Siddartha</strong><br>Pathologist</p>
+</div>
+
+</body>
+</html>

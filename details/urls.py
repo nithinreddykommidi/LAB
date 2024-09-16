@@ -34,22 +34,7 @@ urlpatterns = [
     path('<pk>/doctor', doctor, name='doctor'),
     path('create_order/<int:customer_id>/', create_order_for_customer, name='create_order_for_customer'),
     path('<uuid:order_id>/order_details/invoice/', generate_invoice, name='generate_invoice'),
+    path('<uuid:order_id>/generate_pdf_for_tests/', generate_pdf_for_tests, name='generate_pdf_for_tests'),
     path('<pk>/edit_customer_details/', edit_customer, name='edit_customer'),
-    path('<uuid:uuid>/Eye', eye, name='Eye'),
-    path('<uuid:uuid>/CBP',CBP,name='CBP'),
-    path('<uuid:uuid>/group',group,name='group'),
-    path('<uuid:uuid>/Urine',urine,name='Urine'),
-    path('<uuid:uuid>/Eye',eye,name='Eye'),
-
-
-
-
-    
-    path('<order_id>/print/CBP',print_CBP,name='CBP'),
-    path('<order_id>/print/group',print_group,name='group'),
-    path('<order_id>/print/Urine',print_urine,name='Urine'),
-    path('<order_id>/print/Eye',print_eye,name='Eye'),
-
-
-
+    path('<uuid:uuid>/fill', fill, name='fill'),
 ]

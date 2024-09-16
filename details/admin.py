@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Test,Doctor,Customer,Order,Locations,Gender, Title, TestField, TestResult
+from .models import Test,Doctor,Customer,Order,Locations,Gender, Title, HB
 
 # Register your models here.
 
@@ -10,5 +10,5 @@ admin.site.register(Customer)
 admin.site.register(Locations)
 admin.site.register(Gender)
 admin.site.register(Title)
-admin.site.register(TestField)
-admin.site.register(TestResult)
+admin.site.register(HB)
+
