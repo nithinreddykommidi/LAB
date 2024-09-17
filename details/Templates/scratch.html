@@ -184,6 +184,24 @@
         {% endfor %}
         </tbody>
     </table>
+    <div>
+        <table border="1">
+            <thead>
+            <tr>
+                <th>collected_by</th>
+                <th>tested_by</th>
+                <th>report_by</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{form.collected_by}}</td>
+                    <td>{{form.tested_by}}</td>
+                    <td>{{form.report_by}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
     <button type="submit">Save</button>
 </form>
 

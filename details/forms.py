@@ -178,26 +178,29 @@ class EditCustomerorm(CustomerForm, ModelForm):
         fields = ['title','patient_name', 'mobile', 'email', 'gender', 'age', 'patient_address']
 
 class FillValuesForm(forms.ModelForm):
+    collected_by = forms.ModelChoiceField(
+            queryset=Tech.objects.all(),
+            empty_label="Select collected_by",  # Adds the placeholder option
+            widget=forms.Select(attrs={
+                'class': 'form-control'
+            })
+        )
+    
+    tested_by = forms.ModelChoiceField(
+            queryset=Tech.objects.all(),
+            empty_label="Select tested_by",  # Adds the placeholder option
+            widget=forms.Select(attrs={
+                'class': 'form-control'
+            })
+        )
+    report_by = forms.ModelChoiceField(
+            queryset=Tech.objects.all(),
+            empty_label="Select report_by",  # Adds the placeholder option
+            widget=forms.Select(attrs={
+                'class': 'form-control'
+            })
+        )
     class Meta:
         model = Order
         fields = '__all__'
         exclude = ['collected_at', 'referred_by','collected_date','expected_complete_date','tests','customer','order_id']
-
-    # def __init__(self, *args, **kwargs):
-    #     # Pass the selected tests from the view to the form to dynamically show relevant fields
-    #     selected_tests = kwargs.pop('selected_tests', [])
-    #     super(FillValuesForm, self).__init__(*args, **kwargs)
-
-    #     # Initially hide all fields
-    #     all_fields = ['hba1c', 'hba1c_unit', 'blood_urea_nitrogen', 'blood_urea_nitrogen_unit']
-    #     for field in all_fields:
-    #         self.fields[field].widget = forms.HiddenInput()
-
-    #     # Display the fields related to the selected tests
-    #     if 'HbA1C' in selected_tests:
-    #         self.fields['hba1c'].widget = forms.TextInput()
-    #         self.fields['hba1c_unit'].widget = forms.TextInput()
-
-    #     if 'BLOOD UREA NITROGEN - BUN ' in selected_tests:
-    #         self.fields['blood_urea_nitrogen'].widget = forms.TextInput()
-    #         self.fields['blood_urea_nitrogen_unit'].widget = forms.TextInput()

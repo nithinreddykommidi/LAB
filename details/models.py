@@ -67,6 +67,8 @@ class Locations(models.Model):
             return self.location
 class Tech(models.Model):
     name = models.CharField(max_length=50)
+    def __str__(self):
+        return self.name
 
 class Doctor(models.Model):
     doctor_name = models.CharField(max_length=50)
