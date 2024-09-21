@@ -139,6 +139,9 @@ class Order(models.Model):
     collected_by = models.ForeignKey(Tech, on_delete=models.DO_NOTHING,null=True, related_name='collected_by', blank = True)
     tested_by = models.ForeignKey(Tech, on_delete=models.DO_NOTHING,null=True, related_name='tested_by', blank = True)
     report_by = models.ForeignKey(Tech, on_delete=models.DO_NOTHING,null=True, related_name='report_by',blank=True)
+    collected_datetime = models.DateTimeField(null=True)  # For date and time
+    tested_datetime = models.DateTimeField(null=True)  # For date and time
+    report_datetime = models.DateTimeField(null=True)  # For date and time
 
 
 

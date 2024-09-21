@@ -1,28 +1,25 @@
 {% extends "base.html" %}
 {% block title%} Fill Report {% endblock%}
 {% block content%}
+<style>
+input {
+  width: 170px;
+}
+</style>
 <section>
-    <div class="details">
-        <div> Name : {{patient}}</div>
-        <div> Mobile: {{patient.mobile}}</div>
-        <div>Email: {{patient.email}}</div>
-        <div>Gender: {{patient.gender}}</div>
-        <div>collected_at: {{patient.collected_at}}</div>
-        <div>referred_by: {{patient.referred_by}}</div>
-        <div>collected_date: {{patient.collected_date}}</div>
-        <div>expected_complete_date: {{patient.expected_complete_date}}</div>
-        <div>Registred Time: {{patient.created_at}}</div>
-        <div>Age :{{patient.age}}</div>
-    </div>
         <!--for demo wrap-->
         <h1>Patien's Tests</h1>
         <div class="tbl-header">
           <table cellpadding="0" cellspacing="0" border="0">
             <thead>
                 <tr>
-                    <th>Test</th>
-                    <th>Fill Values</th>
-                    <th>Print Values</th>
+                  <th>Test Name</th>
+                  <th>Subtest</th>
+                  <th>Result</th>
+                  <th>Methodology</th>
+                  <th>Units</th>
+                  <th>Range</th>
+                  <th>Actions</th>
                 </tr>
             </thead>
           </table>
@@ -30,15 +27,181 @@
         <div class="tbl-content">
           <table cellpadding="0" cellspacing="0" border="0">
            
-            {% for test in patient_tests %}
+          {% for test in selected_tests %}
             <tbody>
-                <tr>
-                    <td>  {{test}}  </td>
-                    <td><a href="{{test.test_id}}"> Edit</a></td>            
-                    <td><a href="print/{{test}}"> print</a></td>            
-                </tr>
-            </tbody>
-            {% endfor %}
+            <!-- Show fields for the selected tests -->
+            {% if test == "GLYCOSYLATED HEMOGLOBIN (HBA1c)" %}
+            <tr>
+                <td rowspan="1">{{test}}</td>
+                <td>{{ form.hba1c.label_tag }}</td>
+                <td>{{ form.hba1c }}</td>
+                <td>
+                <select>
+                    <option value="--Select--">--Select--</option>
+                    <!-- Add more options here -->
+                </select>
+                </td>
+                <td>{{units.hba1c_unit}}</td>
+                <td>
+                    {{units.hba1c_reference_range}}
+                </td>
+                <td>
+                <a href="#">Edit Ranges</a>
+                </td>
+            </tr> 
+            <div>
+            {% endif %}
+
+            {% if test == "BLOOD UREA NITROGEN - BUN " %}
+            <tr>
+                <td rowspan="1">{{test}}</td>
+                <td>{{ form.blood_urea_nitrogen.label_tag }}</td>
+                <td>{{ form.blood_urea_nitrogen }}</td>
+                <td>
+                <select>
+                    <option value="--Select--">--Select--</option>
+                    <!-- Add more options here -->
+                </select>
+                </td>
+                <td>{{units.blood_urea_nitrogen_unit}}</td>
+                <td>
+                    {{units.blood_urea_nitrogen_range}}
+                </td>
+                <td>
+                <a href="#">Edit Ranges</a> |
+                </td>
+            </tr> 
+            {% endif %}
+            {% if test == "COMPLETE URINE EXAMINATION" %}
+
+            {% endif %}
+            {% if test == "COTININE" %}
+            <tr>
+                <td rowspan="1">{{test}}</td>
+                <td>{{ form.cotinine.label_tag }}</td>
+                <td>{{ form.cotinine }}</td>
+                <td>
+                <select>
+                    <option value="--Select--">--Select--</option>
+                    <!-- Add more options here -->
+                </select>
+                </td>
+                <td>{{units.cotinine_unit}}</td>
+                <td>
+                    {{units.cotinine_reference_range}}
+                </td>
+                <td>
+                <a href="#">Edit Ranges</a> |
+                </td>
+            </tr>
+            {% endif %}
+            {% if test == "ERYTHROCYTE SEDIMENTATION RATE( ESR)" %}
+            <tr>
+                <td rowspan="1">{{test}}</td>
+                <td>{{ form.esr_1_hour.label_tag }}</td>
+                <td>{{ form.esr_1_hour }}</td>
+                <td>
+                <select>
+                    <option value="--Select--">--Select--</option>
+                    <!-- Add more options here -->
+                </select>
+                </td>
+                <td>{{units.esr_1_hour_unit}}</td>
+                <td>
+                    {{units.esr_1_hour_reference_range}}
+                </td>
+                <td>
+                <a href="#">Edit Ranges</a> |
+                </td>
+            </tr>
+            {% endif %}
+            {% if test == "HAEMOGRAM" %}
+
+            {% endif %}
+            {% if test == "HBsAg - Hepatitis B surface Antigen" %}
+            <tr>
+                <td rowspan="1">{{test}}</td>
+                <td>{{ form.hbsag.label_tag }}</td>
+                <td>{{ form.hbsag }}</td>
+                <td>
+                <select>
+                    <option value="--Select--">--Select--</option>
+                    <!-- Add more options here -->
+                </select>
+                </td>
+                <td>{{units.hbsag_unit}}</td>
+                <td>
+                    {{units.hbsag_reference_range}}
+                </td>
+                <td>
+                <a href="#">Edit Ranges</a> |
+                </td>
+            </tr>
+            {% endif %}
+            {% if test == "HIV I & II Elisa" %}
+            <tr>
+                <td rowspan="1">{{test}}</td>
+                <td>{{ form.hiv_1_and_2.label_tag }}</td>
+                <td>{{ form.hiv_1_and_2 }}</td>
+                <td>
+                <select>
+                    <option value="--Select--">--Select--</option>
+                    <!-- Add more options here -->
+                </select>
+                </td>
+                <td >{{units.hiv_1_and_2_unit}}</td>
+                <td>
+                    {{units.hiv_1_and_2_reference_range}}
+                </td>
+                <td>
+                <a href="#">Edit Ranges</a> |
+                </td>
+            </tr>
+            {% endif %}
+            {% if test == "LIPID PROFILE" %}
+
+            {% endif %}
+            {% if test == "LIVER FUNCTION TEST" %}
+
+            {% endif %}
+            {% if test == "RANDOM BLOOD SUGAR" %}
+
+            {% endif %}
+            {% if test == "RFT/KFT" %}
+
+            {% endif %}
+        {% endfor %}
+          </table>
+        </div>
+
+        <div class="tbl-header">
+          <table cellpadding="0" cellspacing="0" border="0">
+            <thead>
+              <tr>
+                <th>collected_by</th>
+                <th>collected at</th>
+                <th>tested_by</th>
+                <th>tested at</th>
+                <th>report_by</th>
+                <th>report at</th>
+    
+              </tr>
+            </thead>
+          </table>
+        </div>
+        <div class="tbl-content">
+          <table cellpadding="0" cellspacing="0" border="0">
+              <tbody>
+                  <tr>
+                    <td>{{form.collected_by}}</td>
+                    <td>{{form.collected_datetime}}</td>
+                    <td>{{form.tested_by}}</td>
+                    <td>{{form.tested_datetime}}</td>
+                    <td>{{form.report_by}}</td>
+                    <td>{{form.report_datetime}}</td>
+                  </tr>
+                  <!-- and so on... -->
+              </tbody>
           </table>
         </div>
 </section>

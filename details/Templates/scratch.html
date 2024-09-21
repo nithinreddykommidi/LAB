@@ -1,208 +1,29 @@
-{% extends "base.html" %}
-{% block title%} Pending Orders {% endblock%}
-{% block content%}
-<style>
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-  
-    th, td {
-      border: 1px solid black;
-      padding: 8px;
-      text-align: left;
-    }
-  
-    /* Adjust the width of the Range column */
-    .range-column {
-      max-width: 200px; /* Set the desired width */
-      word-wrap: break-word; /* Wrap long text */
-      word-break: break-all; /* Break text in case of long words */
-    }
-</style>
-  
+<script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
 
-<form method="POST">
-    {% csrf_token %}
-    {{ form.non_field_errors }}
-    {{ form.errors }}
-    <table border="1">
-        <thead>
-          <tr>
-            <th>Test Name</th>
-            <th>Subtest</th>
-            <th>Result</th>
-            <th>Methodology</th>
-            <th>Units</th>
-            <th>Range</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-    {% for test in selected_tests %}
-        <tbody>
-            <!-- Show fields for the selected tests -->
-            {% if test == "GLYCOSYLATED HEMOGLOBIN (HBA1c)" %}
-            <tr>
-                <td rowspan="1">{{test}}</td>
-                <td>{{ form.hba1c.label_tag }}</td>
-                <td>{{ form.hba1c }}</td>
-                <td>
-                <select>
-                    <option value="--Select--">--Select--</option>
-                    <!-- Add more options here -->
-                </select>
-                </td>
-                <td>{{units.hba1c_unit}}</td>
-                <td>
-                    {{units.hba1c_reference_range}}
-                </td>
-                <td>
-                <a href="#">Edit Ranges</a>
-                </td>
-            </tr> 
-            <div>
-            {% endif %}
-
-            {% if test == "BLOOD UREA NITROGEN - BUN " %}
-            <tr>
-                <td rowspan="1">{{test}}</td>
-                <td>{{ form.blood_urea_nitrogen.label_tag }}</td>
-                <td>{{ form.blood_urea_nitrogen }}</td>
-                <td>
-                <select>
-                    <option value="--Select--">--Select--</option>
-                    <!-- Add more options here -->
-                </select>
-                </td>
-                <td>{{units.blood_urea_nitrogen_unit}}</td>
-                <td>
-                    {{units.blood_urea_nitrogen_range}}
-                </td>
-                <td>
-                <a href="#">Edit Ranges</a> |
-                </td>
-            </tr> 
-            {% endif %}
-            {% if test == "COMPLETE URINE EXAMINATION" %}
-
-            {% endif %}
-            {% if test == "COTININE" %}
-            <tr>
-                <td rowspan="1">{{test}}</td>
-                <td>{{ form.cotinine.label_tag }}</td>
-                <td>{{ form.cotinine }}</td>
-                <td>
-                <select>
-                    <option value="--Select--">--Select--</option>
-                    <!-- Add more options here -->
-                </select>
-                </td>
-                <td>{{units.cotinine_unit}}</td>
-                <td>
-                    {{units.cotinine_reference_range}}
-                </td>
-                <td>
-                <a href="#">Edit Ranges</a> |
-                </td>
-            </tr>
-            {% endif %}
-            {% if test == "ERYTHROCYTE SEDIMENTATION RATE( ESR)" %}
-            <tr>
-                <td rowspan="1">{{test}}</td>
-                <td>{{ form.esr_1_hour.label_tag }}</td>
-                <td>{{ form.esr_1_hour }}</td>
-                <td>
-                <select>
-                    <option value="--Select--">--Select--</option>
-                    <!-- Add more options here -->
-                </select>
-                </td>
-                <td>{{units.esr_1_hour_unit}}</td>
-                <td>
-                    {{units.esr_1_hour_reference_range}}
-                </td>
-                <td>
-                <a href="#">Edit Ranges</a> |
-                </td>
-            </tr>
-            {% endif %}
-            {% if test == "HAEMOGRAM" %}
-
-            {% endif %}
-            {% if test == "HBsAg - Hepatitis B surface Antigen" %}
-            <tr>
-                <td rowspan="1">{{test}}</td>
-                <td>{{ form.hbsag.label_tag }}</td>
-                <td>{{ form.hbsag }}</td>
-                <td>
-                <select>
-                    <option value="--Select--">--Select--</option>
-                    <!-- Add more options here -->
-                </select>
-                </td>
-                <td>{{units.hbsag_unit}}</td>
-                <td>
-                    {{units.hbsag_reference_range}}
-                </td>
-                <td>
-                <a href="#">Edit Ranges</a> |
-                </td>
-            </tr>
-            {% endif %}
-            {% if test == "HIV I & II Elisa" %}
-            <tr>
-                <td rowspan="1">{{test}}</td>
-                <td>{{ form.hiv_1_and_2.label_tag }}</td>
-                <td>{{ form.hiv_1_and_2 }}</td>
-                <td>
-                <select>
-                    <option value="--Select--">--Select--</option>
-                    <!-- Add more options here -->
-                </select>
-                </td>
-                <td>{{units.hiv_1_and_2_unit}}</td>
-                <td>
-                    {{units.hiv_1_and_2_reference_range}}
-                </td>
-                <td>
-                <a href="#">Edit Ranges</a> |
-                </td>
-            </tr>
-            {% endif %}
-            {% if test == "LIPID PROFILE" %}
-
-            {% endif %}
-            {% if test == "LIVER FUNCTION TEST" %}
-
-            {% endif %}
-            {% if test == "RANDOM BLOOD SUGAR" %}
-
-            {% endif %}
-            {% if test == "RFT/KFT" %}
-
-            {% endif %}
-        {% endfor %}
-        </tbody>
-    </table>
-    <div>
-        <table border="1">
-            <thead>
-            <tr>
-                <th>collected_by</th>
-                <th>tested_by</th>
-                <th>report_by</th>
-            </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{form.collected_by}}</td>
-                    <td>{{form.tested_by}}</td>
-                    <td>{{form.report_by}}</td>
-                </tr>
-            </tbody>
-        </table>
+<div class="wrapper">
+    <div class="sidebar">
+        <h2>Sidebar</h2>
+        <ul>
+            <li><a href="#"><i class="fas fa-home"></i>Home</a></li>
+            <li><a href="#"><i class="fas fa-user"></i>Profile</a></li>
+            <li><a href="#"><i class="fas fa-address-card"></i>About</a></li>
+            <li><a href="#"><i class="fas fa-project-diagram"></i>portfolio</a></li>
+            <li><a href="#"><i class="fas fa-blog"></i>Blogs</a></li>
+            <li><a href="#"><i class="fas fa-address-book"></i>Contact</a></li>
+            <li><a href="#"><i class="fas fa-map-pin"></i>Map</a></li>
+        </ul> 
+        <div class="social_media">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+      </div>
     </div>
-    <button type="submit">Save</button>
-</form>
-
-{% endblock %}
+    <div class="main_content">
+        <div class="header">Welcome!! Have a nice day.</div>  
+        <div class="info">
+          <div>Lorem ipsum dolor sit, amet consectetur adipisicing elit. A sed nobis ut exercitationem atque accusamus sit natus officiis totam blanditiis at eum nemo, nulla et quae eius culpa eveniet voluptatibus repellat illum tenetur, facilis porro. Quae fuga odio perferendis itaque alias sint, beatae non maiores magnam ad, veniam tenetur atque ea exercitationem earum eveniet totam ipsam magni tempora aliquid ullam possimus? Tempora nobis facere porro, praesentium magnam provident accusamus temporibus! Repellendus harum veritatis itaque molestias repudiandae ea corporis maiores non obcaecati libero, unde ipsum consequuntur aut consectetur culpa magni omnis vero odio suscipit vitae dolor quod dignissimos perferendis eos? Consequuntur!</div>
+          <div>Lorem ipsum dolor sit, amet consectetur adipisicing elit. A sed nobis ut exercitationem atque accusamus sit natus officiis totam blanditiis at eum nemo, nulla et quae eius culpa eveniet voluptatibus repellat illum tenetur, facilis porro. Quae fuga odio perferendis itaque alias sint, beatae non maiores magnam ad, veniam tenetur atque ea exercitationem earum eveniet totam ipsam magni tempora aliquid ullam possimus? Tempora nobis facere porro, praesentium magnam provident accusamus temporibus! Repellendus harum veritatis itaque molestias repudiandae ea corporis maiores non obcaecati libero, unde ipsum consequuntur aut consectetur culpa magni omnis vero odio suscipit vitae dolor quod dignissimos perferendis eos? Consequuntur!</div>
+          <div>Lorem ipsum dolor sit, amet consectetur adipisicing elit. A sed nobis ut exercitationem atque accusamus sit natus officiis totam blanditiis at eum nemo, nulla et quae eius culpa eveniet voluptatibus repellat illum tenetur, facilis porro. Quae fuga odio perferendis itaque alias sint, beatae non maiores magnam ad, veniam tenetur atque ea exercitationem earum eveniet totam ipsam magni tempora aliquid ullam possimus? Tempora nobis facere porro, praesentium magnam provident accusamus temporibus! Repellendus harum veritatis itaque molestias repudiandae ea corporis maiores non obcaecati libero, unde ipsum consequuntur aut consectetur culpa magni omnis vero odio suscipit vitae dolor quod dignissimos perferendis eos? Consequuntur!</div>
+      </div>
+    </div>
+</div>

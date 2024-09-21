@@ -204,3 +204,14 @@ class FillValuesForm(forms.ModelForm):
         model = Order
         fields = '__all__'
         exclude = ['collected_at', 'referred_by','collected_date','expected_complete_date','tests','customer','order_id']
+        widgets = {
+            'collected_datetime': forms.DateTimeInput(attrs={'type': 'datetime-local'}, format='%Y-%m-%dT%H:%M'),
+            'tested_datetime': forms.DateTimeInput(attrs={'type': 'datetime-local'}, format='%Y-%m-%dT%H:%M'),
+            'report_datetime': forms.DateTimeInput(attrs={'type': 'datetime-local'}, format='%Y-%m-%dT%H:%M'),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(FillValuesForm, self).__init__(*args, **kwargs)
+        self.fields['collected_datetime'].input_formats = ('%Y-%m-%dT%H:%M',)
+        self.fields['tested_datetime'].input_formats = ('%Y-%m-%dT%H:%M',)
+        self.fields['report_datetime'].input_formats = ('%Y-%m-%dT%H:%M',)
