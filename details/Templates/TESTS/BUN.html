@@ -1,22 +1,120 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>HbA1C Results</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Report</title>
     <style>
-        body { font-family: Arial, sans-serif; }
-        .header { text-align: center; }
-        .content { margin: 20px; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .header {
+            text-align: left;
+            padding: 20px;
+            border-bottom: 2px solid #000;
+        }
+        .header img {
+            width: 200px;
+        }
+        .header-info {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .report-info {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .report-info td {
+            padding: 5px 10px;
+        }
+        .test-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            font-size: 14px;
+        }
+        .test-table, .test-table th, .test-table td {
+            border: 1px solid black;
+        }
+        .test-table th, .test-table td {
+            padding: 8px;
+            text-align: left;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: left;
+        }
+        .signature {
+            margin-top: 50px;
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>BUN Test Results</h1>
+
+<div class="header">
+    <img src="{% static '/images/logo.png' %}" alt="My image" width="200" height="45">
+        <div class="header-info">
+        <strong>Tirumala Diagnostic Center</strong><br>
+        1st Floor, Beside AXIS Bank ATM, Near More Supermarket,<br>
+        Opp. Sri Balaji Anil Mithai Bhandar, Attapur, Hyderabad - 500 048.<br>
+        Ph: 040-3581 6927, 80997 46797.
     </div>
-    <div class="content">
-        <p>Order ID: {{ order.order_id }}</p>
-        <p>Patient: {{ order.customer.patient_name }}</p>
-        <p>HbA1C Level: {{ order.hba1c }} {{ order.hba1c_unit }}</p>
-        <!-- Add more details if necessary -->
+</div>
+
+<table class="report-info">
+    <tr>
+        <td><strong>Patient Name</strong>: {{order.customer}}</td>
+        <td><strong>Bill No</strong>: 31933</td>
+    </tr>
+    <tr>
+        <td><strong>Age/Sex</strong>: 48 Years/Male</td>
+        <td><strong>MR No</strong>: TDC/0924/171</td>
+    </tr>
+    <tr>
+        <td><strong>Reported on</strong>: 13/09/2024 2:17:17 PM</td>
+        <td><strong>Referred By</strong>: {{order.referred_by}}</td>
+    </tr>
+    <tr>
+        <td><strong>Order on</strong>: {{order.collected_date}}</td>
+        <td></td>
+    </tr>
+</table>
+
+<h3 style="text-align: center;">{{test}}</h3>
+
+<table class="test-table">
+    <thead>
+        <tr>
+            <th>Investigations</th>
+            <th>Result</th>
+            <th>Unit</th>
+            <th>Ref. Ranges</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Blood Urea Nitrogen</td>
+            <td>{{order.blood_urea_nitrogen}}</td>
+            <td>mg/dl</td>
+            <td>7 - 21</td>
+        </tr>
+    </tbody>
+</table>
+
+<p style="text-align: center;">Please correlate with clinical conditions.</p>
+<p style="text-align: center;">* End of Report *</p>
+
+<div class="footer">
+    <div>This report is authorised by:</div>
+    <div class="signature">
+        <strong>Dr.K.Siddartha</strong><br>
+        PATHOLOGIST
     </div>
+</div>
+
 </body>
 </html>

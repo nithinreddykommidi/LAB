@@ -180,6 +180,7 @@ class EditCustomerorm(CustomerForm, ModelForm):
 class FillValuesForm(forms.ModelForm):
     collected_by = forms.ModelChoiceField(
             queryset=Tech.objects.all(),
+            required = False,
             empty_label="Select collected_by",  # Adds the placeholder option
             widget=forms.Select(attrs={
                 'class': 'form-control'
@@ -188,6 +189,7 @@ class FillValuesForm(forms.ModelForm):
     
     tested_by = forms.ModelChoiceField(
             queryset=Tech.objects.all(),
+            required = False,
             empty_label="Select tested_by",  # Adds the placeholder option
             widget=forms.Select(attrs={
                 'class': 'form-control'
@@ -195,17 +197,26 @@ class FillValuesForm(forms.ModelForm):
         )
     report_by = forms.ModelChoiceField(
             queryset=Tech.objects.all(),
+            required = False,
             empty_label="Select report_by",  # Adds the placeholder option
             widget=forms.Select(attrs={
                 'class': 'form-control'
             })
         )
+    collected_datetime = forms.DateTimeField(
+            required = False,)
+    tested_datetime = forms.DateTimeField(
+            required = False,)
+    report_datetime = forms.DateTimeField(
+            required = False,)
     class Meta:
         model = Order
         fields = '__all__'
         exclude = ['collected_at', 'referred_by','collected_date','expected_complete_date','tests','customer','order_id']
+        # 'collected_datetime','tested_datetime','report_datetime','collected_by','report_by','tested_by']
+        
         widgets = {
-            'collected_datetime': forms.DateTimeInput(attrs={'type': 'datetime-local'}, format='%Y-%m-%dT%H:%M'),
+            'collected_datetime': forms.DateTimeInput(attrs={'type': 'datetime-local'}, format='%Y-%m-%dT%H:%M',),
             'tested_datetime': forms.DateTimeInput(attrs={'type': 'datetime-local'}, format='%Y-%m-%dT%H:%M'),
             'report_datetime': forms.DateTimeInput(attrs={'type': 'datetime-local'}, format='%Y-%m-%dT%H:%M'),
         }

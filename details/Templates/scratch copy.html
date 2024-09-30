@@ -7,10 +7,8 @@ input {
 }
 </style>
 <section>
-  <form method="POST" action="">
+  <form action="">
     {% csrf_token %}
-    {{ form.non_field_errors }}
-    {{ form.errors }}
         <!--for demo wrap-->
         <h1>Patien's Tests</h1>
         <div class="tbl-header">

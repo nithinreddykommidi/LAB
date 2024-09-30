@@ -242,17 +242,15 @@ def fill_values(request, uuid):
     units = get_object_or_404(UNITSANDRANGES, id=1)
     if not order.customer:
         return HttpResponse("Order does not have an associated customer", status=400)
-
     # Get the names of the tests selected for this order
     selected_tests = [test.test_name for test in order.tests.all()]
-
     if request.method == 'POST':
         form = FillValuesForm(request.POST, instance=order)
         if form.is_valid():
             order.customer = order.customer
             form.save()
             return redirect('order_details', order_id=uuid)
-    return render(request, 'fill_values.html', {'form': form, 'order': order, 'selected_tests': selected_tests,'units':units})
+    return render(request, 'scratch.html', {'form': form, 'order': order, 'selected_tests': selected_tests,'units':units})
 
 def generate_pdf_for_tests(self, order_id):
     try:
