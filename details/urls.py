@@ -41,6 +41,7 @@ urlpatterns = [
     path('<pk>/edit_customer_details/', edit_customer, name='edit_customer'),
     path('<uuid:uuid>/fill_values', fill_values, name='fill_values'),
     path('share_report/<uuid:order_id>/', share_report, name='share_report'),
+    path('update-range/', update_range, name='update_range'),
 
 ]
 if settings.DEBUG:

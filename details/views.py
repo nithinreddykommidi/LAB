@@ -398,3 +398,26 @@ def share_report(request, order_id):
 
     # Redirect the user to WhatsApp Web with the pre-filled message
     return redirect(whatsapp_url)
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import get_object_or_404
+
+@csrf_exempt
+def update_range(request):
+    if request.method == 'POST':
+        field = request.POST.get('field')
+        new_range = request.POST.get('new_range')
+
+        # Get the object you want to update
+        obj = get_object_or_404(UNITSANDRANGES, id=1)  # Adjust this to match your logic
+
+        # Update the field dynamically
+        if field and hasattr(obj, field):
+            setattr(obj, field, new_range)
+            obj.save()
+
+            # Return success and the new range value
+            return JsonResponse({'status': 'success', 'new_range': new_range})
+
+        # Return failure if something goes wrong
+        return JsonResponse({'status': 'fail', 'message': 'Invalid field or data'})

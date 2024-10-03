@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block title%} scratch {% endblock%}
 {% block content%}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <style>
 input {
   width: 170px;
@@ -65,12 +67,12 @@ input {
                 </select>
                 </td>
                 <td>{{units.blood_urea_nitrogen_unit}}</td>
-                <td>
-                    {{units.blood_urea_nitrogen_reference_range|safe}}
-                </td>
-                <td>
-                <a href="#">Edit Ranges</a> |
-                </td>
+                <td id="blood-urea-nitrogen-range">
+                  {{ units.blood_urea_nitrogen_reference_range|safe }}
+              </td>
+              <td>
+                  <a href="#" class="edit-range" data-field="blood_urea_nitrogen_reference_range">Edit Ranges</a>
+              </td>
             </tr> 
             {% endif %}
             {% if test == "COMPLETE URINE EXAMINATION" %}
@@ -1054,4 +1056,46 @@ input {
         </div>
   </form>
 </section>
+<script>
+  $(document).ready(function() {
+    // Handle Edit Ranges link click
+    $('.edit-range').on('click', function(e) {
+        e.preventDefault();
+        
+        // Get the field name from the data-field attribute
+        let field = $(this).data('field');
+
+        // Get the current value from the corresponding element
+        let currentValue = $('#' + field).text();
+        
+        // Prompt the user to enter a new range
+        let newRange = prompt("Enter new range:", currentValue);
+
+        if (newRange !== null) {
+            // Send AJAX request to update the range
+            $.ajax({
+                url: '{% url "update_range" %}',  // Update the URL to match your Django view
+                method: 'POST',
+                data: {
+                    'field': field,
+                    'new_range': newRange,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'  // Include CSRF token for security
+                },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        // Update the DOM with the new range value
+                        $('#blood-urea-nitrogen-range').text(response.new_range);
+                    } else {
+                        alert("Failed to update the range.");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error: " + error);
+                }
+            });
+        }
+    });
+});
+
+</script>
 {% endblock %}
