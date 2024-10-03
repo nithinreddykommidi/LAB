@@ -96,10 +96,12 @@
     </thead>
     <tbody>
         <tr>
-            <td>Blood Urea Nitrogen</td>
-            <td>{{order.blood_urea_nitrogen}}</td>
-            <td>mg/dl</td>
-            <td>7 - 21</td>
+            <td>hiv_1_and_2</td>
+            <td>{{ order.hiv_1_and_2 }}</td>
+            <td >{{units.hiv_1_and_2_unit}}</td>
+            <td>
+                {{units.hiv_1_and_2_reference_range|safe}}
+            </td>
         </tr>
     </tbody>
 </table>

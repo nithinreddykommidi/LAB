@@ -96,11 +96,25 @@
     </thead>
     <tbody>
         <tr>
-            <td>Blood Urea Nitrogen</td>
-            <td>{{order.blood_urea_nitrogen}}</td>
-            <td>mg/dl</td>
-            <td>7 - 21</td>
-        </tr>
+            <td>uric_acid</td>
+            <td>{{ order.uric_acid }}</td>
+    
+            <td>{{units.uric_acid_unit}}</td>
+            <td>
+                {{units.uric_acid_reference_range|safe}}
+            </td>
+    
+          </tr>
+          <tr>
+            <td>serum_creatinine</td>
+            <td>{{ order.serum_creatinine }}</td>
+    
+            <td>{{units.serum_creatinine_unit}}</td>
+            <td>
+                {{units.serum_creatinine_reference_range|safe}}
+            </td>
+    
+          </tr>
     </tbody>
 </table>
 

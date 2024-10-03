@@ -17,6 +17,10 @@ from weasyprint import HTML
 import os
 from PyPDF2 import PdfMerger
 from io import BytesIO
+from urllib.parse import quote_plus
+from django.conf import settings
+
+
 
 
 def get_pat_id(request):
@@ -96,6 +100,12 @@ def delete_order(request,pk):
     order = Order.objects.get(order_id=pk)
     order.delete()
     return  redirect('orders_list')
+
+@login_required(login_url='user_login')
+def delete_customer(request,pk):
+    patient = Customer.objects.get(id=pk)
+    patient.delete()
+    return  redirect('patients_list')
 
 @login_required(login_url='user_login')
 def doctor(request,pk):
@@ -257,7 +267,7 @@ def generate_pdf_for_tests(self, order_id):
         order = Order.objects.get(order_id=order_id)  # Assuming 'order_id' is the field in the Order model
     except Order.DoesNotExist:
         return HttpResponse("Order not found", status=404)    
-    
+    units = get_object_or_404(UNITSANDRANGES, id=1)
     selected_tests = [test.test_name for test in order.tests.all()]
     test_pdf_templates = {
         "GLYCOSYLATED HEMOGLOBIN (HBA1c)": "TESTS/HbA1Cpdf.html",
@@ -282,6 +292,7 @@ def generate_pdf_for_tests(self, order_id):
             context = {
                 'order': order,
                 'test': test,
+                'units': units,
             }
             # Generate the PDF using the selected template
             html_content = render_to_string(template, context)
@@ -299,3 +310,91 @@ def generate_pdf_for_tests(self, order_id):
     response = HttpResponse(merged_pdf.getvalue(), content_type='application/pdf')
     response['Content-Disposition'] = 'inline; filename="merged_test_results.pdf"'
     return response
+
+def generate_pdf_for_test(uuid):
+    try:
+        order = Order.objects.get(order_id=uuid)  # Assuming 'order_id' is the field in the Order model
+    except Order.DoesNotExist:
+        return None, None  # Return None if the order is not found
+    
+    selected_tests = [test.test_name for test in order.tests.all()]
+    test_pdf_templates = {
+        "GLYCOSYLATED HEMOGLOBIN (HBA1c)": "TESTS/HbA1Cpdf.html",
+        "BLOOD UREA NITROGEN - BUN ": "TESTS/BUN.html",
+        "COMPLETE URINE EXAMINATION": "TESTS/COMPLETE URINE EXAMINATION.html",
+        "COTININE": "TESTS/COTININE.html",
+        "ERYTHROCYTE SEDIMENTATION RATE( ESR)": "TESTS/ESR.html",
+        "HAEMOGRAM": "TESTS/HAEMOGRAM.html",
+        "HBsAg - Hepatitis B surface Antigen": "TESTS/HBsAg.html",
+        "HIV I & II Elisa": "TESTS/HIV.html",
+        "LIPID PROFILE": "TESTS/LIPID PROFILE.html",
+        "LIVER FUNCTION TEST": "TESTS/LFT.html",
+        "RANDOM BLOOD SUGAR": "TESTS/RANDOM BLOOD SUGAR.html",
+        "RFT/KFT": "TESTS/KFT.html",
+    }
+
+    # Initialize PDF merger
+    pdf_merger = PdfMerger()
+    for test in selected_tests:
+        template = test_pdf_templates.get(test)
+        if template:
+            context = {
+                'order': order,
+                'test': test,
+            }
+            # Generate the PDF using the selected template
+            html_content = render_to_string(template, context)
+            pdf_file = HTML(string=html_content).write_pdf()
+
+            # Add the PDF file to the merger
+            pdf_merger.append(BytesIO(pdf_file))
+
+    # Create a combined PDF output
+    merged_pdf = BytesIO()
+    pdf_merger.write(merged_pdf)
+    pdf_merger.close()
+
+    # Define the directory and file name
+    pdf_filename = f"order_{uuid}_results.pdf"
+    pdf_directory = settings.MEDIA_ROOT
+
+    # Ensure the directory exists
+    if not os.path.exists(pdf_directory):
+        os.makedirs(pdf_directory)
+
+    pdf_path = os.path.join(pdf_directory, pdf_filename)
+    with open(pdf_path, 'wb') as pdf_output:
+        pdf_output.write(merged_pdf.getvalue())
+
+    return pdf_filename, pdf_path
+
+
+def share_report(request, order_id):
+    try:
+        order = Order.objects.get(order_id=order_id)  # Assuming 'order_id' is the field in the Order model
+    except Order.DoesNotExist:
+        return HttpResponse("Order not found", status=404)    
+    
+    # Call the generate PDF function to generate the PDF file
+    pdf_filename, pdf_path = generate_pdf_for_test(order_id)
+    
+    if not pdf_filename:
+        return HttpResponse("Failed to generate PDF", status=500)
+
+    # Build the download link for the generated PDF file
+    download_link = request.build_absolute_uri(f'/media/{pdf_filename}')
+    phone = order.customer.mobile
+    # share_report_url = reverse('share_report', kwargs={'uuid': str(order.order_id)})
+
+
+    # Create the WhatsApp pre-filled message with the download link
+    message = f"Here is your requested test report: {download_link}"
+
+    # Encode the message for URL compatibility
+    whatsapp_message = quote_plus(message)
+
+    # Construct the WhatsApp Web URL
+    whatsapp_url = f"https://web.whatsapp.com/send?phone={phone}&text={whatsapp_message}"
+
+    # Redirect the user to WhatsApp Web with the pre-filled message
+    return redirect(whatsapp_url)

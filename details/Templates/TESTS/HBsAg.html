@@ -96,10 +96,12 @@
     </thead>
     <tbody>
         <tr>
-            <td>Blood Urea Nitrogen</td>
-            <td>{{order.blood_urea_nitrogen}}</td>
-            <td>mg/dl</td>
-            <td>7 - 21</td>
+            <td>hbsag</td>
+            <td>{{ order.hbsag }}</td>
+            <td>{{units.hbsag_unit}}</td>
+            <td>
+                {{units.hbsag_reference_range|safe}}
+            </td>
         </tr>
     </tbody>
 </table>

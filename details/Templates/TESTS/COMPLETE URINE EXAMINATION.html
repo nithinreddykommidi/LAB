@@ -96,10 +96,173 @@
     </thead>
     <tbody>
         <tr>
-            <td>Blood Urea Nitrogen</td>
-            <td>{{order.blood_urea_nitrogen}}</td>
-            <td>mg/dl</td>
-            <td>7 - 21</td>
+          <td>colour</td>
+          <td>{{ order.colour }}</td>
+  
+          <td>{{units.colour_unit}}</td>
+          <td>
+              {{units.colour_reference_range|safe}}
+          </td>
+  
+        </tr>
+        <tr>
+          <td>specific_gravity</td>
+          <td>{{ order.specific_gravity }}</td>
+  
+          <td>{{units.specific_gravity_unit}}</td>
+          <td>
+              {{units.specific_gravity_reference_range|safe}}
+          </td>
+  
+        </tr>
+        <tr>
+          <td>ph</td>
+          <td>{{ order.ph }}</td>
+  
+          <td>{{units.ph_unit}}</td>
+          <td>
+              {{units.ph_reference_range|safe}}
+          </td>
+  
+        </tr>
+        <tr>
+          <td>blood</td>
+          <td>{{ order.blood }}</td>
+  
+          <td>{{units.blood_unit}}</td>
+          <td>
+              {{units.blood_reference_range|safe}}
+          </td>
+  
+        </tr>
+        <tr>
+          <td>albumin</td>
+          <td>{{ order.albumin }}</td>
+  
+          <td>{{units.albumin_unit}}</td>
+          <td>
+              {{units.albumin_reference_range|safe}}
+          </td>
+  
+        </tr>
+        <tr>
+          <td>sugar</td>
+          <td>{{ order.sugar }}</td>
+  
+          <td>{{units.sugar_unit}}</td>
+          <td>
+              {{units.sugar_reference_range|safe}}
+          </td>
+  
+        </tr>
+        <tr>
+          <td>ketone_bodies</td>
+          <td>{{ order.ketone_bodies }}</td>
+  
+          <td>{{units.ketone_bodies_unit}}</td>
+          <td>
+              {{units.ketone_bodies_reference_range|safe}}
+          </td>
+  
+        </tr>
+        <tr>
+          <td>nitrite</td>
+          <td>{{ order.nitrite }}</td>
+  
+          <td>{{units.nitrite_unit}}</td>
+          <td>
+              {{units.nitrite_reference_range|safe}}
+          </td>
+  
+        </tr>
+        <tr>
+          <td>urobilinogen</td>
+          <td>{{ order.urobilinogen }}</td>
+  
+          <td>{{units.urobilinogen_unit}}</td>
+          <td>
+              {{units.urobilinogen_reference_range|safe}}
+          </td>
+  
+        </tr>
+        <tr>
+          <td>leucocytes</td>
+          <td>{{ order.leucocytes }}</td>
+  
+          <td>{{units.leucocytes_unit}}</td>
+          <td>
+              {{units.leucocytes_reference_range|safe}}
+          </td>
+  
+        </tr>
+        <tr>
+          <td>bile_salts</td>
+          <td>{{ order.bile_salts }}</td>
+  
+          <td>{{units.bile_salts_unit}}</td>
+          <td>
+              {{units.bile_salts_reference_range|safe}}
+          </td>
+  
+        </tr>
+        <tr>
+          <td>bile_pigments</td>
+          <td>{{ order.bile_pigments }}</td>
+  
+          <td>{{units.bile_pigments_unit}}</td>
+          <td>
+              {{units.bile_pigments_reference_range|safe}}
+          </td>
+  
+        </tr>
+        <tr>
+          <td>pus_cells</td>
+          <td>{{ order.pus_cells }}</td>
+  
+          <td>{{units.pus_cells_unit}}</td>
+          <td>
+              {{units.pus_cells_reference_range|safe}}
+          </td>
+  
+        </tr>
+        <tr>
+          <td>epithelial_cells</td>
+          <td>{{ order.epithelial_cells }}</td>
+  
+          <td>{{units.epithelial_cells_unit}}</td>
+          <td>
+              {{units.epithelial_cells_reference_range|safe}}
+          </td>
+  
+        </tr>
+        <tr>
+          <td>rbcs</td>
+          <td>{{ order.rbcs }}</td>
+  
+          <td>{{units.rbcs_unit}}</td>
+          <td>
+              {{units.rbcs_reference_range|safe}}
+          </td>
+  
+        </tr>
+        <tr>
+          <td>bacteria</td>
+          <td>{{ order.bacteria }}</td>
+  
+          <td>{{units.bacteria_unit}}</td>
+          <td>
+              {{units.bacteria_reference_range|safe}}
+          </td>
+  
+        </tr>
+        <tr>
+          <td>others</td>
+          <td>{{ order.others }}</td>
+  
+          <td>{{units.others_unit}}</td>
+          <td>
+              {{units.others_reference_range|safe}}
+          </td>
         </tr>
     </tbody>
 </table>

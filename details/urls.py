@@ -16,6 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,re_path
 from .views import *
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     path('', home,name = 'home'),
     path('register_customer',register_customer,name='register_customer'),
@@ -25,15 +28,20 @@ urlpatterns = [
     path('orders_list',orders_list, name='orders_list'),
     path('daily_totals',daily_totals, name='daily_totals'),
     path('doctors_list',doctors_list, name='doctors_list'),
-    path('pending_samples',pending_samples, name='pending_samples'),
+    path('pending_samples',home, name='pending_samples'),
     path('<int:pk>/customer_details', customer_details, name='customer_details'),
     path('<order_id>/order_details', order_details, name='order_details'),
     path('<order_id>/edit_order', edit_order, name='edit_order'),
     path('<pk>/delete_order', delete_order, name='delete_order'),
+    path('<pk>/delete_customer', delete_customer, name='delete_customer'),
     path('<pk>/doctor', doctor, name='doctor'),
     path('create_order/<int:customer_id>/', create_order_for_customer, name='create_order_for_customer'),
     path('<uuid:order_id>/order_details/invoice/', generate_invoice, name='generate_invoice'),
     path('<uuid:order_id>/generate_pdf_for_tests/', generate_pdf_for_tests, name='generate_pdf_for_tests'),
     path('<pk>/edit_customer_details/', edit_customer, name='edit_customer'),
     path('<uuid:uuid>/fill_values', fill_values, name='fill_values'),
+    path('share_report/<uuid:order_id>/', share_report, name='share_report'),
+
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -96,10 +96,14 @@
     </thead>
     <tbody>
         <tr>
-            <td>Blood Urea Nitrogen</td>
-            <td>{{order.blood_urea_nitrogen}}</td>
-            <td>mg/dl</td>
-            <td>7 - 21</td>
+            <td>cotinine</td>
+            <td>{{ order.cotinine }}</td>
+  
+            <td>{{units.cotinine_unit}}</td>
+            <td>
+                {{units.cotinine_reference_range|safe}}
+            </td>
+  
         </tr>
     </tbody>
 </table>

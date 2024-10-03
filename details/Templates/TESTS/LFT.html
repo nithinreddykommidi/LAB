@@ -96,11 +96,115 @@
     </thead>
     <tbody>
         <tr>
-            <td>Blood Urea Nitrogen</td>
-            <td>{{order.blood_urea_nitrogen}}</td>
-            <td>mg/dl</td>
-            <td>7 - 21</td>
-        </tr>
+            <td>total_bilirubin</td>
+            <td>{{ order.total_bilirubin }}</td>
+    
+            <td>{{units.total_bilirubin_unit}}</td>
+            <td>
+                {{units.total_bilirubin_reference_range|safe}}
+            </td>
+    
+          </tr>
+          <tr>
+            <td>direct_bilirubin</td>
+            <td>{{ order.direct_bilirubin }}</td>
+    
+            <td>{{units.direct_bilirubin_unit}}</td>
+            <td>
+                {{units.direct_bilirubin_reference_range|safe}}
+            </td>
+    
+          </tr>
+          <tr>
+            <td>indirect_bilirubin</td>
+            <td>{{ order.indirect_bilirubin }}</td>
+    
+            <td>{{units.indirect_bilirubin_unit}}</td>
+            <td>
+                {{units.indirect_bilirubin_reference_range|safe}}
+            </td>
+    
+          </tr>
+          <tr>
+            <td>alkaline_phosphatase</td>
+            <td>{{ order.alkaline_phosphatase }}</td>
+    
+            <td>{{units.alkaline_phosphatase_unit}}</td>
+            <td>
+                {{units.alkaline_phosphatase_reference_range|safe}}
+            </td>
+    
+          </tr>
+          <tr>
+            <td>serum_gpt</td>
+            <td>{{ order.serum_gpt }}</td>
+    
+            <td>{{units.serum_gpt_unit}}</td>
+            <td>
+                {{units.serum_gpt_reference_range|safe}}
+            </td>
+    
+          </tr>
+          <tr>
+            <td>serum_got</td>
+            <td>{{ order.serum_got }}</td>
+    
+            <td>{{units.serum_got_unit}}</td>
+            <td>
+                {{units.serum_got_reference_range|safe}}
+            </td>
+    
+          </tr>
+          <tr>
+            <td>total_proteins</td>
+            <td>{{ order.total_proteins }}</td>
+    
+            <td>{{units.total_proteins_unit}}</td>
+            <td>
+                {{units.total_proteins_reference_range|safe}}
+            </td>
+    
+          </tr>
+          <tr>
+            <td>albumin</td>
+            <td>{{ order.albumin }}</td>
+    
+            <td>{{units.albumin_unit}}</td>
+            <td>
+                {{units.albumin_reference_range|safe}}
+            </td>
+    
+          </tr>
+          <tr>
+            <td>globulin</td>
+            <td>{{ order.globulin }}</td>
+    
+            <td>{{units.globulin_unit}}</td>
+            <td>
+                {{units.globulin_reference_range|safe}}
+            </td>
+    
+          </tr>
+          <tr>
+            <td>alb_glob_ratio</td>
+            <td>{{ order.alb_glob_ratio }}</td>
+    
+            <td>{{units.alb_glob_ratio_unit}}</td>
+            <td>
+                {{units.alb_glob_ratio_reference_range|safe}}
+            </td>
+    
+          </tr>
+          <tr>
+            <td>ggtp</td>
+            <td>{{ order.ggtp }}</td>
+    
+            <td>{{units.ggtp_unit}}</td>
+            <td>
+                {{units.ggtp_reference_range|safe}}
+            </td>
+    
+          </tr>
     </tbody>
 </table>
 

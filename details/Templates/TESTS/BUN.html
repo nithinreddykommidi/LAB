@@ -85,7 +85,6 @@
 </table>
 
 <h3 style="text-align: center;">{{test}}</h3>
-
 <table class="test-table">
     <thead>
         <tr>
@@ -99,8 +98,10 @@
         <tr>
             <td>Blood Urea Nitrogen</td>
             <td>{{order.blood_urea_nitrogen}}</td>
-            <td>mg/dl</td>
-            <td>7 - 21</td>
+            <td>{{units.blood_urea_nitrogen_unit}}</td>
+            <td>
+                {{units.blood_urea_nitrogen_range|safe}}
+            </td>
         </tr>
     </tbody>
 </table>

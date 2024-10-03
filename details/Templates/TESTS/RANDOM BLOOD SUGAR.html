@@ -96,11 +96,13 @@
     </thead>
     <tbody>
         <tr>
-            <td>Blood Urea Nitrogen</td>
-            <td>{{order.blood_urea_nitrogen}}</td>
-            <td>mg/dl</td>
-            <td>7 - 21</td>
-        </tr>
+            <td>random_blood_sugar</td>
+            <td>{{ order.random_blood_sugar }}</td>
+            <td>{{units.random_blood_sugar_unit}}</td>
+            <td>
+                {{units.random_blood_sugar_reference_range|safe}}
+            </td>
+          </tr>
     </tbody>
 </table>
 

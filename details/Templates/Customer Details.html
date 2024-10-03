@@ -10,6 +10,7 @@
         <p>Gender: {{patient.gender}}</p>
         <p>Age :{{patient.age}}</p>
         <p><a href="{% url 'edit_customer' patient.id %}"> edit</a></p>
+        <p><a href="{% url 'delete_customer' patient.id %}"> delete</a></p>
 
     </div>
 

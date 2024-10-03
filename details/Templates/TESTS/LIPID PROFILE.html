@@ -96,11 +96,63 @@
     </thead>
     <tbody>
         <tr>
-            <td>Blood Urea Nitrogen</td>
-            <td>{{order.blood_urea_nitrogen}}</td>
-            <td>mg/dl</td>
-            <td>7 - 21</td>
-        </tr>
+            <td>total_cholesterol</td>
+            <td>{{ order.total_cholesterol }}</td>
+    
+            <td>{{units.total_cholesterol_unit}}</td>
+            <td>
+                {{units.total_cholesterol_reference_range|safe}}
+            </td>
+    
+          </tr>
+          <tr>
+            <td>hdl</td>
+            <td>{{order.hdl }}</td>
+            <td>{{units.hdl_unit}}</td>
+            <td>
+                {{units.hdl_reference_range|safe}}
+            </td>
+          </tr>
+          <tr>
+            <td>ldl</td>
+            <td>{{ order.ldl }}</td>
+    
+            <td>{{units.ldl_unit}}</td>
+            <td>
+                {{units.ldl_reference_range|safe}}
+            </td>
+    
+          </tr>
+          <tr>
+            <td>vldl</td>
+            <td>{{ order.vldl }}</td>
+    
+            <td>{{units.vldl_unit}}</td>
+            <td>
+                {{units.vldl_reference_range|safe}}
+            </td>
+    
+          </tr>
+          <tr>
+            <td>triglycerides</td>
+            <td>{{ order.triglycerides }}</td>
+    
+            <td>{{units.triglycerides_unit}}</td>
+            <td>
+                {{units.triglycerides_reference_range|safe}}
+            </td>
+    
+          </tr>
+          <tr>
+            <td>chol_hdl_ratio</td>
+            <td>{{ order.chol_hdl_ratio }}</td>
+    
+            <td>{{units.chol_hdl_ratio_unit}}</td>
+            <td>
+                {{units.chol_hdl_ratio_reference_range|safe}}
+            </td>
+    
+          </tr>
     </tbody>
 </table>
 

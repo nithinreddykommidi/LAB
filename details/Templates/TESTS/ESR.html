@@ -96,10 +96,14 @@
     </thead>
     <tbody>
         <tr>
-            <td>Blood Urea Nitrogen</td>
-            <td>{{order.blood_urea_nitrogen}}</td>
-            <td>mg/dl</td>
-            <td>7 - 21</td>
+            <td>esr_1_hour</td>
+            <td>{{ order.esr_1_hour }}</td>
+  
+            <td>{{units.esr_1_hour_unit}}</td>
+            <td>
+                {{units.esr_1_hour_reference_range|safe}}
+            </td>
+  
         </tr>
     </tbody>
 </table>

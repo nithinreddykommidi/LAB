@@ -40,6 +40,7 @@ class Customer(models.Model):
     gender = models.ForeignKey(Gender, on_delete=models.DO_NOTHING,null=True)
     age = models.CharField(max_length=4, null=True)
     patient_address = models.CharField(max_length=150)
+    # willing_to_get_SMS = models.BooleanField(default=True)
 
     @staticmethod
     def get_all_customers():
@@ -266,166 +267,175 @@ class UNITSANDRANGES(models.Model):
     hba1c_reference_range = models.TextField(blank= True)
 # BLOOD UREA NITROGEN - BUN
     blood_urea_nitrogen_unit = models.CharField(max_length=10, blank=True)
-    blood_urea_nitrogen_reference_range = models.CharField(max_length=150, blank=True)
+    blood_urea_nitrogen_reference_range = models.CharField(max_length=250, blank=True)
 # COTININE
     cotinine_unit = models.CharField(max_length=10, blank=True)
-    cotinine_reference_range = models.CharField(max_length=150, blank=True)
+    cotinine_reference_range = models.CharField(max_length=250, blank=True)
 # ERYTHROCYTE SEDIMENTATION RATE( ESR)
     esr_1_hour_unit = models.CharField(max_length=10, blank=True)
-    esr_1_hour_reference_range = models.CharField(max_length=150, blank=True)
+    esr_1_hour_reference_range = models.CharField(max_length=250, blank=True)
 # HBsAg - Hepatitis B surface Antigen
     hbsag_unit = models.CharField(max_length=10, blank=True)
-    hbsag_reference_range = models.CharField(max_length=150, blank=True)
+    hbsag_reference_range = models.CharField(max_length=250, blank=True)
 # HIV I & II Elisa
     hiv_1_and_2_unit = models.CharField(max_length=10, blank=True)
-    hiv_1_and_2_reference_range = models.CharField(max_length=150, blank=True)
+    hiv_1_and_2_reference_range = models.CharField(max_length=250, blank=True)
 # COMPLETE URINE EXAMINATION
     colour_unit = models.CharField(max_length=10, blank=True)
-    colour_reference_range = models.CharField(max_length=150, blank=True)
+    colour_reference_range = models.CharField(max_length=250, blank=True)
 
     specific_gravity_unit = models.CharField(max_length=10, blank=True)
-    specific_gravity_reference_range = models.CharField(max_length=150, blank=True)
+    specific_gravity_reference_range = models.CharField(max_length=250, blank=True)
 
     ph_unit = models.CharField(max_length=10, blank=True)
-    ph_reference_range = models.CharField(max_length=150, blank=True)
+    ph_reference_range = models.CharField(max_length=250, blank=True)
 
     blood_unit = models.CharField(max_length=10, blank=True)
-    blood_reference_range = models.CharField(max_length=150, blank=True)
+    blood_reference_range = models.CharField(max_length=250, blank=True)
 
     albumin_unit = models.CharField(max_length=10, blank=True)
-    albumin_reference_range = models.CharField(max_length=150, blank=True)
+    albumin_reference_range = models.CharField(max_length=250, blank=True)
 
     sugar_unit = models.CharField(max_length=10, blank=True)
-    sugar_reference_range = models.CharField(max_length=150, blank=True)
+    sugar_reference_range = models.CharField(max_length=250, blank=True)
 
     ketone_bodies_unit = models.CharField(max_length=10, blank=True)
-    ketone_bodies_reference_range = models.CharField(max_length=150, blank=True)
+    ketone_bodies_reference_range = models.CharField(max_length=250, blank=True)
 
     nitrite_unit = models.CharField(max_length=10, blank=True)
-    nitrite_reference_range = models.CharField(max_length=150, blank=True)
+    nitrite_reference_range = models.CharField(max_length=250, blank=True)
 
     urobilinogen_unit = models.CharField(max_length=10, blank=True)
-    urobilinogen_reference_range = models.CharField(max_length=150, blank=True)
+    urobilinogen_reference_range = models.CharField(max_length=250, blank=True)
 
     leucocytes_unit = models.CharField(max_length=10, blank=True)
-    leucocytes_reference_range = models.CharField(max_length=150, blank=True)
+    leucocytes_reference_range = models.CharField(max_length=250, blank=True)
 
     bile_salts_unit = models.CharField(max_length=10, blank=True)
-    bile_salts_reference_range = models.CharField(max_length=150, blank=True)
+    bile_salts_reference_range = models.CharField(max_length=250, blank=True)
 
     bile_pigments_unit = models.CharField(max_length=10, blank=True)
-    bile_pigments_reference_range = models.CharField(max_length=150, blank=True)
+    bile_pigments_reference_range = models.CharField(max_length=250, blank=True)
 
     pus_cells_unit = models.CharField(max_length=10, blank=True)
-    pus_cells_reference_range = models.CharField(max_length=150, blank=True)
+    pus_cells_reference_range = models.CharField(max_length=250, blank=True)
 
     epithelial_cells_unit = models.CharField(max_length=10, blank=True)
-    epithelial_cells_reference_range = models.CharField(max_length=150, blank=True)
+    epithelial_cells_reference_range = models.CharField(max_length=250, blank=True)
 
     rbcs_unit = models.CharField(max_length=10, blank=True)
-    rbcs_reference_range = models.CharField(max_length=150, blank=True)
+    rbcs_reference_range = models.CharField(max_length=250, blank=True)
 
     bacteria_unit = models.CharField(max_length=10, blank=True)
-    bacteria_reference_range = models.CharField(max_length=150, blank=True)
+    bacteria_reference_range = models.CharField(max_length=250, blank=True)
 
     others_unit = models.CharField(max_length=10, blank=True)
-    others_reference_range = models.CharField(max_length=150, blank=True)
+    others_reference_range = models.CharField(max_length=250, blank=True)
 # HAEMOGRAM
     haemoglobin_unit = models.CharField(max_length=10, blank=True)
-    haemoglobin_reference_range = models.CharField(max_length=150, blank=True)
+    haemoglobin_reference_range = models.CharField(max_length=250, blank=True)
 
     rbc_count_unit = models.CharField(max_length=10, blank=True)
-    rbc_count_reference_range = models.CharField(max_length=150, blank=True)
+    rbc_count_reference_range = models.CharField(max_length=250, blank=True)
 
     pcv_unit = models.CharField(max_length=10, blank=True)
-    pcv_reference_range = models.CharField(max_length=150, blank=True)
+    pcv_reference_range = models.CharField(max_length=250, blank=True)
 
     platelets_unit = models.CharField(max_length=10, blank=True)
-    platelets_reference_range = models.CharField(max_length=150, blank=True)
+    platelets_reference_range = models.CharField(max_length=250, blank=True)
 
     wbc_unit = models.CharField(max_length=10, blank=True)
-    wbc_reference_range = models.CharField(max_length=150, blank=True)
+    wbc_reference_range = models.CharField(max_length=250, blank=True)
 
     neutrophils_unit = models.CharField(max_length=10, blank=True)
-    neutrophils_reference_range = models.CharField(max_length=150, blank=True)
+    neutrophils_reference_range = models.CharField(max_length=250, blank=True)
 
     lymphocytes_unit = models.CharField(max_length=10, blank=True)
-    lymphocytes_reference_range = models.CharField(max_length=150, blank=True)
+    lymphocytes_reference_range = models.CharField(max_length=250, blank=True)
 
     eosinophils_unit = models.CharField(max_length=10, blank=True)
-    eosinophils_reference_range = models.CharField(max_length=150, blank=True)
+    eosinophils_reference_range = models.CharField(max_length=250, blank=True)
 
     monocytes_unit = models.CharField(max_length=10, blank=True)
-    monocytes_reference_range = models.CharField(max_length=150, blank=True)
+    monocytes_reference_range = models.CharField(max_length=250, blank=True)
 
     basophils_unit = models.CharField(max_length=10, blank=True)
-    basophils_reference_range = models.CharField(max_length=150, blank=True)
+    basophils_reference_range = models.CharField(max_length=250, blank=True)
 
     mcv_unit = models.CharField(max_length=10, blank=True)
-    mcv_reference_range = models.CharField(max_length=150, blank=True)
+    mcv_reference_range = models.CharField(max_length=250, blank=True)
 
     mchc_unit = models.CharField(max_length=10, blank=True)
-    mchc_reference_range = models.CharField(max_length=150, blank=True)
+    mchc_reference_range = models.CharField(max_length=250, blank=True)
 
     mch_unit = models.CharField(max_length=10, blank=True)
-    mch_reference_range = models.CharField(max_length=150, blank=True)
+    mch_reference_range = models.CharField(max_length=250, blank=True)
 # RANDOM BLOOD SUGAR
     random_blood_sugar_unit = models.CharField(max_length=10, blank=True)
-    random_blood_sugar_reference_range = models.CharField(max_length=150, blank=True)
+    random_blood_sugar_reference_range = models.CharField(max_length=250, blank=True)
 # RFT/KFT
     uric_acid_unit = models.CharField(max_length=10, blank=True)
-    uric_acid_reference_range = models.CharField(max_length=150, blank=True)
+    uric_acid_reference_range = models.CharField(max_length=250, blank=True)
 
     serum_creatinine_unit = models.CharField(max_length=10, blank=True)
-    serum_creatinine_reference_range = models.CharField(max_length=150, blank=True)
+    serum_creatinine_reference_range = models.CharField(max_length=250, blank=True)
 # LIPID PROFILE
     total_cholesterol_unit = models.CharField(max_length=10, blank=True)
-    total_cholesterol_reference_range = models.CharField(max_length=150, blank=True)
+    total_cholesterol_reference_range = models.CharField(max_length=250, blank=True)
 
     hdl_unit = models.CharField(max_length=10, blank=True)
-    hdl_reference_range = models.CharField(max_length=150, blank=True)
+    hdl_reference_range = models.CharField(max_length=250, blank=True)
 
     ldl_unit = models.CharField(max_length=10, blank=True)
-    ldl_reference_range = models.CharField(max_length=150, blank=True)
+    ldl_reference_range = models.CharField(max_length=250, blank=True)
 
     vldl_unit = models.CharField(max_length=10, blank=True)
-    vldl_reference_range = models.CharField(max_length=150, blank=True)
+    vldl_reference_range = models.CharField(max_length=250, blank=True)
 
     triglycerides_unit = models.CharField(max_length=10, blank=True)
-    triglycerides_reference_range = models.CharField(max_length=150, blank=True)
+    triglycerides_reference_range = models.CharField(max_length=250, blank=True)
 
     chol_hdl_ratio_unit = models.CharField(max_length=10, blank=True)
-    chol_hdl_ratio_reference_range = models.CharField(max_length=150, blank=True)
+    chol_hdl_ratio_reference_range = models.CharField(max_length=250, blank=True)
 # LIVER FUNCTION TEST
     total_bilirubin_unit = models.CharField(max_length=10, blank=True)
-    total_bilirubin_reference_range = models.CharField(max_length=150, blank=True)
+    total_bilirubin_reference_range = models.CharField(max_length=250, blank=True)
 
     direct_bilirubin_unit = models.CharField(max_length=10, blank=True)
-    direct_bilirubin_reference_range = models.CharField(max_length=150, blank=True)
+    direct_bilirubin_reference_range = models.CharField(max_length=250, blank=True)
 
     indirect_bilirubin_unit = models.CharField(max_length=10, blank=True)
-    indirect_bilirubin_reference_range = models.CharField(max_length=150, blank=True)
+    indirect_bilirubin_reference_range = models.CharField(max_length=250, blank=True)
 
     alkaline_phosphatase_unit = models.CharField(max_length=10, blank=True)
-    alkaline_phosphatase_reference_range = models.CharField(max_length=150, blank=True)
+    alkaline_phosphatase_reference_range = models.CharField(max_length=250, blank=True)
 
     serum_gpt_unit = models.CharField(max_length=10, blank=True)
-    serum_gpt_reference_range = models.CharField(max_length=150, blank=True)
+    serum_gpt_reference_range = models.CharField(max_length=250, blank=True)
 
     serum_got_unit = models.CharField(max_length=10, blank=True)
-    serum_got_reference_range = models.CharField(max_length=150, blank=True)
+    serum_got_reference_range = models.CharField(max_length=250, blank=True)
 
     total_proteins_unit = models.CharField(max_length=10, blank=True)
-    total_proteins_reference_range = models.CharField(max_length=150, blank=True)
+    total_proteins_reference_range = models.CharField(max_length=250, blank=True)
 
     albumin_unit = models.CharField(max_length=10, blank=True)
-    albumin_reference_range = models.CharField(max_length=150, blank=True)
+    albumin_reference_range = models.CharField(max_length=250, blank=True)
 
     globulin_unit = models.CharField(max_length=10, blank=True)
-    globulin_reference_range = models.CharField(max_length=150, blank=True)
+    globulin_reference_range = models.CharField(max_length=250, blank=True)
 
     alb_glob_ratio_unit = models.CharField(max_length=10, blank=True)
-    alb_glob_ratio_reference_range = models.CharField(max_length=150, blank=True)
+    alb_glob_ratio_reference_range = models.CharField(max_length=250, blank=True)
 
     ggtp_unit = models.CharField(max_length=10, blank=True)
-    ggtp_reference_range = models.CharField(max_length=150, blank=True)
+    ggtp_reference_range = models.CharField(max_length=250, blank=True)
+
+# class HomeVisit(models.Model):
+#     date = models.DateTimeField()
+#     location = models.TextField()
+#     status = models.CharField(max_length=20, choices=[('scheduled', 'Scheduled'), ('completed', 'Completed'), ('canceled', 'Canceled')])
+#     notes = models.TextField(blank=True, null=True)
+#     client = models.ForeignKey(Client, on_delete=models.CASCADE)
+#     visitor = models.ForeignKey(Visitor, on_delete=models.CASCADE)
+#     reason = models.ForeignKey(VisitReason, on_delete=models.SET_NULL, null=True)

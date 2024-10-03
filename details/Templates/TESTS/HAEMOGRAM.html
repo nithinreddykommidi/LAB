@@ -96,11 +96,135 @@
     </thead>
     <tbody>
         <tr>
-            <td>Blood Urea Nitrogen</td>
-            <td>{{order.blood_urea_nitrogen}}</td>
-            <td>mg/dl</td>
-            <td>7 - 21</td>
-        </tr>
+            <td>haemoglobin</td>
+            <td>{{ order.haemoglobin }}</td>
+    
+            <td>{{units.haemoglobin_unit}}</td>
+            <td>
+                {{units.haemoglobin_reference_range|safe}}
+            </td>
+    
+          </tr>
+          <tr>
+            <td>rbc_count</td>
+            <td>{{ order.rbc_count }}</td>
+    
+            <td>{{units.rbc_count_unit}}</td>
+            <td>
+                {{units.rbc_count_reference_range|safe}}
+            </td>
+    
+          </tr>
+          <tr>
+            <td>pcv</td>
+            <td>{{ order.pcv }}</td>
+    
+            <td>{{units.pcv_unit}}</td>
+            <td>
+                {{units.pcv_reference_range|safe}}
+            </td>
+    
+          </tr>
+          <tr>
+            <td>platelets</td>
+            <td>{{ order.platelets }}</td>
+    
+            <td>{{units.platelets_unit}}</td>
+            <td>
+                {{units.platelets_reference_range|safe}}
+            </td>
+    
+          </tr>
+          <tr>
+            <td>wbc</td>
+            <td>{{ order.wbc }}</td>
+    
+            <td>{{units.wbc_unit}}</td>
+            <td>
+                {{units.wbc_reference_range|safe}}
+            </td>
+    
+          </tr>
+          <tr>
+            <td>neutrophils</td>
+            <td>{{ order.neutrophils }}</td>
+    
+            <td>{{units.neutrophils_unit}}</td>
+            <td>
+                {{units.neutrophils_reference_range|safe}}
+            </td>
+    
+          </tr>
+          <tr>
+            <td>lymphocytes</td>
+            <td>{{ order.lymphocytes }}</td>
+    
+            <td>{{units.lymphocytes_unit}}</td>
+            <td>
+                {{units.lymphocytes_reference_range|safe}}
+            </td>
+    
+          </tr>
+          <tr>
+            <td>eosinophils</td>
+            <td>{{ order.eosinophils }}</td>
+    
+            <td>{{units.eosinophils_unit}}</td>
+            <td>
+                {{units.eosinophils_reference_range|safe}}
+            </td>
+    
+          </tr>
+          <tr>
+            <td>monocytes</td>
+            <td>{{ order.monocytes }}</td>
+    
+            <td>{{units.monocytes_unit}}</td>
+            <td>
+                {{units.monocytes_reference_range|safe}}
+            </td>
+    
+          </tr>
+          <tr>
+            <td>basophils</td>
+            <td>{{ order.basophils }}</td>
+    
+            <td>{{units.basophils_unit}}</td>
+            <td>
+                {{units.basophils_reference_range|safe}}
+            </td>
+    
+          </tr>
+          <tr>
+            <td>mcv</td>
+            <td>{{ order.mcv }}</td>
+    
+            <td>{{units.mcv_unit}}</td>
+            <td>
+                {{units.mcv_reference_range|safe}}
+            </td>
+    
+          </tr>
+          <tr>
+            <td>mchc</td>
+            <td>{{ order.mchc }}</td>
+    
+            <td>{{units.mchc_unit}}</td>
+            <td>
+                {{units.mchc_reference_range|safe}}
+            </td>
+    
+          </tr>
+          <tr>
+            <td>mch</td>
+            <td>{{ order.mch }}</td>
+    
+            <td>{{units.mch_unit}}</td>
+            <td>
+                {{units.mch_reference_range|safe}}
+            </td>
+    
+          </tr>
     </tbody>
 </table>
 

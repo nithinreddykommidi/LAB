@@ -38,7 +38,9 @@
                 </td>
                 <td>
                   <a href="{% url 'generate_pdf_for_tests' order.order_id %}"> print</a>
-                </td>
+                  <a target= "blank" href="{% url 'share_report' order_id=order.order_id %}" class="btn btn-primary">➤
+                  </a>
+                </td>                
 
             </tr>
             <!-- and so on... -->

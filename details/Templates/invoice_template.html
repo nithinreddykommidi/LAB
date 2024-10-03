@@ -1,3 +1,5 @@
+{% load number_to_words %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -131,7 +133,7 @@
 
     <div class="footer">
         <p>
-            Received with thanks a sum of Rs. : {{order.get_total}}/- (Rupees Four Thousand Four Hundred only)<br>
+            Received with thanks a sum of Rs. : {{order.get_total}}/- ( {{order.get_total|number_to_words}} only)<br>
             <strong>Authorized By:</strong> ________<br>
             <strong>Remarks:</strong> ________<br><br>
             Note: Please bring this receipt to collect Reports.
