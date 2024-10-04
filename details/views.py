@@ -260,7 +260,7 @@ def fill_values(request, uuid):
             order.customer = order.customer
             form.save()
             return redirect('order_details', order_id=uuid)
-    return render(request, 'scratch.html', {'form': form, 'order': order, 'selected_tests': selected_tests,'units':units})
+    return render(request, 'fill_values.html', {'form': form, 'order': order, 'selected_tests': selected_tests,'units':units})
 
 def generate_pdf_for_tests(self, order_id):
     try:

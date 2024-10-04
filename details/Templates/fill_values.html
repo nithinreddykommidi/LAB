@@ -1,13 +1,18 @@
 {% extends "base.html" %}
-{% block title%} Fill Report {% endblock%}
+{% block title%} Fill Values {% endblock%}
 {% block content%}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <style>
 input {
   width: 170px;
 }
 </style>
 <section>
-  <form action="">
+  <form method="POST" action="">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {{ form.errors }}
         <!--for demo wrap-->
         <h1>Patien's Tests</h1>
         <div class="tbl-header">
@@ -30,7 +35,6 @@ input {
            
           {% for test in selected_tests %}
             <tbody>
-            <!-- Show fields for the selected tests -->
             {% if test == "GLYCOSYLATED HEMOGLOBIN (HBA1c)" %}
             <tr>
                 <td rowspan="1">{{test}}</td>
@@ -39,18 +43,16 @@ input {
                 <td>
                 <select>
                     <option value="--Select--">--Select--</option>
-                    <!-- Add more options here -->
                 </select>
                 </td>
                 <td>{{units.hba1c_unit}}</td>
-                <td>
-                    {{units.hba1c_reference_range}}
+                <td id="hba1c_reference_range">
+                    {{units.hba1c_reference_range|safe}}
                 </td>
                 <td>
-                <a href="#">Edit Ranges</a>
+                  <a href="#" class="edit-range" data-field="hba1c_reference_range">Edit Ranges</a>
                 </td>
-            </tr> 
-            <div>
+            </tr>
             {% endif %}
 
             {% if test == "BLOOD UREA NITROGEN - BUN " %}
@@ -65,16 +67,305 @@ input {
                 </select>
                 </td>
                 <td>{{units.blood_urea_nitrogen_unit}}</td>
-                <td>
-                    {{units.blood_urea_nitrogen_range}}
-                </td>
-                <td>
-                <a href="#">Edit Ranges</a> |
-                </td>
+                <td id="blood_urea_nitrogen_reference_range">
+                  {{ units.blood_urea_nitrogen_reference_range|safe }}
+              </td>
+              
+              <td>
+                  <a href="#" class="edit-range" data-field="blood_urea_nitrogen_reference_range">Edit Ranges</a>
+              </td>
             </tr> 
             {% endif %}
             {% if test == "COMPLETE URINE EXAMINATION" %}
-
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.colour.label_tag }}</td>
+              <td>{{ form.colour }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.colour_unit}}</td>
+              <td id="colour_reference_range">
+                  {{units.colour_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="colour_reference_range">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.specific_gravity.label_tag }}</td>
+              <td>{{ form.specific_gravity }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.specific_gravity_unit}}</td>
+              <td id="specific_gravity_reference_range">
+                  {{units.specific_gravity_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="specific_gravity_reference_range">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.ph.label_tag }}</td>
+              <td>{{ form.ph }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.ph_unit}}</td>
+              <td id="ph_reference_range">
+                  {{units.ph_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="ph_reference_range">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.blood.label_tag }}</td>
+              <td>{{ form.blood }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.blood_unit}}</td>
+              <td id="blood_reference_range">
+                  {{units.blood_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="blood_reference_range">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.albumin.label_tag }}</td>
+              <td>{{ form.albumin }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.albumin_unit}}</td>
+              <td id="albumin_reference_range">
+                  {{units.albumin_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="albumin_reference_range">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.sugar.label_tag }}</td>
+              <td>{{ form.sugar }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.sugar_unit}}</td>
+              <td id="sugar_reference_range">
+                  {{units.sugar_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="sugar_reference_range">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.ketone_bodies.label_tag }}</td>
+              <td>{{ form.ketone_bodies }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.ketone_bodies_unit}}</td>
+              <td id="ketone_bodies_reference_range">
+                  {{units.ketone_bodies_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="ketone_bodies_reference_range">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.nitrite.label_tag }}</td>
+              <td>{{ form.nitrite }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.nitrite_unit}}</td>
+              <td id="nitrite_reference_range">
+                  {{units.nitrite_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="nitrite_reference_range">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.urobilinogen.label_tag }}</td>
+              <td>{{ form.urobilinogen }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.urobilinogen_unit}}</td>
+              <td id="urobilinogen_reference_range">
+                  {{units.urobilinogen_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="urobilinogen_reference_range">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.leucocytes.label_tag }}</td>
+              <td>{{ form.leucocytes }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.leucocytes_unit}}</td>
+              <td id="leucocytes_reference_range">
+                  {{units.leucocytes_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="leucocytes_reference_range">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.bile_salts.label_tag }}</td>
+              <td>{{ form.bile_salts }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.bile_salts_unit}}</td>
+              <td id="bile_salts_reference_range">
+                  {{units.bile_salts_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="bile_salts_reference_range">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.bile_pigments.label_tag }}</td>
+              <td>{{ form.bile_pigments }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.bile_pigments_unit}}</td>
+              <td id="bile_pigments_reference_range">
+                  {{units.bile_pigments_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="bile_pigments_reference_range">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.pus_cells.label_tag }}</td>
+              <td>{{ form.pus_cells }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.pus_cells_unit}}</td>
+              <td id="pus_cells_reference_range">
+                  {{units.pus_cells_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="pus_cells_reference_range">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.epithelial_cells.label_tag }}</td>
+              <td>{{ form.epithelial_cells }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.epithelial_cells_unit}}</td>
+              <td id="epithelial_cells_reference_range">
+                  {{units.epithelial_cells_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="epithelial_cells_reference_range">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.rbcs.label_tag }}</td>
+              <td>{{ form.rbcs }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.rbcs_unit}}</td>
+              <td id="rbcs_reference_range">
+                  {{units.rbcs_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="rbcs_reference_range">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.bacteria.label_tag }}</td>
+              <td>{{ form.bacteria }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.bacteria_unit}}</td>
+              <td id="bacteria_reference_range">
+                  {{units.bacteria_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="bacteria_reference_range">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.others.label_tag }}</td>
+              <td>{{ form.others }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.others_unit}}</td>
+              <td id="others_reference_range">
+                  {{units.others_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="others_reference_range">Edit Ranges</a>
+              </td>
+            </tr>
             {% endif %}
             {% if test == "COTININE" %}
             <tr>
@@ -89,7 +380,7 @@ input {
                 </td>
                 <td>{{units.cotinine_unit}}</td>
                 <td>
-                    {{units.cotinine_reference_range}}
+                    {{units.cotinine_reference_range|safe}}
                 </td>
                 <td>
                 <a href="#">Edit Ranges</a> |
@@ -109,7 +400,7 @@ input {
                 </td>
                 <td>{{units.esr_1_hour_unit}}</td>
                 <td>
-                    {{units.esr_1_hour_reference_range}}
+                    {{units.esr_1_hour_reference_range|safe}}
                 </td>
                 <td>
                 <a href="#">Edit Ranges</a> |
@@ -117,7 +408,227 @@ input {
             </tr>
             {% endif %}
             {% if test == "HAEMOGRAM" %}
-
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.haemoglobin.label_tag }}</td>
+              <td>{{ form.haemoglobin }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.haemoglobin_unit}}</td>
+              <td>
+                  {{units.haemoglobin_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.rbc_count.label_tag }}</td>
+              <td>{{ form.rbc_count }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.rbc_count_unit}}</td>
+              <td>
+                  {{units.rbc_count_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.pcv.label_tag }}</td>
+              <td>{{ form.pcv }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.pcv_unit}}</td>
+              <td>
+                  {{units.pcv_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.platelets.label_tag }}</td>
+              <td>{{ form.platelets }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.platelets_unit}}</td>
+              <td>
+                  {{units.platelets_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.wbc.label_tag }}</td>
+              <td>{{ form.wbc }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.wbc_unit}}</td>
+              <td>
+                  {{units.wbc_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.neutrophils.label_tag }}</td>
+              <td>{{ form.neutrophils }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.neutrophils_unit}}</td>
+              <td>
+                  {{units.neutrophils_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.lymphocytes.label_tag }}</td>
+              <td>{{ form.lymphocytes }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.lymphocytes_unit}}</td>
+              <td>
+                  {{units.lymphocytes_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.eosinophils.label_tag }}</td>
+              <td>{{ form.eosinophils }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.eosinophils_unit}}</td>
+              <td>
+                  {{units.eosinophils_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.monocytes.label_tag }}</td>
+              <td>{{ form.monocytes }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.monocytes_unit}}</td>
+              <td>
+                  {{units.monocytes_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.basophils.label_tag }}</td>
+              <td>{{ form.basophils }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.basophils_unit}}</td>
+              <td>
+                  {{units.basophils_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.mcv.label_tag }}</td>
+              <td>{{ form.mcv }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.mcv_unit}}</td>
+              <td>
+                  {{units.mcv_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.mchc.label_tag }}</td>
+              <td>{{ form.mchc }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.mchc_unit}}</td>
+              <td>
+                  {{units.mchc_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.mch.label_tag }}</td>
+              <td>{{ form.mch }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.mch_unit}}</td>
+              <td>
+                  {{units.mch_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
             {% endif %}
             {% if test == "HBsAg - Hepatitis B surface Antigen" %}
             <tr>
@@ -132,7 +643,7 @@ input {
                 </td>
                 <td>{{units.hbsag_unit}}</td>
                 <td>
-                    {{units.hbsag_reference_range}}
+                    {{units.hbsag_reference_range|safe}}
                 </td>
                 <td>
                 <a href="#">Edit Ranges</a> |
@@ -152,7 +663,7 @@ input {
                 </td>
                 <td >{{units.hiv_1_and_2_unit}}</td>
                 <td>
-                    {{units.hiv_1_and_2_reference_range}}
+                    {{units.hiv_1_and_2_reference_range|safe}}
                 </td>
                 <td>
                 <a href="#">Edit Ranges</a> |
@@ -160,16 +671,352 @@ input {
             </tr>
             {% endif %}
             {% if test == "LIPID PROFILE" %}
-
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.total_cholesterol.label_tag }}</td>
+              <td>{{ form.total_cholesterol }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.total_cholesterol_unit}}</td>
+              <td>
+                  {{units.total_cholesterol_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.hdl.label_tag }}</td>
+              <td>{{ form.hdl }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.hdl_unit}}</td>
+              <td>
+                  {{units.hdl_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.ldl.label_tag }}</td>
+              <td>{{ form.ldl }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.ldl_unit}}</td>
+              <td>
+                  {{units.ldl_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.vldl.label_tag }}</td>
+              <td>{{ form.vldl }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.vldl_unit}}</td>
+              <td>
+                  {{units.vldl_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.triglycerides.label_tag }}</td>
+              <td>{{ form.triglycerides }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.triglycerides_unit}}</td>
+              <td>
+                  {{units.triglycerides_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.chol_hdl_ratio.label_tag }}</td>
+              <td>{{ form.chol_hdl_ratio }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.chol_hdl_ratio_unit}}</td>
+              <td>
+                  {{units.chol_hdl_ratio_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
             {% endif %}
             {% if test == "LIVER FUNCTION TEST" %}
-
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.total_bilirubin.label_tag }}</td>
+              <td>{{ form.total_bilirubin }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.total_bilirubin_unit}}</td>
+              <td>
+                  {{units.total_bilirubin_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.direct_bilirubin.label_tag }}</td>
+              <td>{{ form.direct_bilirubin }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.direct_bilirubin_unit}}</td>
+              <td>
+                  {{units.direct_bilirubin_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.indirect_bilirubin.label_tag }}</td>
+              <td>{{ form.indirect_bilirubin }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.indirect_bilirubin_unit}}</td>
+              <td>
+                  {{units.indirect_bilirubin_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.alkaline_phosphatase.label_tag }}</td>
+              <td>{{ form.alkaline_phosphatase }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.alkaline_phosphatase_unit}}</td>
+              <td>
+                  {{units.alkaline_phosphatase_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.serum_gpt.label_tag }}</td>
+              <td>{{ form.serum_gpt }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.serum_gpt_unit}}</td>
+              <td>
+                  {{units.serum_gpt_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.serum_got.label_tag }}</td>
+              <td>{{ form.serum_got }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.serum_got_unit}}</td>
+              <td>
+                  {{units.serum_got_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.total_proteins.label_tag }}</td>
+              <td>{{ form.total_proteins }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.total_proteins_unit}}</td>
+              <td>
+                  {{units.total_proteins_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.albumin.label_tag }}</td>
+              <td>{{ form.albumin }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.albumin_unit}}</td>
+              <td>
+                  {{units.albumin_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.globulin.label_tag }}</td>
+              <td>{{ form.globulin }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.globulin_unit}}</td>
+              <td>
+                  {{units.globulin_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.alb_glob_ratio.label_tag }}</td>
+              <td>{{ form.alb_glob_ratio }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.alb_glob_ratio_unit}}</td>
+              <td>
+                  {{units.alb_glob_ratio_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.ggtp.label_tag }}</td>
+              <td>{{ form.ggtp }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.ggtp_unit}}</td>
+              <td>
+                  {{units.ggtp_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
             {% endif %}
             {% if test == "RANDOM BLOOD SUGAR" %}
-
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.random_blood_sugar.label_tag }}</td>
+              <td>{{ form.random_blood_sugar }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.random_blood_sugar_unit}}</td>
+              <td>
+                  {{units.random_blood_sugar_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
             {% endif %}
             {% if test == "RFT/KFT" %}
-
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.uric_acid.label_tag }}</td>
+              <td>{{ form.uric_acid }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.uric_acid_unit}}</td>
+              <td>
+                  {{units.uric_acid_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="1">{{test}}</td>
+              <td>{{ form.serum_creatinine.label_tag }}</td>
+              <td>{{ form.serum_creatinine }}</td>
+              <td>
+              <select>
+                  <option value="--Select--">--Select--</option>
+              </select>
+              </td>
+              <td>{{units.serum_creatinine_unit}}</td>
+              <td>
+                  {{units.serum_creatinine_reference_range|safe}}
+              </td>
+              <td>
+            <a href="#" class="edit-range" data-field="b0_b">Edit Ranges</a>
+              </td>
+            </tr>
             {% endif %}
         {% endfor %}
           </table>
@@ -207,7 +1054,49 @@ input {
         </div>
         <div class="d-flex justify-content-center mt-3 login_container">
           <input class="btn login_btn" type="submit" value="Submit">
-      </div>
-      </form>
-      </section>
+        </div>
+  </form>
+</section>
+<script>
+  $(document).ready(function() {
+    // Handle Edit Ranges link click
+    $('.edit-range').on('click', function(e) {
+        e.preventDefault();
+        
+        // Get the field name from the data-field attribute (e.g., 'blood_urea_nitrogen_reference_range')
+        let field = $(this).data('field');
+        
+        // Get the current value from the corresponding element (use the correct id)
+        let oldValue = $('#' + field).text().trim();  // Fetch old value from the <td> element
+
+        // Prompt the user to enter a new range, with the old value pre-filled
+        let newRange = prompt("Enter new range:", oldValue);
+
+        if (newRange !== null && newRange !== oldValue) {
+            // Send AJAX request to update the range
+            $.ajax({
+                url: '{% url "update_range" %}',  // Update the URL to match your Django view
+                method: 'POST',
+                data: {
+                    'field': field,
+                    'new_range': newRange,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'  // Include CSRF token for security
+                },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        // Update the DOM with the new range value
+                        $('#' + field).text(response.new_range);
+                    } else {
+                        alert("Failed to update the range.");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error: " + error);
+                }
+            });
+        }
+    });
+});
+
+</script>
 {% endblock %}
