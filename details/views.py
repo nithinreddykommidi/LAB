@@ -73,7 +73,7 @@ def home(request):
         if form.is_valid():
             form.save()
             return redirect('/')
-    return render(request, 'Home.html', {'tests': tests, 'form': form})
+    return render(request, 'scratch.html', {'tests': tests, 'form': form})
 
 @login_required(login_url='user_login')
 def orders_list(request):

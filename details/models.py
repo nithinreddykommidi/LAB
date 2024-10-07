@@ -71,6 +71,11 @@ class Tech(models.Model):
     def __str__(self):
         return self.name
 
+class VisitStatus(models.Model):
+    name = models.CharField(max_length=50)
+    def __str__(self):
+        return self.name
+
 class Doctor(models.Model):
     doctor_name = models.CharField(max_length=50)
     commission = models.IntegerField()
@@ -435,7 +440,7 @@ class HomeVisit(models.Model):
     date = models.DateTimeField()
     location = models.CharField(max_length = 50, blank= True)
     googlemaps_link = models.CharField(max_length = 50, blank= True)
-    status = models.CharField(max_length=20, choices=[('scheduled', 'Scheduled'), ('completed', 'Completed'), ('canceled', 'Canceled')])
     notes = models.CharField(max_length = 50, blank=True, null=True)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     visitor = models.ForeignKey(Tech, on_delete=models.CASCADE)
+    status = models.ForeignKey(VisitStatus, on_delete=models.CASCADE)

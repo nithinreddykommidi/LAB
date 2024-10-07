@@ -238,6 +238,36 @@ class HomeVisitForm(ModelForm):
         ),
         label="Visited Date",  # Optional: Add a label for the form field
     )
+    customer = forms.ModelChoiceField(
+            queryset=Customer.objects.all(),
+            empty_label="Select Customer",  # Adds the placeholder option
+            widget=forms.Select(attrs={
+                'class': 'form-control'
+            })
+    )
+    visitor = forms.ModelChoiceField(
+            queryset=Tech.objects.all(),
+            empty_label="Select Visitor",  # Adds the placeholder option
+            widget=forms.Select(attrs={
+                'class': 'form-control'
+            })
+    )
+    status = forms.ModelChoiceField(
+            queryset=VisitStatus.objects.all(),
+            empty_label="Select Status",  # Adds the placeholder option
+            widget=forms.Select(attrs={
+                'class': 'form-control'
+            })
+    )
+    location = forms.CharField(
+            widget=forms.TextInput(attrs={'placeholder': "Enter patient's Location"})
+    )
+    googlemaps_link = forms.CharField(
+            widget=forms.TextInput(attrs={'placeholder': "Enter patient's Location googlemaps_link"})
+    )
+    notes = forms.CharField(
+            widget=forms.TextInput(attrs={'placeholder': "Enter notes"})
+    )
     class Meta:
         model = HomeVisit
         fields = "__all__"

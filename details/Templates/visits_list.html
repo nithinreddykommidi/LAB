@@ -33,9 +33,8 @@
                 <td> {{visit.visitor}}</td>
                 <td> {{visit.location}}</td>
                 <td> {{visit.status}}</td>
+                <td> {{visit.notes}}</td>
                 <td> <a href="{{visit.googlemaps_link}}" target="_blank"> 📍 </a> </td>
-                <td> {{visit.notes}}</td>
-                <td> {{visit.notes}}</td>
                 <td>
                   <a href="{% url 'edit_visit' visit.id %}"> Edit</a>
                   <a href="{% url 'delete_visit' visit.id %}"> ❌</a>
