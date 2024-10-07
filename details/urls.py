@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path,re_path
+from django.urls import path,re_path,include
 from .views import *
 from django.conf import settings
 from django.conf.urls.static import static
@@ -46,6 +46,8 @@ urlpatterns = [
     path('<uuid:uuid>/fill_values', fill_values, name='fill_values'),
     path('share_report/<uuid:order_id>/', share_report, name='share_report'),
     path('update-range/', update_range, name='update_range'),
+    path('select2/', include('django_select2.urls')),  # Add this for Select2 support
+
 
 ]
 if settings.DEBUG:

@@ -1,6 +1,8 @@
 from django.forms import *
 from .models import *
 from django import forms
+from django_select2.forms import Select2Widget
+
 
 class CustomerForm(ModelForm):
         title = forms.ModelChoiceField(
@@ -239,12 +241,11 @@ class HomeVisitForm(ModelForm):
         label="Visited Date",  # Optional: Add a label for the form field
     )
     customer = forms.ModelChoiceField(
-            queryset=Customer.objects.all(),
-            empty_label="Select Customer",  # Adds the placeholder option
-            widget=forms.Select(attrs={
-                'class': 'form-control'
-            })
+        queryset=Customer.objects.all(),
+        empty_label="Select Customer",
+        widget=Select2Widget(attrs={'class': 'form-control'}),  # Use Select2Widget for searchable dropdown
     )
+    
     visitor = forms.ModelChoiceField(
             queryset=Tech.objects.all(),
             empty_label="Select Visitor",  # Adds the placeholder option

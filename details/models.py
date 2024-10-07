@@ -111,7 +111,7 @@ class Doctor(models.Model):
 class Order(models.Model):
     def get_total(self):
         # patient_tests = self.tests.all()
-        total = sum([test.price for test in self.tests.all()])
+        total = sum(test.price for test in self.tests.all())
         return total
     
     def get_selected_tests(self):
