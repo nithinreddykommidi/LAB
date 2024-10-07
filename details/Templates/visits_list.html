@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title%} Visits {% endblock%}
+
+{% block content%}
+
+<section>
+    <!--for demo wrap-->
+    <h1>Visits</h1>
+    <div class="tbl-header">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <thead>
+          <tr>
+            <th>Patient Name</th>
+            <th>visit_date</th>
+            <th>visitor</th>
+            <th>location </th>
+            <th>status </th>
+            <th>notes </th>
+            <th>Google Maps Link </th>
+            <th>Actions </th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    <div class="tbl-content">
+      <table cellpadding="0" cellspacing="0" border="0">
+       
+        {% for visit in visits%}
+        <tbody>
+            <tr>
+                <td> {{visit.customer}}</td>
+                <td> {{visit.date}}</td>
+                <td> {{visit.visitor}}</td>
+                <td> {{visit.location}}</td>
+                <td> {{visit.status}}</td>
+                <td> <a href="{{visit.googlemaps_link}}" target="_blank"> 📍 </a> </td>
+                <td> {{visit.notes}}</td>
+                <td> {{visit.notes}}</td>
+                <td>
+                  <a href="{% url 'edit_visit' visit.id %}"> Edit</a>
+                  <a href="{% url 'delete_visit' visit.id %}"> ❌</a>
+              </td>
+            </tr>
+            <!-- and so on... -->
+        </tbody>
+    
+        {% endfor %} 
+      </table>
+    </div>
+    <a href={% url 'create_visit' %}> create new visit</a>
+
+  </section>
+  
+  
+  
+  <!-- follow me template -->
+  <div class="made-with-love">
+    Made with
+    <i>♥</i> by N<i>♥</i>S
+   </div>
+
+    {% endblock %}

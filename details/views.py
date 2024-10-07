@@ -45,6 +45,25 @@ def register_customer(request):
     return render(request, 'New Customer.html', {'tests': tests, 'form': form})
 
 @login_required(login_url='user_login')
+def create_visit(request):
+    form = HomeVisitForm()
+    if request.method == 'POST':
+        form = HomeVisitForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    return render(request, 'New Visit.html', {'form': form})
+
+@login_required(login_url='user_login')
+def edit_visit(request,pk):
+    instance = HomeVisit.objects.get(id=pk)
+    form = HomeVisitForm(request.POST or None, instance=instance)
+    if form.is_valid():
+        form.save()
+        return redirect(reverse('visits_list'))
+    return render(request,'New Visit.html',{'form':form})
+
+@login_required(login_url='user_login')
 def home(request):
     tests = Test.get_all_tests()
     form = NewOrderForm()
@@ -70,6 +89,11 @@ def orders_list(request):
 def doctors_list(request):
     doctors = Doctor.get_all_doctors()
     return render(request, 'Doctors.html', {'doctors': doctors})
+
+@login_required(login_url='user_login')
+def visits_list(request):
+    visits = HomeVisit.objects.all()
+    return render(request, 'visits_list.html', {'visits': visits})
 
 @login_required(login_url='user_login')
 def customer_details(request,pk):
@@ -100,6 +124,12 @@ def delete_order(request,pk):
     order = Order.objects.get(order_id=pk)
     order.delete()
     return  redirect('orders_list')
+
+@login_required(login_url='user_login')
+def delete_visit(request,pk):
+    visit = HomeVisit.objects.get(id=pk)
+    visit.delete()
+    return  redirect('visits_list')
 
 @login_required(login_url='user_login')
 def delete_customer(request,pk):

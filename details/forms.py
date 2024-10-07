@@ -226,3 +226,18 @@ class FillValuesForm(forms.ModelForm):
         self.fields['collected_datetime'].input_formats = ('%Y-%m-%dT%H:%M',)
         self.fields['tested_datetime'].input_formats = ('%Y-%m-%dT%H:%M',)
         self.fields['report_datetime'].input_formats = ('%Y-%m-%dT%H:%M',)
+
+class HomeVisitForm(ModelForm):
+    date = forms.DateField(
+        widget=forms.DateInput(
+            attrs={
+                'class': 'form-control',   # Add CSS class for styling
+                'placeholder': 'collected date',  # Set the placeholder
+                'type': 'date',           # This is important for the calendar to show
+            }
+        ),
+        label="Visited Date",  # Optional: Add a label for the form field
+    )
+    class Meta:
+        model = HomeVisit
+        fields = "__all__"

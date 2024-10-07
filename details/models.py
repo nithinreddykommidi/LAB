@@ -431,11 +431,11 @@ class UNITSANDRANGES(models.Model):
     ggtp_unit = models.CharField(max_length=10, blank=True)
     ggtp_reference_range = models.CharField(max_length=250, blank=True)
 
-# class HomeVisit(models.Model):
-#     date = models.DateTimeField()
-#     location = models.TextField()
-#     status = models.CharField(max_length=20, choices=[('scheduled', 'Scheduled'), ('completed', 'Completed'), ('canceled', 'Canceled')])
-#     notes = models.TextField(blank=True, null=True)
-#     client = models.ForeignKey(Client, on_delete=models.CASCADE)
-#     visitor = models.ForeignKey(Visitor, on_delete=models.CASCADE)
-#     reason = models.ForeignKey(VisitReason, on_delete=models.SET_NULL, null=True)
+class HomeVisit(models.Model):
+    date = models.DateTimeField()
+    location = models.CharField(max_length = 50, blank= True)
+    googlemaps_link = models.CharField(max_length = 50, blank= True)
+    status = models.CharField(max_length=20, choices=[('scheduled', 'Scheduled'), ('completed', 'Completed'), ('canceled', 'Canceled')])
+    notes = models.CharField(max_length = 50, blank=True, null=True)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    visitor = models.ForeignKey(Tech, on_delete=models.CASCADE)
