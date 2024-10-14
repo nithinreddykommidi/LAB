@@ -52,47 +52,43 @@ class CustomerSearchForm(ModelForm):
         fields = ['patient_name','mobile']
 
 class NewOrderForm(ModelForm):
-    collected_at = forms.ModelChoiceField(
-            queryset=Locations.objects.all(),
-            empty_label="Select Location",  # Adds the placeholder option
-            widget=forms.Select(attrs={
-                'class': 'form-control'
-            })
-        )
+    # collected_at = forms.ModelChoiceField(
+    #         queryset=Locations.objects.all(),
+    #         empty_label="Select Location",  # Adds the placeholder option
+    #         widget=forms.Select(attrs={
+    #             'class': 'form-control'
+    #         })
+    #     )
     
-    customer = forms.ModelChoiceField(
-            queryset=Customer.objects.all(),
-            empty_label="Select Customer",  # Adds the placeholder option
-            widget=forms.Select(attrs={
-                'class': 'form-control'
-            })
-        )
-    referred_by = forms.ModelChoiceField(
-            queryset=Doctor.objects.all(),
-            empty_label="Select the doctor refered",  # Adds the placeholder option
-            widget=forms.Select(attrs={
-                'class': 'form-control'
-            })
-        )
+    # customer = forms.ModelChoiceField(
+    #         queryset=Customer.objects.all(),
+    #         empty_label="Select Customer",  # Adds the placeholder option
+    #         widget=forms.Select(attrs={
+    #             'class': 'form-control'
+    #         })
+    #     )
+    # referred_by = forms.ModelChoiceField(
+    #         queryset=Doctor.objects.all(),
+    #         empty_label="Select the doctor refered",  # Adds the placeholder option
+    #         widget=forms.Select(attrs={
+    #             'class': 'form-control'
+    #         })
+    #     )
     collected_date = forms.DateField(
         widget=forms.DateInput(
             attrs={
-                'class': 'form-control',   # Add CSS class for styling
                 'placeholder': 'collected date',  # Set the placeholder
                 'type': 'date',           # This is important for the calendar to show
             }
         ),
-        label="Collected Date",  # Optional: Add a label for the form field
     )
     expected_complete_date = forms.DateField(
         widget=forms.DateInput(
             attrs={
-                'class': 'form-control',   # Add CSS class for styling
                 'placeholder': 'collected_date',  # Set the placeholder
                 'type': 'date',           # This is important for the calendar to show
             }
         ),
-        label="Collected Date",  # Optional: Add a label for the form field
     )
     tests = forms.ModelMultipleChoiceField(
         queryset=Test.objects.all(),  # Change this to your actual queryset
