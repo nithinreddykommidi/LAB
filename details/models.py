@@ -2,6 +2,7 @@ from django.db import models
 from datetime import datetime
 from django.db.models import Max
 import uuid
+from django.contrib.auth.models import User
 
 
 class Test(models.Model):
@@ -33,6 +34,7 @@ class Title(models.Model):
 
 
 class Customer(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)  # Add this line
     title = models.ForeignKey(Title, on_delete=models.DO_NOTHING,null=True)
     patient_name = models.CharField(max_length=50)
     mobile = models.IntegerField(null=True)

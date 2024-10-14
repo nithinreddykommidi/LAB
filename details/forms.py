@@ -2,7 +2,40 @@ from django.forms import *
 from .models import *
 from django import forms
 from django_select2.forms import Select2Widget
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
+
+class UserCustomerForm(UserCreationForm):
+    title = forms.ModelChoiceField(queryset=Title.objects.all(), required=False)
+    patient_name = forms.CharField(max_length=50)
+    mobile = forms.IntegerField(required=False)
+    email = forms.EmailField(required=False)
+    gender = forms.ModelChoiceField(queryset=Gender.objects.all(), required=False)
+    age = forms.CharField(max_length=4, required=False)
+    patient_address = forms.CharField(max_length=150, required=False)
+
+    class Meta:
+        model = User
+        fields = ['username','email']  # Default User fields
+
+    def save(self, commit=True):
+        user = super(UserCustomerForm, self).save(commit=False)
+        if commit:
+            user.save()
+        
+        # Create a corresponding Customer object with user as a foreign key
+        customer = Customer.objects.create(
+            user=user,
+            title=self.cleaned_data.get('title'),
+            patient_name=self.cleaned_data.get('patient_name'),
+            mobile=self.cleaned_data.get('mobile'),
+            email=self.cleaned_data.get('email'),
+            gender=self.cleaned_data.get('gender'),
+            age=self.cleaned_data.get('age'),
+            patient_address=self.cleaned_data.get('patient_address')
+        )
+        return user
 
 class CustomerForm(ModelForm):
         title = forms.ModelChoiceField(

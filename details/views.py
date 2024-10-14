@@ -19,6 +19,8 @@ from PyPDF2 import PdfMerger
 from io import BytesIO
 from urllib.parse import quote_plus
 from django.conf import settings
+from django.contrib.auth.hashers import make_password
+
 
 
 
@@ -37,10 +39,29 @@ def get_pat_id(request):
 def register_customer(request):
     tests = Test.get_all_tests()
     form = CustomerForm()
+    
     if request.method == 'POST':
         form = CustomerForm(request.POST)
         if form.is_valid():
-            form.save()
+            # Save the Customer instance first
+            customer = form.save(commit=False)
+
+            # Create a User instance
+            user = User(
+                username=customer.patient_name,  # Or another field that uniquely identifies the user
+                email=customer.email,
+                first_name=customer.patient_name.split()[0],  # Assuming the first name is the first part
+                last_name=customer.patient_name.split()[-1],  # Assuming the last name is the last part
+            )
+
+            # Set the default password
+            user.password = make_password("Maheshnit@5")  # Set your default password
+            user.save()
+
+            # Assign the User instance to the Customer
+            customer.user = user
+            customer.save()
+            
             return redirect('/')
     return render(request, 'New Customer.html', {'tests': tests, 'form': form})
 
