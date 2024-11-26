@@ -3,8 +3,14 @@ from .models import *
 from django import forms
 from django_select2.forms import Select2Widget
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User,Group
+from dal import autocomplete
 
+
+class AppointmentForm(forms.ModelForm):
+    class Meta:
+        model = Appointment
+        fields = ['date', 'time', 'service']
 
 class UserCustomerForm(UserCreationForm):
     title = forms.ModelChoiceField(queryset=Title.objects.all(), required=False)
@@ -35,6 +41,8 @@ class UserCustomerForm(UserCreationForm):
             age=self.cleaned_data.get('age'),
             patient_address=self.cleaned_data.get('patient_address')
         )
+        customer_group, created = Group.objects.get_or_create(name='Customer')
+        user.groups.add(customer_group)
         return user
 
 class CustomerForm(ModelForm):
@@ -83,6 +91,21 @@ class CustomerSearchForm(ModelForm):
     class Meta:
         model = Date
         fields = ['patient_name','mobile']
+        
+
+class VisitForm(forms.ModelForm):
+    customer = forms.ModelChoiceField(
+        queryset=Customer.objects.all(),
+        widget=autocomplete.ModelSelect2(url='customer-autocomplete')  # This URL will point to your autocomplete view
+    )
+    class Meta:
+        model = HomeVisit
+        fields = ['customer','visit_date', 'location', 'status']
+        # widgets = {
+        #     'customer': autocomplete.ModelSelect2(url='customer-autocomplete'),
+        #     # 'doctor': autocomplete.ModelSelect2(url='doctor-autocomplete'),
+        # }
+
 
 class NewOrderForm(ModelForm):
     collected_at = forms.ModelChoiceField(
@@ -263,7 +286,7 @@ class FillValuesForm(forms.ModelForm):
         self.fields['report_datetime'].input_formats = ('%Y-%m-%dT%H:%M',)
 
 class HomeVisitForm(ModelForm):
-    date = forms.DateField(
+    visit_date = forms.DateField(
         widget=forms.DateInput(
             attrs={
                 'class': 'form-control',   # Add CSS class for styling

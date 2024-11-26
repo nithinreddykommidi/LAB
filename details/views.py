@@ -4,7 +4,7 @@ from django.http import HttpResponse,HttpResponseRedirect
 from .models import Customer, Test, Doctor, Order, Title, UNITSANDRANGES
 from .forms import *
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required,user_passes_test
 from django.template.loader import get_template
 import datetime
 import re
@@ -20,11 +20,18 @@ from io import BytesIO
 from urllib.parse import quote_plus
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
+from .filters import CustomerFilter, VisitFilter, OrderFilter
+from .utils import send_order_notification
 
-
-
-
-
+# Helper function to check if user belongs to one of the specified groups
+def group_required(group_names):
+    if not isinstance(group_names, (list, tuple)):
+        group_names = [group_names]  # Ensure it's always a list or tuple
+    
+    def in_groups(user):
+        return user.is_authenticated and (user.is_superuser or user.groups.filter(name__in=group_names).exists())
+    
+    return user_passes_test(in_groups)
 def get_pat_id(request):
     s = request.META.get('HTTP_REFERER')
     match = re.search(r'([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})', s)
@@ -36,16 +43,14 @@ def get_pat_id(request):
     return Orderid
 
 @login_required(login_url='user_login')
+@group_required(['Techician'])
 def register_customer(request):
-    tests = Test.get_all_tests()
     form = CustomerForm()
-    
     if request.method == 'POST':
         form = CustomerForm(request.POST)
         if form.is_valid():
             # Save the Customer instance first
             customer = form.save(commit=False)
-
             # Create a User instance
             user = User(
                 username=customer.patient_name,  # Or another field that uniquely identifies the user
@@ -53,19 +58,23 @@ def register_customer(request):
                 first_name=customer.patient_name.split()[0],  # Assuming the first name is the first part
                 last_name=customer.patient_name.split()[-1],  # Assuming the last name is the last part
             )
-
             # Set the default password
             user.password = make_password("Maheshnit@5")  # Set your default password
             user.save()
-
             # Assign the User instance to the Customer
             customer.user = user
             customer.save()
-            
+            # Assign the user to the "Customer" group (if you have it set up)
+            customer_group, created = Group.objects.get_or_create(name='Customer')
+            user.groups.add(customer_group)
+            subject = 'Welcome'
+            message = f"please use https://gg.com to with username:{customer.patient_name} and password: Maheshnit@5"
+            send_order_notification(to_email=customer.email, subject=subject, message=message)
             return redirect('/')
-    return render(request, 'New Customer.html', {'tests': tests, 'form': form})
+    return render(request, 'New Customer.html', {'form': form})
 
 @login_required(login_url='user_login')
+@group_required(['Techician'])
 def create_visit(request):
     form = HomeVisitForm()
     if request.method == 'POST':
@@ -76,6 +85,7 @@ def create_visit(request):
     return render(request, 'New Visit.html', {'form': form})
 
 @login_required(login_url='user_login')
+@group_required(['Techician'])
 def edit_visit(request,pk):
     instance = HomeVisit.objects.get(id=pk)
     form = HomeVisitForm(request.POST or None, instance=instance)
@@ -85,51 +95,63 @@ def edit_visit(request,pk):
     return render(request,'New Visit.html',{'form':form})
 
 @login_required(login_url='user_login')
+@group_required(['Techician'])
 def home(request):
     tests = Test.get_all_tests()
     form = NewOrderForm()
     if request.method == 'POST':
         form = NewOrderForm(request.POST)
-
         if form.is_valid():
             form.save()
-            return redirect('/')
+            cleaned_data = form.cleaned_data
+            field1_value = cleaned_data['customer']
+            subject = 'New Order Created'
+            message = f"An order has been successfully created."
+            send_order_notification(to_email=field1_value.email, subject=subject, message=message)
+            return redirect(reverse('orders_list'))
     return render(request, 'Home.html', {'tests': tests, 'form': form})
 
 @login_required(login_url='user_login')
+@group_required(['Techician'])
 def orders_list(request):
-    list_of_orders = Order.objects.all()
-    p = Paginator(Order.objects.all(), 11)
-    page = request.GET.get('page')
-    orders = p.get_page(page)
-    nums = "a" * orders.paginator.num_pages
-    return render(request, 'orders.html', 
-		{'list_of_orders': list_of_orders,'orders': orders,'nums':nums})
+    f = OrderFilter(request.GET, queryset=Order.objects.all())
+    return render(request, 'orders.html', {'filter': f})
+    # list_of_orders = Order.objects.all()
+    # p = Paginator(Order.objects.all(), 11)
+    # page = request.GET.get('page')
+    # orders = p.get_page(page)
+    # nums = "a" * orders.paginator.num_pages
+    # return render(request, 'orders.html', 
+	# 	{'list_of_orders': list_of_orders,'orders': orders,'nums':nums})
 
 @login_required(login_url='user_login')
+@group_required(['Techician'])
 def doctors_list(request):
     doctors = Doctor.get_all_doctors()
     return render(request, 'Doctors.html', {'doctors': doctors})
 
 @login_required(login_url='user_login')
+@group_required(['Techician'])
 def visits_list(request):
-    visits = HomeVisit.objects.all()
-    return render(request, 'visits_list.html', {'visits': visits})
+    f = VisitFilter(request.GET, queryset=HomeVisit.objects.all())
+    return render(request, 'visits_list.html', {'filter': f})
 
 @login_required(login_url='user_login')
+@group_required(['Techician'])
 def customer_details(request,pk):
     patient = Customer.objects.get(id=pk)
     orders = patient.order_set.all()
     return render(request,'Customer Details.html',{'patient': patient, 'orders':orders})
 
 @login_required(login_url='user_login')
+@group_required(['Techician'])
 def order_details(request,order_id):
     order = Order.objects.get(order_id=order_id)
     tests = order.tests.all()
     return render(request,'Order Details.html',{'order': order, 'tests': tests})
 
-
 @login_required(login_url='user_login')
+@group_required(['Techician'])
 def edit_order(request,order_id):
     instance = Order.objects.get(order_id=order_id)
     form = NewOrderForm(request.POST or None, instance=instance)
@@ -139,26 +161,29 @@ def edit_order(request,order_id):
     order = Order.objects.get(order_id=order_id)
     return render(request,'edit_order.html',{'order': order, 'form':form})
 
-
 @login_required(login_url='user_login')
+@group_required(['Techician'])
 def delete_order(request,pk):
     order = Order.objects.get(order_id=pk)
     order.delete()
     return  redirect('orders_list')
 
 @login_required(login_url='user_login')
+@group_required(['Techician'])
 def delete_visit(request,pk):
     visit = HomeVisit.objects.get(id=pk)
     visit.delete()
     return  redirect('visits_list')
 
 @login_required(login_url='user_login')
+@group_required(['Techician'])
 def delete_customer(request,pk):
     patient = Customer.objects.get(id=pk)
     patient.delete()
     return  redirect('patients_list')
 
 @login_required(login_url='user_login')
+@group_required(['Techician'])
 def doctor(request,pk):
     doctor = Doctor.objects.get(id=pk)
     orders = doctor.order_set.all()
@@ -168,30 +193,38 @@ def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = authenticate(request,username=username,password=password)
+        user = authenticate(request, username=username, password=password)
+
         if user is not None:
-            login(request,user)
-            return redirect ('/')
-    return render(request,'login.html')
+            login(request, user)
+
+            # Check if the logged-in user is in the 'Customer' group
+            if user.groups.filter(name='Customer').exists():
+                return redirect('customer_portal')  # Redirect customer to their dashboard
+            elif user.groups.filter(name='Doctor').exists():
+                return redirect('doctor_portal')
+            else:
+                return redirect('home')  # Redirect other users to homepage
+        else:
+            # Invalid credentials, handle login failure
+            return render(request, 'login.html', {'error': 'Invalid username or password'})
+
+    return render(request, 'login.html')
 
 def user_logout(request):
     logout(request)
     return redirect('user_login')
 
-
 def pending_samples(request):
         orders = Order.get_all_orders()
         pending_tests = {}
         for order in orders:
-            # Get tests that are not in the collection_status of the patient
             pending_patient_tests = order.tests.exclude(id__in=order.collection_status.all())
             if pending_patient_tests.exists():
                 pending_tests[order] = list(pending_patient_tests)
         return render(request,'pending.html',{'pending_tests':pending_tests})
 
-
 def daily_totals(request):
-
     if request.method == 'POST':
         form = MyForm(request.POST)
         if form.is_valid():
@@ -216,7 +249,6 @@ def daily_totals(request):
 
 def create_order_for_customer(request, customer_id):
     customer = get_object_or_404(Customer, id=customer_id)  # Get the customer by ID
-
     if request.method == 'POST':
         form = OrderForm(request.POST)# Pass customer to the form
         if form.is_valid():
@@ -230,48 +262,14 @@ def create_order_for_customer(request, customer_id):
 
     return render(request, 'order_form.html', {'form': form, 'customer': customer})   
 
-
-# Helper function to get customer by patient_name and optionally mobile
-def get_customer(patient_name=None, mobile=None):
-    try:
-        # Start with an empty query
-        query = Q()
-
-        # If patient_name is provided, use icontains to allow partial matching
-        if patient_name:
-            query &= Q(patient_name__icontains=patient_name)
-
-        # If mobile is provided, use icontains to allow partial matching
-        if mobile:
-            query &= Q(mobile__icontains=mobile)
-
-        # Query the database with the constructed Q object
-        customers = Customer.objects.filter(query)
-
-        # If no customers are found, return an empty list
-        if not customers.exists():
-            return []
-
-        return customers  # Return the queryset containing multiple customers
-
-    except ObjectDoesNotExist:
-        # Handling case where no customer is found
-        return []
-# View function
+@login_required(login_url='user_login')
+@group_required(['Techician'])
 def patients_list(request):
-    form = CustomerSearchForm(request.POST or None)  # Handle both POST and GET
-    if request.method == 'POST' and form.is_valid():
-        patient_name = form.cleaned_data.get('patient_name')
-        mobile = form.cleaned_data.get('mobile')
-        customers = get_customer(patient_name, mobile)
-    else:
-        customers = Customer.objects.all()  # By default, list all customers
-
-    return render(request, 'patients.html', {'customers': customers, 'form': form})
-    # customers = Customer.get_all_customers()
-    # return render(request, 'patients.html', {'customers': customers})
+    f = CustomerFilter(request.GET, queryset=Customer.objects.all())
+    return render(request, 'patients.html', {'filter': f})
 
 @login_required(login_url='user_login')
+@group_required(['Techician'])
 def edit_customer(request,pk):
     instance = Customer.objects.get(id=pk)
     form = EditCustomerorm(request.POST or None, instance=instance)
@@ -296,14 +294,13 @@ def generate_invoice(request, order_id):
     return response
 
 @login_required(login_url='user_login')
+@group_required(['Techician'])
 def fill_values(request, uuid):
-    # Get the order by order_id
     order = get_object_or_404(Order, order_id=uuid)
     form = FillValuesForm(instance = order)
     units = get_object_or_404(UNITSANDRANGES, id=1)
     if not order.customer:
         return HttpResponse("Order does not have an associated customer", status=400)
-    # Get the names of the tests selected for this order
     selected_tests = [test.test_name for test in order.tests.all()]
     if request.method == 'POST':
         form = FillValuesForm(request.POST, instance=order)
@@ -472,3 +469,36 @@ def update_range(request):
 
         # Return failure if something goes wrong
         return JsonResponse({'status': 'fail', 'message': 'Invalid field or data'})
+
+@login_required(login_url='user_login')
+@group_required(['Customer'])
+def customer_portal(request):
+    usr = (str(request.user))
+    customer = Customer.objects.get(patient_name=usr)
+    orders = customer.order_set.all()  
+    visits = customer.homevisit_set.all()  
+    return render(request, 'portal.html', {
+        'customer': customer,
+        'visits': visits,
+        'orders': orders
+    })
+@login_required(login_url='user_login')
+@group_required(['Customer'])
+def download_report(request, report_id):
+    report = get_object_or_404(TestReport, id=report_id, customer__user=request.user)
+    response = HttpResponse(report.file, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename={report.filename}'
+    return response
+
+@login_required(login_url='user_login')
+@group_required(['Doctor'])
+def doctor_portal(request):
+    usr = (str(request.user))
+    doctor = Doctor.objects.get(doctor_name=usr)
+    orders = doctor.order_set.all()
+    # visits = customer.homevisit_set.all()  
+    return render(request, 'docportal.html', {
+        'doctor': doctor,
+        # 'visits': visits,
+        'orders': orders
+    })

@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title%} All Tests {% endblock%}
+
+
+{% block content%}
+<section>
+    <h1>Welcome, {{ customer.patient_name }}</h1>
+    <h1>your Visits</h1>
+    <div class="tbl-header">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <thead>
+          <tr>
+            <th>Patient Name</th>
+            <th>visit_date</th>
+            <th>visitor</th>
+            <th>location </th>
+            <th>status </th>
+            <th>notes </th>
+            <th>Google Maps Link </th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    <div class="tbl-content">
+      <table cellpadding="0" cellspacing="0" border="0">
+       
+        {% for visit in visits %}
+        <tbody>
+            <tr>
+                <td> {{visit.customer}}</td>
+                <td> {{visit.visit_date}}</td>
+                <td> {{visit.visitor}}</td>
+                <td> {{visit.location}}</td>
+                <td> {{visit.status}}</td>
+                <td> {{visit.notes}}</td>
+                <td> <a href="{{visit.googlemaps_link}}" target="_blank"> 📍 </a> </td>
+            </tr>
+            <!-- and so on... -->
+        </tbody>
+    
+        {% endfor %} 
+      </table>
+    </div>
+  <!--for demo wrap-->
+    <h1>Your Orders</h1>
+    <div class="tbl-header">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <thead>
+          <tr>
+            <th>Orders Date</th>
+            <th>Customer Name</th>
+            <th>total amount</th>
+            <th>referred_by</th>
+            <th>status </th>
+            <th>print reports </th>
+            <th>Download Invoice </th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    <div class="tbl-content">
+      <table cellpadding="0" cellspacing="0" border="0">
+        {% for order in orders %}
+        <tbody>
+            <tr>
+                <td>{{order.collected_date}}</td>
+                <td>{{order.customer.patient_name}}</td>
+                <td> {{order.get_total}}</td>
+                <td> {{order.referred_by}}</td>
+                <td> order status</td>
+                <td>
+                  <a href="{% url 'generate_pdf_for_tests' order.order_id %}"> print</a>
+                </td>                 <td>
+                    <a href="{% url 'generate_invoice' order.order_id %}">Download Invoice</a>
+                </td>                
+
+            </tr>
+            <!-- and so on... -->
+        </tbody>
+    </div>
+        {% endfor %}
+      </table>
+  </section>
+{% endblock %}

@@ -118,11 +118,43 @@
         transform: scaleX(1);
         transform-origin: left;
         }
-    </style>
+    .spinner-overlay {
+        opacity: 0;
+        visibility: hidden;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+        display: flex;  /* Use flex to center the spinner */
+        justify-content: center;
+        align-items: center;
+        transition: opacity 0.3s ease; /* Smooth transition */
+        pointer-events: none; /* Prevents overlay from blocking clicks */
+    }
+    .spinner-overlay.show {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto; /* Allow clicks to interact with the spinner when shown */
+    }
+    .spinner-border {
+        width: 3rem;
+        height: 3rem;
+        color: #fff;
+    }
+</style>
+
+
 </head>
 <body>
+    <div class="spinner-overlay d-flex">
+        <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
     <div>
-
         <ul class="nav-links">
           <li><a href={% url 'home' %}> <img src="{% static '/images/logo.png' %}" alt="My image" width="200" height="45"></li>
           <li><a href={% url 'patients_list' %}> patients list </a> </li> 
@@ -141,7 +173,7 @@
                     <h3 id="form-title">Order Form</h3>
                 </div>
                 <div class="d-flex justify-content-center form_container">
-                    <form method="POST" action="">
+                    <form method="POST" action="" id="orderForm">
                         {{ form.non_field_errors }}
                            {{ form.errors }}
                         {% csrf_token %}
@@ -203,18 +235,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
         $(document).ready(function() {
-            // Initialize Select2 on the customer field
-            $('#id_customer').select2({
-                placeholder: "Select Customer",
-                allowClear: true
-            });
+            // Initialize Select2 on relevant fields
+            $('#id_customer').select2({ placeholder: "Select Customer", allowClear: true });
+            $('#id_referred_by').select2({ placeholder: "Select referred by", allowClear: true });
     
-            // Initialize Select2 on the visitor field
-            $('#id_referred_by').select2({
-                placeholder: "Select referred by",
-                allowClear: true
+            // Trigger the spinner on form submission
+            $('#orderForm').on('submit', function(e) {
+                $('.spinner-overlay').addClass('show');  // Show spinner
+                $(this).find('input[type="submit"]').prop('disabled', true);  // Disable submit button
             });
         });
     </script>
+    
 </body>
 </html>

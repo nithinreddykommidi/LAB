@@ -46,7 +46,10 @@ urlpatterns = [
     path('<uuid:uuid>/fill_values', fill_values, name='fill_values'),
     path('share_report/<uuid:order_id>/', share_report, name='share_report'),
     path('update-range/', update_range, name='update_range'),
-    path('select2/', include('django_select2.urls')),  # Add this for Select2 support
+    path('select2/', include('django_select2.urls')),
+    path('customer-portal/', customer_portal, name='customer_portal'),
+    path('doctor-portal/', doctor_portal, name='doctor_portal'),
+    path('download-report/<int:report_id>/', download_report, name='download_report'),
 
 
 ]

@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'django_filters',
     'django_select2',
+    'dal',
+    'dal_select2'
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -134,3 +136,13 @@ STATICFILES_DIR =[
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = 'nithinreddykommidi424@gmail.com'
+EMAIL_HOST_PASSWORD = 'uznx gkli vmgb nvud' 
+DEFAULT_FROM_EMAIL = 'nithinreddykommidi424@infy.com'

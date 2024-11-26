@@ -3,7 +3,7 @@ from datetime import datetime
 from django.db.models import Max
 import uuid
 from django.contrib.auth.models import User
-
+from django.utils import timezone
 
 class Test(models.Model):
     is_collected = {('yes', 'yes'),
@@ -32,6 +32,24 @@ class Title(models.Model):
     def __str__(self):
         return self.title
 
+
+
+class Appointment(models.Model):
+    customer = models.ForeignKey('Customer', on_delete=models.CASCADE)
+    date = models.DateField()
+    time = models.TimeField()
+    service = models.CharField(max_length=100)  # Description of the service (e.g., Home Visit, Check-up, etc.)
+    status = models.CharField(max_length=50, choices=[
+        ('pending', 'Pending'),
+        ('confirmed', 'Confirmed'),
+        ('completed', 'Completed'),
+        ('canceled', 'Canceled'),
+    ], default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Appointment for {self.customer.patient_name} on {self.date} at {self.time}"
 
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)  # Add this line
@@ -439,7 +457,7 @@ class UNITSANDRANGES(models.Model):
     ggtp_reference_range = models.CharField(max_length=250, blank=True)
 
 class HomeVisit(models.Model):
-    date = models.DateTimeField()
+    visit_date = models.DateTimeField(blank=True)
     location = models.CharField(max_length = 50, blank= True)
     googlemaps_link = models.CharField(max_length = 50, blank= True)
     notes = models.CharField(max_length = 50, blank=True, null=True)

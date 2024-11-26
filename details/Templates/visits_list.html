@@ -1,9 +1,17 @@
 {% extends "base.html" %}
 {% block title%} Visits {% endblock%}
-
+<script src="https://unpkg.com/@trevoreyre/autocomplete-js"></script>
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/@trevoreyre/autocomplete-js/dist/style.css"
+/>
 {% block content%}
 
 <section>
+  <form method="get">
+    {{ filter.form.as_p }}
+    <button type="submit" class="btn btn-primary">Filter</button>
+</form>
     <!--for demo wrap-->
     <h1>Visits</h1>
     <div class="tbl-header">
@@ -25,11 +33,11 @@
     <div class="tbl-content">
       <table cellpadding="0" cellspacing="0" border="0">
        
-        {% for visit in visits%}
+        {% for visit in filter.qs%}
         <tbody>
             <tr>
                 <td> {{visit.customer}}</td>
-                <td> {{visit.date}}</td>
+                <td> {{visit.visit_date}}</td>
                 <td> {{visit.visitor}}</td>
                 <td> {{visit.location}}</td>
                 <td> {{visit.status}}</td>
